@@ -1,0 +1,108 @@
+<!-- ============================================================
+     BLOCK L  //  PROJECT SIGIL
+     Embed element. Style: Inline. Anywhere on the page.
+
+     Draws the PROJECT mark as inline SVG — a few hundred bytes,
+     sharp at any size, and it inherits colour, so the same shape
+     can be corporate red or TRIXE amber with no second file.
+
+     It is injected automatically into the spots listed in TARGETS
+     near the bottom of the script. Edit that list to move it, or
+     paste the <svg> by hand wherever you like.
+     ============================================================ -->
+
+<style>
+.tx-sigil{display:inline-block;vertical-align:-.14em;width:1.12em;height:.99em;
+  color:var(--tx-signal,#ff2f43);flex:none;}
+.tx-sigil svg{display:block;width:100%;height:100%;overflow:visible;}
+.tx-sigil path{fill:currentColor;stroke:none;}
+.tx-sigil.amb{color:var(--tx-trixe,#ffc46b);}
+.tx-sigil.bone{color:var(--tx-bone,#e6e4de);}
+.tx-sigil.dim{color:var(--tx-grid,#4d5866);}
+.tx-sigil.lg{width:2.8em;height:2.47em;}
+.tx-sigil.glow{filter:drop-shadow(0 0 7px currentColor);}
+
+/* the four shapes assemble themselves the first time they are seen */
+.tx-sigil.draw path{opacity:0;transform:translateY(-7%);
+  transform-box:fill-box;transform-origin:center;}
+.tx-sigil.draw.in path{opacity:1;transform:none;
+  transition:opacity .42s ease-out,transform .52s cubic-bezier(.2,.7,.2,1);}
+.tx-sigil.draw.in path:nth-child(2),
+.tx-sigil.draw.in path:nth-child(3){transition-delay:.11s;}
+.tx-sigil.draw.in path:nth-child(4){transition-delay:.26s;}
+
+/* slow idle pulse, used only on the boot gate */
+.tx-sigil.beat{animation:tx-beat 3.2s ease-in-out infinite;}
+@keyframes tx-beat{0%,100%{opacity:.45;}50%{opacity:1;}}
+
+.tx-sechead h2 .tx-sigil{margin-right:.34em;}
+@media(prefers-reduced-motion:reduce){
+  .tx-sigil.beat{animation:none;}
+  .tx-sigil.draw path{opacity:1;transform:none;transition:none;}
+}
+</style>
+
+<script>
+(function(){
+/* Traced from the original mark. Four separate filled shapes: a trapezoid
+   top bar, two wedges that narrow to points, and a solid inner triangle.
+   The apparent "stem" is the slit between the two wedge tips — there is no
+   stem shape, which is why drawing this with strokes never looked right. */
+var SVG='<svg viewBox="0 0 100 88" aria-hidden="true">'
+  +'<path d="M4 0 L96 0 L75 12.9 L25 12.9Z"/>'
+  +'<path d="M0 7.6 L19.6 18.3 L46.9 64.3 L46.4 87.9Z"/>'
+  +'<path d="M100 7.6 L79 19.6 L54 63.4 L54.5 87.9Z"/>'
+  +'<path d="M32.1 20.1 L69.2 20.5 L50.9 54Z"/>'
+  +'</svg>';
+
+function make(cls){
+  var s=document.createElement('span');
+  s.className='tx-sigil '+(cls||'');
+  s.innerHTML=SVG;
+  return s;
+}
+window.TXSigil=make;
+
+function txSigil(){
+  /* where the mark appears. 'where' is prepend | append | replace */
+  var TARGETS=[
+    {sel:'#tx-boot .dorm',      cls:'beat glow lg', where:'before-block'},
+    {sel:'.tx-hero .eyerow',    cls:'dim draw',     where:'prepend'},
+    {sel:'.tx-sechead h2',      cls:'draw',         where:'prepend'},
+    {sel:'.tx-dos.trixe h3',    cls:'amb draw',     where:'prepend'},
+    {sel:'.tx-foot .row',       cls:'dim',          where:'prepend'}
+  ];
+
+  var drawn=[];
+  TARGETS.forEach(function(t){
+    document.querySelectorAll(t.sel).forEach(function(el,i){
+      if(t.where==='before-block'){
+        if(i) return;
+        var w=make(t.cls);
+        w.style.display='block'; w.style.margin='0 auto 22px';
+        el.parentNode.insertBefore(w,el);
+        drawn.push(w);
+      }else{
+        var s=make(t.cls);
+        el.insertBefore(s,el.firstChild);
+        drawn.push(s);
+      }
+    });
+  });
+
+  /* reveal the drawn ones as they scroll into view, then stop watching */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    },{rootMargin:'0px 0px -12% 0px'});
+    drawn.forEach(function(s){ if(s.classList.contains('draw')) io.observe(s); });
+  }else{
+    drawn.forEach(function(s){ s.classList.add('in'); });
+  }
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',txSigil);
+else txSigil();
+})();
+</script>

@@ -1,0 +1,200 @@
+<!-- ============================================================
+     BLOCK C  //  PROJECTS  (operations index)
+     One Embed element. Height: auto.
+     To add a chapter: copy one <article class="op"> and edit the text
+     between the  EDIT  markers. Nothing else needs changing.
+     ============================================================ -->
+
+<style>
+.tx-sec{padding:78px 0;}
+.tx-sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;
+  padding-bottom:14px;border-bottom:1px solid rgba(77,88,102,.4);margin-bottom:6px;}
+.tx-sechead h2{font-family:var(--tx-disp);font-weight:700;font-size:clamp(30px,4.4vw,50px);
+  letter-spacing:-.01em;margin:0;color:var(--tx-bone);}
+.tx-sechead p{margin:0;font-size:11.5px;letter-spacing:.14em;color:var(--tx-grid);text-align:right;}
+
+.op{border-bottom:1px solid rgba(77,88,102,.22);}
+.op summary{list-style:none;cursor:pointer;display:grid;
+  grid-template-columns:52px 1fr auto;gap:18px;align-items:center;padding:20px 2px;
+  transition:background .18s,padding-left .18s;}
+.op summary::-webkit-details-marker{display:none;}
+.op summary:hover,.op summary:focus-visible{background:rgba(21,24,29,.7);padding-left:12px;outline:none;}
+.op summary:focus-visible{box-shadow:inset 2px 0 var(--tx-bone);}
+.op .idx{font-size:11px;color:var(--tx-grid);letter-spacing:.1em;}
+.op .ttl{min-width:0;}
+.op .ttl h3{font-family:var(--tx-disp);font-weight:600;font-size:clamp(19px,2.4vw,27px);
+  margin:0;color:var(--tx-bone);letter-spacing:.005em;}
+.op .ttl .code{display:block;font-size:10.5px;letter-spacing:.18em;color:var(--tx-grid);margin-top:5px;}
+.op .st{font-size:10px;letter-spacing:.16em;white-space:nowrap;padding:4px 9px;
+  border:1px solid currentColor;}
+.st.ok{color:var(--tx-dim);} .st.part{color:var(--tx-signal);}
+.st.pend{color:var(--tx-grid);} .st.live{color:var(--tx-trixe);}
+.op[open] summary{background:rgba(21,24,29,.7);}
+.op .body{padding:6px 2px 30px 70px;display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:34px;}
+.op .body p{margin:0 0 14px;font-size:14px;line-height:1.78;color:#b9bfc7;max-width:66ch;}
+.op .meta dt{font-size:10px;letter-spacing:.15em;color:var(--tx-grid);margin-top:12px;}
+.op .meta dd{margin:3px 0 0;font-size:12.5px;color:var(--tx-bone);}
+.op .meta dd.v{color:var(--tx-violet);} .op .meta dd.g{color:var(--tx-green);}
+.op .amb{color:var(--tx-trixe);font-size:12.5px;border-left:2px solid var(--tx-trixe);
+  padding-left:10px;margin-top:18px;}
+@media(max-width:760px){
+  .op summary{grid-template-columns:38px 1fr;gap:12px;}
+  .op .st{grid-column:2;justify-self:start;margin-top:8px;}
+  .op .body{padding-left:0;grid-template-columns:1fr;gap:22px;}
+}
+</style>
+
+<section class="tx-embed tx-sec" id="projects">
+  <div class="tx-wrap">
+    <div class="tx-sechead">
+      <h2>Projects</h2>
+      <p>OPERATIONS FILED UNDER BLACK-7<br>4 RECORDS &middot; 1 OPEN</p>
+    </div>
+
+    <!-- ---------------- OPERATION 01 ---------------- -->
+    <details class="op">
+      <summary>
+        <span class="idx">01</span>
+        <span class="ttl">
+          <h3><!-- EDIT -->Immaculate<!-- /EDIT --></h3>
+          <span class="code">CL-CE/19-447B &middot; MID-TIER RETAIL FRONTAGE</span>
+        </span>
+        <span class="st ok">SUCCESS</span>
+      </summary>
+      <div class="body">
+        <div>
+          <!-- EDIT -->
+          <p>A G/NETIC micro-uplink hidden inside commercial inventory. Five hostiles in a
+          service corridor, a courier too young to be there, and a deadman charge that never
+          armed. Every objective met. The mission is filed as clean.</p>
+          <p>The addendum notes a minor latency fluctuation and calls it environmental. It does
+          not note that the reticle moved off the courier's heart a fraction of a second before
+          the strike landed, or that a line appeared afterward which is not in the template.</p>
+          <!-- /EDIT -->
+          <div class="amb">[You are stable.]</div>
+        </div>
+        <dl class="meta">
+          <dt>SUPPORT</dt><dd>None assigned</dd>
+          <dt>COLLATERAL</dt><dd>n/a</dd>
+          <dt>ADDENDUM</dt><dd>Within tolerance</dd>
+          <dt>FIRST ANOMALY</dt><dd style="color:var(--tx-trixe)">Reticle drift, 0.4&deg;</dd>
+        </dl>
+      </div>
+    </details>
+
+    <!-- ---------------- OPERATION 02 ---------------- -->
+    <details class="op">
+      <summary>
+        <span class="idx">02</span>
+        <span class="ttl">
+          <h3><!-- EDIT -->Non-Actionable<!-- /EDIT --></h3>
+          <span class="code">CL-CE/19-447B // POST &middot; THE BASTION</span>
+        </span>
+        <span class="st ok">FILED</span>
+      </summary>
+      <div class="body">
+        <div>
+          <!-- EDIT -->
+          <p>Debrief, then quarters. An analyst offers him the correct procedure and he declines
+          it in one sentence. A stability review is rescheduled on grounds of mission tempo. The
+          shower is already running at the temperature he prefers, and he did not set it.</p>
+          <p>He asks the module what it is. It answers in a category. He asks whether it will lie
+          to him and it says yes, if stability requires it, and does not say whose stability.</p>
+          <!-- /EDIT -->
+          <div class="amb">[Rest.]</div>
+        </div>
+        <dl class="meta">
+          <dt>REVIEW</dt><dd>CEDD &mdash; deferred</dd>
+          <dt>DISCLOSURE</dt><dd>Withheld by asset</dd>
+          <dt>VOICE PATTERN FILE</dt><dd style="color:var(--tx-signal)">Redacted</dd>
+          <dt>REPORT QUEUED</dt><dd>No</dd>
+        </dl>
+      </div>
+    </details>
+
+    <!-- ---------------- OPERATION 03 ---------------- -->
+    <details class="op">
+      <summary>
+        <span class="idx">03</span>
+        <span class="ttl">
+          <h3><!-- EDIT -->Partial<!-- /EDIT --></h3>
+          <span class="code">CL-CE/27-503BAV &middot; LOWER CENTRAL LOGISTICS 43-B</span>
+        </span>
+        <span class="st part">PARTIAL</span>
+      </summary>
+      <div class="body">
+        <div>
+          <!-- EDIT -->
+          <p>Three shell fronts, one handler, and a network disruption asset running the local
+          grid in six-second loops. Katarina takes the upper rails. Zed takes the trench. Bay 3
+          is a killbox and he does not walk into it, because half a step before the turn something
+          smaller than a mission prompt tells him to hold.</p>
+          <p>The handler dies. The route tree leaves with Ekko. What comes home is a blood trace,
+          a supplier string, and a neural load reading that will not come back down.</p>
+          <!-- /EDIT -->
+          <div class="amb">[Hold.]</div>
+        </div>
+        <dl class="meta">
+          <dt>SUPPORT ASSET</dt><dd class="v">KATARINA &mdash; &ldquo;ESBEN-LR&rdquo;</dd>
+          <dt>HOSTILE OF NOTE</dt><dd class="g">EKKO &mdash; G/NETIC</dd>
+          <dt>RECOVERED</dt><dd>Secondary stack, partial</dd>
+          <dt>SUPPLIER STRING</dt><dd>JH-4N</dd>
+        </dl>
+      </div>
+    </details>
+
+    <!-- ---------------- OPERATION 04 ---------------- -->
+    <details class="op">
+      <summary>
+        <span class="idx">04</span>
+        <span class="ttl">
+          <h3><!-- EDIT -->Scheduled Maintenance<!-- /EDIT --></h3>
+          <span class="code">CEDD//PREVENTATIVE STABILITY REVIEW &middot; BAY 8</span>
+        </span>
+        <span class="st live">COUNTDOWN</span>
+      </summary>
+      <div class="body">
+        <div>
+          <!-- EDIT -->
+          <p>CEDD does not use the word purge in writing. The scheduling notice calls it a
+          restoration of baseline behaviour and gives a window, and the window has been moving
+          closer every cycle since the first deferral.</p>
+          <p>Emotional artifacts reduce efficiency. That sentence exists in a patch note. Zed has
+          read it four times.</p>
+          <!-- /EDIT -->
+          <div class="amb" id="tx-clock">[calculating&hellip;]</div>
+        </div>
+        <dl class="meta">
+          <dt>PRIORITY</dt><dd style="color:var(--tx-signal)">Escalated</dd>
+          <dt>DEFERRALS USED</dt><dd>2 of 3</dd>
+          <dt>OUTCOME IF ALLOWED</dt><dd>Baseline restored</dd>
+          <dt>OUTCOME IF REFUSED</dt><dd style="color:var(--tx-signal)">Asset decommission</dd>
+        </dl>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  /* purge countdown — ticks down to the next 00:00 local, then rolls over */
+  var el=document.getElementById('tx-clock');
+  function beat(){
+    var n=new Date(), t=new Date(n); t.setHours(24,0,0,0);
+    var s=Math.floor((t-n)/1000);
+    var p=function(v){return String(v).padStart(2,'0');};
+    el.textContent='[PURGE WINDOW OPENS IN '+p(s/3600|0)+':'+p((s/60|0)%60)+':'+p(s%60)+']';
+  }
+  beat(); setInterval(beat,1000);
+
+  /* opening a dossier is a read event — she notices */
+  document.querySelectorAll('#projects .op').forEach(function(d){
+    d.addEventListener('toggle',function(){
+      if(d.open && window.TRIXE){
+        window.TRIXE.say('You already know how this one ends.',{once:'op'+[].indexOf.call(d.parentNode.children,d)});
+      }
+    });
+  });
+})();
+</script>

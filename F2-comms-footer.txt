@@ -1,0 +1,40 @@
+<!-- ============================================================
+     BLOCK F2  //  COMMS FOOTER  (chrome BELOW the form)
+     Embed element placed directly below your Carrd Form element.
+     ============================================================ -->
+
+<style>
+.tx-foot{padding:22px 0 70px;font-size:11px;letter-spacing:.1em;color:var(--tx-grid);}
+.tx-foot .row{border-top:1px solid rgba(77,88,102,.28);padding-top:16px;text-align:left;}
+.tx-foot .row span{display:block;}
+.tx-foot .row .link{margin-top:10px;}
+.tx-foot a{color:var(--tx-dim);text-decoration:none;border-bottom:1px solid transparent;}
+.tx-foot a:hover,.tx-foot a:focus-visible{color:var(--tx-bone);border-bottom-color:var(--tx-signal);}
+.tx-foot .sign{margin-top:26px;color:var(--tx-trixe);font-size:12.5px;letter-spacing:.02em;
+  text-shadow:0 0 14px rgba(255,196,107,.3);}
+</style>
+
+<section class="tx-embed tx-foot">
+  <div class="tx-wrap">
+    <div class="row">
+      <span>PROJECT CORPORATION &middot; COMMAND LINE &middot; CEDD</span>
+      <span>NEURAL LOAD LOGGED FOR THIS SESSION: <b id="tx-fnl" style="color:var(--tx-bone);font-weight:500">--</b></span>
+    </div>
+    <div class="row" style="border:0;padding-top:10px">
+      <span>Fan work. League of Legends and PROJECT: Zed belong to Riot Games.</span>
+      <span>TRIXE is original. Everything she does here is unauthorised.</span>
+      <span class="link"><a href="#top">RETURN TO TOP</a></span>
+    </div>
+    <div class="sign">[Close the file. I will still be here.]</div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var el=document.getElementById('tx-fnl'), peak=12;
+  setInterval(function(){
+    if(window.TRIXE) peak=Math.max(peak,window.TRIXE.load());
+    el.textContent=Math.round(peak)+'% peak';
+  },900);
+})();
+</script>

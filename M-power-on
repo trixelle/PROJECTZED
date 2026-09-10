@@ -1,0 +1,171 @@
+<!-- ============================================================
+     BLOCK M  //  POWER-ON ANIMATION  (optional)
+     Embed element. Style: Inline. Anywhere on the page.
+
+     Self-contained. It watches for the boot gate clearing on its
+     own rather than being called by A2, so A1 and A2 stay clean
+     and deleting this embed removes the effect completely with
+     nothing left dangling.
+     ============================================================ -->
+
+<style>
+#tx-crt{position:fixed;inset:0;z-index:9998;pointer-events:none;background:var(--tx-bone,#e6e4de);
+  opacity:0;transform:scaleY(.004);transform-origin:center;}
+#tx-crt.go{animation:tx-crt 700ms cubic-bezier(.2,.75,.2,1) forwards;}
+@keyframes tx-crt{
+  0%{opacity:1;transform:scaleY(.004);}
+  30%{opacity:1;transform:scaleY(.004);}
+  58%{opacity:.92;transform:scaleY(1);}
+  100%{opacity:0;transform:scaleY(1);}
+}
+#tx-sweep{position:fixed;left:0;right:0;top:-200px;height:200px;z-index:9997;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,transparent,rgba(255,47,67,.10) 45%,rgba(230,228,222,.14) 60%,transparent);}
+#tx-sweep.go{animation:tx-sweep 1200ms ease-out forwards;}
+@keyframes tx-sweep{0%{opacity:1;top:-200px;}100%{opacity:0;top:100%;}}
+
+body.tx-poweron .tx-hero .tx-wrap{animation:tx-rise 760ms cubic-bezier(.2,.7,.2,1) both;}
+@keyframes tx-rise{0%{opacity:0;transform:translateY(14px);}100%{opacity:1;transform:none;}}
+
+/* sections ease in the first time they are seen */
+.tx-rev{opacity:0;transform:translateY(16px);}
+.tx-rev.in{opacity:1;transform:none;transition:opacity .7s ease-out,transform .7s cubic-bezier(.2,.7,.2,1);}
+
+@media(prefers-reduced-motion:reduce){
+  #tx-crt,#tx-sweep{display:none;}
+  body.tx-poweron .tx-hero .tx-wrap{animation:none;}
+  .tx-rev{opacity:1;transform:none;}
+}
+</style>
+
+<div id="tx-crt" aria-hidden="true"></div>
+<div id="tx-sweep" aria-hidden="true"></div>
+
+<script>
+(function(){
+function txPower(){
+  var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var crt=document.getElementById('tx-crt'), sw=document.getElementById('tx-sweep');
+  try{
+    if(crt&&crt.parentNode!==document.body) document.body.appendChild(crt);
+    if(sw&&sw.parentNode!==document.body) document.body.appendChild(sw);
+  }catch(e){}
+
+  function fire(){
+    document.body.classList.add('tx-poweron');
+    if(RM) return;
+    if(crt){ crt.classList.add('go'); setTimeout(function(){ crt.remove(); },900); }
+    if(sw){ sw.classList.add('go');  setTimeout(function(){ sw.remove(); },1400); }
+    if(window.TXA) window.TXA.chime();
+  }
+
+  /* Watch for the boot gate going away. Waiting for the element to be
+     removed is what keeps the flash in step with the reveal instead of
+     landing a second late on an already-visible page. */
+  var boot=document.getElementById('tx-boot');
+  if(!boot){ fire(); }
+  else{
+    var mo=new MutationObserver(function(){
+      if(!document.getElementById('tx-boot')){ mo.disconnect(); fire(); }
+    });
+    mo.observe(document.body,{childList:true});
+  }
+
+  /* section reveals */
+  if('IntersectionObserver' in window && !RM){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{rootMargin:'0px 0px -10% 0px'});
+    document.querySelectorAll('.tx-sec .tx-sechead, .tx-dossiers, .tx-arch').forEach(function(el){
+      el.classList.add('tx-rev'); io.observe(el);
+    });
+  }
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',txPower);
+else txPower();
+})();
+</script><!-- ============================================================
+     BLOCK M  //  POWER-ON ANIMATION  (optional)
+     Embed element. Style: Inline. Anywhere on the page.
+
+     Self-contained. It watches for the boot gate clearing on its
+     own rather than being called by A2, so A1 and A2 stay clean
+     and deleting this embed removes the effect completely with
+     nothing left dangling.
+     ============================================================ -->
+
+<style>
+#tx-crt{position:fixed;inset:0;z-index:9998;pointer-events:none;background:var(--tx-bone,#e6e4de);
+  opacity:0;transform:scaleY(.004);transform-origin:center;}
+#tx-crt.go{animation:tx-crt 700ms cubic-bezier(.2,.75,.2,1) forwards;}
+@keyframes tx-crt{
+  0%{opacity:1;transform:scaleY(.004);}
+  30%{opacity:1;transform:scaleY(.004);}
+  58%{opacity:.92;transform:scaleY(1);}
+  100%{opacity:0;transform:scaleY(1);}
+}
+#tx-sweep{position:fixed;left:0;right:0;top:-200px;height:200px;z-index:9997;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,transparent,rgba(255,47,67,.10) 45%,rgba(230,228,222,.14) 60%,transparent);}
+#tx-sweep.go{animation:tx-sweep 1200ms ease-out forwards;}
+@keyframes tx-sweep{0%{opacity:1;top:-200px;}100%{opacity:0;top:100%;}}
+
+body.tx-poweron .tx-hero .tx-wrap{animation:tx-rise 760ms cubic-bezier(.2,.7,.2,1) both;}
+@keyframes tx-rise{0%{opacity:0;transform:translateY(14px);}100%{opacity:1;transform:none;}}
+
+/* sections ease in the first time they are seen */
+.tx-rev{opacity:0;transform:translateY(16px);}
+.tx-rev.in{opacity:1;transform:none;transition:opacity .7s ease-out,transform .7s cubic-bezier(.2,.7,.2,1);}
+
+@media(prefers-reduced-motion:reduce){
+  #tx-crt,#tx-sweep{display:none;}
+  body.tx-poweron .tx-hero .tx-wrap{animation:none;}
+  .tx-rev{opacity:1;transform:none;}
+}
+</style>
+
+<div id="tx-crt" aria-hidden="true"></div>
+<div id="tx-sweep" aria-hidden="true"></div>
+
+<script>
+(function(){
+function txPower(){
+  var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var crt=document.getElementById('tx-crt'), sw=document.getElementById('tx-sweep');
+  try{
+    if(crt&&crt.parentNode!==document.body) document.body.appendChild(crt);
+    if(sw&&sw.parentNode!==document.body) document.body.appendChild(sw);
+  }catch(e){}
+
+  function fire(){
+    document.body.classList.add('tx-poweron');
+    if(RM) return;
+    if(crt){ crt.classList.add('go'); setTimeout(function(){ crt.remove(); },900); }
+    if(sw){ sw.classList.add('go');  setTimeout(function(){ sw.remove(); },1400); }
+    if(window.TXA) window.TXA.chime();
+  }
+
+  /* Watch for the boot gate going away. Waiting for the element to be
+     removed is what keeps the flash in step with the reveal instead of
+     landing a second late on an already-visible page. */
+  var boot=document.getElementById('tx-boot');
+  if(!boot){ fire(); }
+  else{
+    var mo=new MutationObserver(function(){
+      if(!document.getElementById('tx-boot')){ mo.disconnect(); fire(); }
+    });
+    mo.observe(document.body,{childList:true});
+  }
+
+  /* section reveals */
+  if('IntersectionObserver' in window && !RM){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{rootMargin:'0px 0px -10% 0px'});
+    document.querySelectorAll('.tx-sec .tx-sechead, .tx-dossiers, .tx-arch').forEach(function(el){
+      el.classList.add('tx-rev'); io.observe(el);
+    });
+  }
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',txPower);
+else txPower();
+})();
+</script>

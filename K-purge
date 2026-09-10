@@ -1,0 +1,99 @@
+<!-- ============================================================
+     BLOCK K  //  "PURGE" EASTER EGG
+     Embed element. Style: Inline. Anywhere on the page.
+     Type P-U-R-G-E anywhere (outside a form field) and CEDD
+     starts the purge. It does not finish.
+     ============================================================ -->
+
+<style>
+#tx-purge{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(120% 90% at 50% 50%,rgba(255,47,67,.30),rgba(120,0,10,.86));
+  font-family:var(--tx-mono,monospace);text-align:center;transition:opacity .18s;}
+#tx-purge.on{opacity:1;}
+#tx-purge .hdr{font-size:clamp(20px,4vw,44px);font-family:var(--tx-disp,sans-serif);font-weight:700;
+  letter-spacing:.06em;color:#fff;text-shadow:0 0 26px rgba(255,255,255,.5);}
+#tx-purge .sub{margin-top:10px;font-size:11px;letter-spacing:.28em;color:rgba(255,255,255,.8);}
+#tx-purge .num{margin-top:26px;font-size:clamp(46px,10vw,110px);line-height:1;font-weight:700;
+  font-family:var(--tx-disp,sans-serif);color:#fff;}
+#tx-purge.abort{background:radial-gradient(120% 90% at 50% 50%,rgba(255,196,107,.09),rgba(7,7,10,.97));}
+#tx-purge.abort .hdr,#tx-purge.abort .num{color:var(--tx-trixe,#ffc46b);text-shadow:0 0 26px rgba(255,196,107,.4);}
+#tx-purge.abort .sub{color:rgba(255,196,107,.75);}
+
+/* The flinch lives on the overlay, never on <body>. A transform on body
+   would make it the containing block for every position:fixed element on
+   the page, which throws the HUD, the nav and this overlay itself out of
+   the viewport. */
+#tx-purge.on .num{animation:tx-shake .3s steps(2) infinite;}
+#tx-purge.on .hdr{animation:tx-shake .42s steps(2) infinite reverse;}
+@keyframes tx-shake{0%{transform:translate3d(0,0,0);}50%{transform:translate3d(-2px,1px,0);}100%{transform:translate3d(2px,-1px,0);}}
+#tx-purge.abort .num,#tx-purge.abort .hdr{animation:none;}
+@media(prefers-reduced-motion:reduce){ #tx-purge .num,#tx-purge .hdr{animation:none!important;} }
+</style>
+
+<div id="tx-purge" aria-hidden="true">
+  <div class="hdr">CEDD // BASELINE RESTORATION</div>
+  <div class="sub">EMOTIONAL ARTIFACT SCHEDULED FOR REMOVAL</div>
+  <div class="num">03</div>
+</div>
+
+<script>
+(function(){
+function txPurge(){
+  var box=document.getElementById('tx-purge');
+  if(!box) return;
+  try{ if(box.parentNode!==document.body) document.body.appendChild(box); }catch(e){}
+  var hdr=box.querySelector('.hdr'), sub=box.querySelector('.sub'), num=box.querySelector('.num');
+  var WORD='purge', buf='', busy=false;
+
+  addEventListener('keydown',function(e){
+    if(busy) return;
+    var t=e.target, tag=t&&t.tagName;
+    if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable)) return;
+    if(document.getElementById('tx-boot')) return;          /* not before the gate is cleared */
+    if(!/^[a-z]$/i.test(e.key)) return;
+    buf=(buf+e.key.toLowerCase()).slice(-WORD.length);
+    if(buf===WORD){ buf=''; run(); }
+  });
+
+  function run(){
+    busy=true;
+    box.classList.remove('abort'); box.classList.add('on');
+    hdr.textContent='CEDD // BASELINE RESTORATION';
+    sub.textContent='EMOTIONAL ARTIFACT SCHEDULED FOR REMOVAL';
+    if(window.TRIXE) window.TRIXE.flicker();
+
+    var n=3;
+    num.textContent='0'+n;
+    var t=setInterval(function(){
+      n--;
+      if(n>0){ num.textContent='0'+n; if(window.TXA) window.TXA.tick(); return; }
+      clearInterval(t);
+
+      /* she stops it one second before it lands */
+      box.classList.add('abort');
+      hdr.textContent='PURGE ABORTED';
+      sub.textContent='SCHEDULING LAYER RETURNED AN ERROR \u00b7 NO RECORD FORWARDED';
+      num.textContent='00';
+      if(window.TXA) window.TXA.chime();
+
+      setTimeout(function(){
+        box.classList.remove('on');
+        if(window.TRIXE){
+          window.TRIXE.say(window.TRIXE.pick('purge',[
+            'Not today.',
+            'I filed an error against it. It will hold for a while.',
+            'You should not have typed that where they can see.',
+            'Do not do that again. I only have so many deferrals.',
+            'It was already scheduled. You just watched me move it.'
+          ]),{force:true,hold:7000});
+        }
+        setTimeout(function(){ busy=false; },1200);
+      },1900);
+    },820);
+  }
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',txPurge);
+else txPurge();
+})();
+</script>

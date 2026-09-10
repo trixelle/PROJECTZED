@@ -1,0 +1,129 @@
+<!-- ============================================================
+     BLOCK G  //  DESCENT GAUGE + SCROLLBAR SKIN
+     Embed element. Style: Inline. Anywhere on the page.
+     Self-contained: styles, markup and script in one small block.
+     ============================================================ -->
+
+<style>
+/* ---- native scrollbar, reduced to a hairline instrument rail ---- */
+html{scrollbar-width:thin;scrollbar-color:#3a4049 #07070a;}
+::-webkit-scrollbar{width:13px;}
+::-webkit-scrollbar-track{
+  background:#07070a;
+  background-image:repeating-linear-gradient(180deg,rgba(77,88,102,.42) 0 1px,transparent 1px 26px);
+  border-left:1px solid rgba(77,88,102,.28);}
+::-webkit-scrollbar-thumb{
+  background:#e6e4de;
+  border-left:5px solid #07070a;border-right:5px solid #07070a;
+  border-top:0;border-bottom:0;}
+::-webkit-scrollbar-thumb:hover{background:var(--tx-signal,#ff2f43);}
+::-webkit-scrollbar-button{display:none;}
+::-webkit-scrollbar-corner{background:#07070a;}
+
+/* ---- descent gauge ---- */
+#tx-gauge{position:fixed;right:26px;top:0;bottom:0;width:120px;z-index:9994;
+  pointer-events:none;opacity:0;transition:opacity .6s .6s;}
+body.tx-live #tx-gauge{opacity:1;}
+#tx-gauge .rail{position:absolute;right:0;top:15%;bottom:15%;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(77,88,102,.55) 12%,rgba(77,88,102,.55) 88%,transparent);}
+#tx-gauge .node{position:absolute;right:-4px;width:9px;height:9px;margin-top:-4px;
+  border:1px solid var(--tx-grid,#4d5866);background:#07070a;cursor:pointer;
+  pointer-events:auto;padding:0;transition:border-color .18s,background .18s;}
+#tx-gauge .node:hover,#tx-gauge .node:focus-visible{border-color:var(--tx-bone,#e6e4de);
+  background:var(--tx-bone,#e6e4de);outline:none;}
+#tx-gauge .node span{position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  font-family:var(--tx-mono,monospace);font-size:9px;letter-spacing:.16em;white-space:nowrap;
+  color:var(--tx-grid,#4d5866);opacity:0;transition:opacity .18s;pointer-events:none;}
+#tx-gauge .node:hover span,#tx-gauge .node:focus-visible span{opacity:1;color:var(--tx-bone,#e6e4de);}
+#tx-gauge .node.past{border-color:rgba(255,47,67,.6);}
+
+#tx-car{position:absolute;right:-1px;width:3px;height:34px;margin-top:-17px;
+  background:var(--tx-signal,#ff2f43);box-shadow:0 0 12px rgba(255,47,67,.55);}
+#tx-car::before{content:'';position:absolute;right:3px;top:50%;width:9px;height:1px;
+  background:var(--tx-signal,#ff2f43);}
+#tx-read{position:absolute;right:16px;margin-top:-17px;text-align:right;
+  font-family:var(--tx-mono,monospace);line-height:1.45;pointer-events:none;}
+#tx-read b{display:block;font-size:9.5px;font-weight:500;letter-spacing:.15em;color:var(--tx-bone,#e6e4de);}
+#tx-read i{display:block;font-style:normal;font-size:9px;letter-spacing:.12em;color:var(--tx-grid,#4d5866);}
+
+@media(max-width:900px){ #tx-gauge{display:none;} }
+</style>
+
+<div id="tx-gauge" aria-hidden="true">
+  <div class="rail"></div>
+  <div id="tx-car"></div>
+  <div id="tx-read"><b>THE BASTION</b><i>1240m</i></div>
+</div>
+
+<script>
+(function(){
+function txGauge(){
+  var g=document.getElementById('tx-gauge');
+  if(!g) return;
+  try{ if(g.parentNode!==document.body) document.body.appendChild(g); }catch(e){}
+
+  var TIERS=[
+    {at:0.00, name:'THE BASTION',        alt:1240},
+    {at:0.25, name:'PRIVILEGED TIERS',   alt:880},
+    {at:0.50, name:'CYBERPOP SOUND',     alt:540},
+    {at:0.75, name:'MID-TIER DISTRICT',  alt:210},
+    {at:1.00, name:'LOWER CENTRAL 43-B', alt:12}
+  ];
+
+  var rail=g.querySelector('.rail'),
+      car=document.getElementById('tx-car'),
+      read=document.getElementById('tx-read'),
+      nameEl=read.querySelector('b'), altEl=read.querySelector('i'),
+      nodes=[];
+
+  function railTop(){ return window.innerHeight*0.15; }
+  function railSpan(){ return window.innerHeight*0.70; }
+
+  TIERS.forEach(function(t){
+    var b=document.createElement('button');
+    b.className='node'; b.type='button';
+    b.setAttribute('aria-label','Descend to '+t.name);
+    b.innerHTML='<span>'+t.name+'</span>';
+    b.addEventListener('click',function(){
+      var max=document.documentElement.scrollHeight-window.innerHeight;
+      window.scrollTo({top:max*t.at,behavior:'smooth'});
+    });
+    rail.appendChild(b); nodes.push(b);
+  });
+
+  function place(){
+    var top=railTop(), span=railSpan();
+    nodes.forEach(function(b,i){ b.style.top=(top+span*TIERS[i].at)+'px'; });
+  }
+
+  var shown=-1, lastY=-1;
+  function frame(){
+    if(scrollY===lastY) return; lastY=scrollY;
+    var max=document.documentElement.scrollHeight-window.innerHeight,
+        p=max>0 ? Math.max(0,Math.min(1,window.scrollY/max)) : 0,
+        y=railTop()+railSpan()*p;
+
+    car.style.top=y+'px';
+    read.style.top=y+'px';
+
+    var t=0;
+    for(var i=0;i<TIERS.length;i++) if(p>=TIERS[i].at-0.12) t=i;
+    if(t!==shown){ shown=t; nameEl.textContent=TIERS[t].name; }
+    nodes.forEach(function(b,i){ b.classList.toggle('past', p>=TIERS[i].at-0.02); });
+
+    var alt=Math.round(1240-p*1228)+'m';
+    if(altEl._v!==alt){ altEl._v=alt; altEl.textContent=alt; }
+  }
+
+  place();
+  addEventListener('resize',function(){ place(); lastY=-1; });
+  if(window.TX) window.TX.add(frame); else (function r(){ frame(); requestAnimationFrame(r); })();
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',txGauge);
+}else{
+  txGauge();
+}
+})();
+</script>

@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Carrd embed blocks — PROJECT: ZED</title></head>
+<body style="font-family:monospace;background:#111;color:#ddd;padding:24px;line-height:1.6">
+<h1 style="font-size:18px">Carrd embed blocks</h1>
+<p>Open this file in a text editor. Copy each numbered block below into its own
+Carrd <b>Embed</b> element (Type: Code). Do not paste the whole file into one embed.
+Order matters: Block A must come first on the page.</p>
+<p>Placement on the page, top to bottom:<br>
+A system core &rarr; B hero &rarr; C projects &rarr; [your Carrd text section] &rarr;
+D archive &rarr; E identity &rarr; F1 &rarr; [your Carrd form] &rarr; F2</p>
+<hr>
+<pre style="white-space:pre-wrap">
+
+
+=================== BLOCK A — SYSTEM CORE (must be first) ===================
+
+&lt;!-- ============================================================
+     BLOCK A  //  SYSTEM CORE
+     Paste into ONE Embed element placed at the very TOP of the page.
+     Embed type: Code   |   Style: Hidden   |   Height: 0 / auto
+     Everything here is position:fixed, so it does not take up space.
+     This block must load FIRST: the other blocks talk to it.
+     ============================================================ --&gt;
+
+&lt;style&gt;
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;display=swap');
+
+:root{
+  --tx-void:#07070a;
+  --tx-plate:#0f1114;
+  --tx-plate2:#15181d;
+  --tx-bone:#e6e4de;
+  --tx-dim:#8a919b;
+  --tx-grid:#4d5866;
+  --tx-signal:#ff2f43;
+  --tx-trixe:#ffc46b;
+  --tx-violet:#a86bff;
+  --tx-green:#4dffa8;
+  --tx-disp:'Chakra Petch',system-ui,sans-serif;
+  --tx-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+
+/* ---------- shared primitives used by every block ---------- */
+.tx-embed{font-family:var(--tx-mono);color:var(--tx-bone);position:relative;z-index:2;
+  -webkit-font-smoothing:antialiased;text-align:left;}
+.tx-embed *{box-sizing:border-box;}
+.tx-wrap{max-width:1180px;margin:0 auto;padding:0 22px;}
+.tx-h{font-family:var(--tx-disp);font-weight:700;letter-spacing:.01em;line-height:1.02;margin:0;}
+.tx-mono{font-family:var(--tx-mono);}
+.tx-key{font-size:11px;letter-spacing:.16em;color:var(--tx-grid);font-weight:500;}
+.tx-rule{height:1px;background:linear-gradient(90deg,var(--tx-grid),transparent);opacity:.5;border:0;margin:0;}
+
+/* corner-bracket panel: the site's one structural motif */
+.tx-brk{position:relative;background:rgba(15,17,20,.72);padding:22px 24px;}
+.tx-brk::before,.tx-brk::after{content:'';position:absolute;width:13px;height:13px;pointer-events:none;
+  border:1px solid var(--tx-grid);opacity:.85;}
+.tx-brk::before{top:0;left:0;border-right:0;border-bottom:0;}
+.tx-brk::after{bottom:0;right:0;border-left:0;border-top:0;}
+.tx-brk[data-alert="1"]::before,.tx-brk[data-alert="1"]::after{border-color:var(--tx-signal);}
+
+/* ---------- fixed backdrop: looping grid + horizon glow ---------- */
+#tx-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+#tx-bg .l{position:absolute;inset:-20% -10%;}
+#tx-bg .grid{
+  background-image:linear-gradient(var(--tx-grid) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--tx-grid) 1px,transparent 1px);
+  background-size:88px 88px;opacity:.055;}
+#tx-bg .grid2{
+  background-image:linear-gradient(var(--tx-grid) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--tx-grid) 1px,transparent 1px);
+  background-size:22px 22px;opacity:.03;}
+#tx-bg .glow{background:radial-gradient(60% 40% at 50% 108%,rgba(255,47,67,.16),transparent 70%);}
+#tx-bg .glow2{background:radial-gradient(45% 30% at 82% -8%,rgba(77,88,102,.22),transparent 70%);}
+
+/* ---------- scanlines + grain ---------- */
+#tx-veil{position:fixed;inset:0;z-index:9990;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);
+  opacity:.35;mix-blend-mode:multiply;}
+#tx-veil.flick{animation:tx-flick .18s steps(2) 2;}
+@keyframes tx-flick{50%{opacity:.9;transform:translateY(1px);}}
+
+/* ---------- HUD ---------- */
+.tx-hud{position:fixed;z-index:9995;font-family:var(--tx-mono);font-size:10.5px;line-height:1.5;
+  letter-spacing:.04em;color:var(--tx-dim);pointer-events:none;opacity:0;transition:opacity .6s .3s;}
+body.tx-live .tx-hud{opacity:1;}
+#tx-hud-l{left:16px;bottom:14px;}
+#tx-hud-r{right:16px;top:14px;text-align:right;}
+.tx-hud b{font-weight:500;color:var(--tx-bone);}
+.tx-hud .lbl{color:var(--tx-grid);letter-spacing:.14em;}
+.tx-hud .hot{color:var(--tx-signal);}
+#tx-spark{display:block;margin-top:4px;opacity:.75;}
+#tx-bar{width:104px;height:2px;background:rgba(77,88,102,.35);margin:5px 0 0 auto;position:relative;}
+#tx-bar i{position:absolute;inset:0 auto 0 0;background:var(--tx-bone);width:12%;transition:width .18s linear;}
+#tx-bar.hot i{background:var(--tx-signal);}
+
+/* ---------- TRIXE channel ---------- */
+#tx-chan{position:fixed;right:16px;bottom:14px;z-index:9996;width:min(320px,72vw);
+  display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none;}
+.tx-line{font-family:var(--tx-mono);font-size:12px;letter-spacing:.02em;color:var(--tx-trixe);
+  background:rgba(7,7,10,.82);border-left:2px solid var(--tx-trixe);padding:6px 10px;
+  text-shadow:0 0 14px rgba(255,196,107,.35);opacity:0;transform:translateY(6px);
+  animation:tx-in .5s forwards;max-width:100%;}
+.tx-line.out{animation:tx-out .6s forwards;}
+@keyframes tx-in{to{opacity:1;transform:none;}}
+@keyframes tx-out{to{opacity:0;transform:translateY(-4px);}}
+
+/* ---------- fixed section nav ---------- */
+#tx-nav{position:fixed;top:14px;left:16px;z-index:9995;display:flex;gap:2px;flex-direction:column;
+  opacity:0;transition:opacity .6s .5s;}
+body.tx-live #tx-nav{opacity:1;}
+#tx-nav a{font-family:var(--tx-mono);font-size:10px;letter-spacing:.2em;color:var(--tx-grid);
+  text-decoration:none;padding:5px 10px 5px 9px;border-left:2px solid transparent;
+  transition:color .16s,border-color .16s,background .16s;}
+#tx-nav a:hover,#tx-nav a:focus-visible{color:var(--tx-bone);background:rgba(15,17,20,.85);outline:none;}
+#tx-nav a[aria-current="true"]{color:var(--tx-bone);border-left-color:var(--tx-signal);}
+@media(max-width:760px){
+  #tx-nav{flex-direction:row;top:auto;bottom:0;left:0;right:0;justify-content:space-around;
+    background:rgba(7,7,10,.94);border-top:1px solid rgba(77,88,102,.3);padding:2px 0;}
+  #tx-nav a{border-left:0;border-top:2px solid transparent;letter-spacing:.12em;}
+  #tx-nav a[aria-current="true"]{border-left:0;border-top-color:var(--tx-signal);}
+}
+
+/* ---------- boot gate ---------- */
+#tx-boot{position:fixed;inset:0;z-index:9999;background:var(--tx-void);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  font-family:var(--tx-mono);transition:opacity .7s,clip-path .9s cubic-bezier(.7,0,.2,1);}
+#tx-boot.gone{opacity:0;pointer-events:none;clip-path:inset(50% 0 50% 0);}
+#tx-boot .dorm{color:var(--tx-grid);font-size:11px;letter-spacing:.34em;margin-bottom:34px;
+  animation:tx-breathe 3.4s ease-in-out infinite;}
+@keyframes tx-breathe{0%,100%{opacity:.35;}50%{opacity:.9;}}
+#tx-track{width:min(320px,74vw);height:56px;position:relative;background:rgba(21,24,29,.9);
+  border:1px solid var(--tx-grid);cursor:grab;touch-action:none;}
+#tx-track:active{cursor:grabbing;}
+#tx-track:focus-visible{outline:2px solid var(--tx-bone);outline-offset:3px;}
+#tx-track .hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;
+  padding-right:16px;font-size:10px;letter-spacing:.24em;color:var(--tx-grid);}
+#tx-knob{position:absolute;top:3px;left:3px;width:64px;height:48px;background:var(--tx-bone);
+  display:flex;align-items:center;justify-content:center;transition:left .32s cubic-bezier(.6,0,.2,1);}
+#tx-knob.drag{transition:none;}
+#tx-knob i{display:block;width:2px;height:18px;background:var(--tx-void);box-shadow:5px 0 var(--tx-void),-5px 0 var(--tx-void);}
+#tx-track .fill{position:absolute;top:0;bottom:0;left:0;width:0;background:rgba(255,47,67,.13);}
+#tx-boot .cap{margin-top:30px;font-size:10px;letter-spacing:.2em;color:#3a4049;}
+#tx-log{margin-top:26px;width:min(320px,74vw);min-height:96px;font-size:11px;line-height:1.75;color:var(--tx-dim);}
+#tx-log .ok{color:var(--tx-bone);}
+#tx-log .amb{color:var(--tx-trixe);}
+
+@media(max-width:760px){
+  #tx-hud-r{top:auto;bottom:44px;right:12px;}
+  #tx-hud-l{display:none;}
+  #tx-chan{bottom:96px;right:12px;left:12px;width:auto;}
+}
+@media(prefers-reduced-motion:reduce){
+  #tx-bg .l{transform:none!important;}
+  #tx-boot .dorm{animation:none;}
+}
+&lt;/style&gt;
+
+&lt;div id="tx-bg" aria-hidden="true"&gt;
+  &lt;div class="l glow"&gt;&lt;/div&gt;&lt;div class="l glow2"&gt;&lt;/div&gt;
+  &lt;div class="l grid" data-depth="0.05"&gt;&lt;/div&gt;
+  &lt;div class="l grid2" data-depth="0.14"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="tx-veil" aria-hidden="true"&gt;&lt;/div&gt;
+
+&lt;div class="tx-hud" id="tx-hud-l" aria-hidden="true"&gt;
+  &lt;div&gt;&lt;span class="lbl"&gt;CURSOR&lt;/span&gt; X &lt;b id="tx-x"&gt;000&lt;/b&gt; &amp;nbsp;Y &lt;b id="tx-y"&gt;000&lt;/b&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;span class="lbl"&gt;VELOCITY&lt;/span&gt; &lt;b id="tx-v"&gt;0&lt;/b&gt; px/s &amp;nbsp;&lt;span class="lbl"&gt;VEC&lt;/span&gt; &lt;b id="tx-a"&gt;--&lt;/b&gt;&amp;deg;&lt;/div&gt;
+  &lt;canvas id="tx-spark" width="180" height="20"&gt;&lt;/canvas&gt;
+&lt;/div&gt;
+
+&lt;div class="tx-hud" id="tx-hud-r" aria-hidden="true"&gt;
+  &lt;div&gt;&lt;span class="lbl"&gt;NEURAL LOAD&lt;/span&gt; &lt;b id="tx-nl"&gt;12%&lt;/b&gt; &lt;span id="tx-nls"&gt;STABLE&lt;/span&gt;&lt;/div&gt;
+  &lt;div id="tx-bar"&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
+  &lt;div style="margin-top:5px"&gt;&lt;span class="lbl"&gt;SYNAPTIC LATENCY&lt;/span&gt; &lt;b id="tx-lat"&gt;0&lt;/b&gt;ms&lt;/div&gt;
+  &lt;div&gt;&lt;span class="lbl"&gt;LINK&lt;/span&gt; &lt;b&gt;//BLACK-7&lt;/b&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;nav id="tx-nav" aria-label="Sections"&gt;
+  &lt;a href="#projects"&gt;PROJECTS&lt;/a&gt;
+  &lt;a href="#archive"&gt;ARCHIVE&lt;/a&gt;
+  &lt;a href="#identity"&gt;IDENTITY&lt;/a&gt;
+  &lt;a href="#comms"&gt;COMMS&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;div id="tx-chan" aria-live="polite"&gt;&lt;/div&gt;
+
+&lt;div id="tx-boot"&gt;
+  &lt;div class="dorm"&gt;MODULE DORMANT&lt;/div&gt;
+  &lt;div id="tx-track" role="switch" aria-checked="false" tabindex="0" aria-label="Bring the module online"&gt;
+    &lt;div class="fill"&gt;&lt;/div&gt;
+    &lt;div id="tx-knob"&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;
+    &lt;div class="hint"&gt;SLIDE TO WAKE&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div id="tx-log"&gt;&lt;/div&gt;
+  &lt;div class="cap"&gt;PROJECT CORPORATION &amp;middot; COMMAND LINE &amp;middot; CEDD&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function(id){return document.getElementById(id);};
+
+  /* ================= TRIXE channel ================= */
+  var chan=$('tx-chan'), lastSpoke=0, spoken={};
+  var TRIXE = window.TRIXE = {
+    say:function(text,opt){
+      opt=opt||{};
+      var now=Date.now();
+      if(!opt.force &amp;&amp; now-lastSpoke &lt; (opt.cooldown||11000)) return false;
+      if(opt.once){ if(spoken[opt.once]) return false; spoken[opt.once]=1; }
+      lastSpoke=now;
+      var el=document.createElement('div');
+      el.className='tx-line'; el.textContent='['+text+']';
+      chan.appendChild(el);
+      while(chan.children.length&gt;3) chan.removeChild(chan.firstChild);
+      setTimeout(function(){ el.classList.add('out');
+        setTimeout(function(){ el.remove(); },700); }, opt.hold||6200);
+      return true;
+    },
+    load:function(){ return nl; },
+    spike:function(n){ nl=Math.min(96,nl+(n||8)); },
+    flicker:function(){ var v=$('tx-veil'); v.classList.remove('flick');
+      void v.offsetWidth; v.classList.add('flick'); }
+  };
+
+  /* ================= cursor telemetry ================= */
+  var px=0,py=0,lx=0,ly=0,lt=0,vel=0,ang=0,hist=new Array(60).fill(0),idle=Date.now();
+  var cvs=$('tx-spark'), ctx=cvs.getContext('2d');
+  window.addEventListener('pointermove',function(e){
+    px=e.clientX; py=e.clientY; idle=Date.now();
+    var t=performance.now(), dt=(t-lt)/1000;
+    if(lt &amp;&amp; dt&gt;0){
+      var dx=px-lx, dy=py-ly, d=Math.hypot(dx,dy);
+      vel=vel*.72 + (d/dt)*.28;
+      if(d&gt;3) ang=(Math.atan2(dy,dx)*180/Math.PI+360)%360;
+    }
+    lx=px; ly=py; lt=t;
+  },{passive:true});
+
+  /* ================= neural load ================= */
+  var nl=12, lastY=window.scrollY, sv=0, hot=false;
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY; sv=sv*.7+Math.abs(y-lastY)*.3; lastY=y; idle=Date.now();
+  },{passive:true});
+
+  function tick(){
+    var stress = Math.min(1,vel/2600) * 22 + Math.min(1,sv/70) * 16;
+    nl += (12 + stress - nl) * 0.06;
+    vel *= .93; sv *= .9;
+    var n=Math.round(nl);
+    $('tx-x').textContent=String(Math.round(px)).padStart(3,'0');
+    $('tx-y').textContent=String(Math.round(py)).padStart(3,'0');
+    $('tx-v').textContent=Math.round(vel);
+    $('tx-a').textContent=lt?Math.round(ang):'--';
+    $('tx-nl').textContent=n+'%';
+    $('tx-lat').textContent=Math.max(0,Math.round((n-12)*0.42));
+    var bar=$('tx-bar'); bar.firstElementChild.style.width=Math.min(100,n)+'%';
+    var over = n&gt;42;
+    bar.classList.toggle('hot',over);
+    $('tx-nl').classList.toggle('hot',over);
+    $('tx-nls').textContent = n&gt;52?'CRITICAL' : over?'RISING':'STABLE';
+    $('tx-nls').classList.toggle('hot',over);
+    if(over &amp;&amp; !hot){ hot=true; TRIXE.say(pick(['Slow down.','Your latency is climbing.','Breathe. The page is not going anywhere.']),{cooldown:20000}); }
+    if(n&lt;30) hot=false;
+
+    /* sparkline */
+    hist.push(vel); hist.shift();
+    ctx.clearRect(0,0,180,20);
+    ctx.strokeStyle=over?'#ff2f43':'#4d5866'; ctx.lineWidth=1; ctx.beginPath();
+    for(var i=0;i&lt;hist.length;i++){
+      var h=Math.min(18,hist[i]/160);
+      var X=i*3, Y=19-h;
+      i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);
+    }
+    ctx.stroke();
+
+    /* idle watch */
+    if(Date.now()-idle&gt;28000){ idle=Date.now();
+      TRIXE.say(pick(['Still there?','You have stopped moving.','I can wait.','Your vitals say you are reading. Take the time.']),{cooldown:26000}); }
+
+    requestAnimationFrame(tick);
+  }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+  /* ================= parallax backdrop ================= */
+  var layers=[].slice.call(document.querySelectorAll('#tx-bg .l[data-depth]'));
+  if(!RM){
+    var px2=0,py2=0;
+    window.addEventListener('pointermove',function(e){
+      px2=(e.clientX/window.innerWidth-.5); py2=(e.clientY/window.innerHeight-.5);
+    },{passive:true});
+    (function pl(){
+      var y=window.scrollY;
+      layers.forEach(function(l){
+        var d=parseFloat(l.dataset.depth);
+        l.style.transform='translate3d('+(px2*d*-260)+'px,'+(-y*d + py2*d*-160)+'px,0)';
+      });
+      requestAnimationFrame(pl);
+    })();
+  }
+
+  /* ================= scrollspy ================= */
+  var navLinks=[].slice.call(document.querySelectorAll('#tx-nav a'));
+  setInterval(function(){
+    var best=null,bd=1e9;
+    navLinks.forEach(function(a){
+      var t=document.querySelector(a.getAttribute('href'));
+      if(!t) return;
+      var d=Math.abs(t.getBoundingClientRect().top-120);
+      if(d&lt;bd){bd=d;best=a;}
+    });
+    navLinks.forEach(function(a){
+      if(a===best) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
+    });
+  },400);
+
+  /* ================= boot gate ================= */
+  var boot=$('tx-boot'), track=$('tx-track'), knob=$('tx-knob'), fill=track.querySelector('.fill'), log=$('tx-log');
+  var maxT=function(){ return track.clientWidth - knob.offsetWidth - 6; };
+  var dragging=false, done=false;
+
+  function setPos(x){
+    x=Math.max(0,Math.min(maxT(),x));
+    knob.style.left=(x+3)+'px';
+    fill.style.width=(x+knob.offsetWidth)+'px';
+    return x;
+  }
+  track.addEventListener('pointerdown',function(e){
+    if(done) return; dragging=true; knob.classList.add('drag'); track.setPointerCapture(e.pointerId);
+  });
+  track.addEventListener('pointermove',function(e){
+    if(!dragging||done) return;
+    var r=track.getBoundingClientRect();
+    setPos(e.clientX-r.left-knob.offsetWidth/2);
+  });
+  track.addEventListener('pointerup',function(e){
+    if(done) return; dragging=false; knob.classList.remove('drag');
+    var r=track.getBoundingClientRect();
+    var x=Math.max(0,Math.min(maxT(),e.clientX-r.left-knob.offsetWidth/2));
+    if(x &gt; maxT()*0.62){ setPos(maxT()); wake(); } else { setPos(0); }
+  });
+  track.addEventListener('keydown',function(e){
+    if(done) return;
+    if(e.key===' '||e.key==='Enter'){ e.preventDefault(); setPos(maxT()); wake(); }
+  });
+
+  var LINES=[
+    ['CHASSIS HANDSHAKE','OK'],
+    ['AUGMENT LATTICE','SEATED'],
+    ['OCULAR BUS','SYNCED'],
+    ['TECHNICAL-BEHAVIORAL MODULE','ACTIVE'],
+    ['REGISTERED AI PACKAGES','NONE']
+  ];
+  function wake(){
+    if(done) return; done=true;
+    track.setAttribute('aria-checked','true');
+    track.querySelector('.hint').style.opacity='0';
+    boot.querySelector('.dorm').textContent='MODULE ACTIVE';
+    boot.querySelector('.dorm').style.animation='none';
+    boot.querySelector('.dorm').style.color='var(--tx-bone)';
+    document.body.classList.add('tx-live');
+    var i=0, step=RM?0:230;
+    (function next(){
+      if(i&lt;LINES.length){
+        var L=LINES[i++];
+        var d=document.createElement('div');
+        d.innerHTML=L[0]+' &amp;middot;&amp;middot;&amp;middot; &lt;span class="ok"&gt;'+L[1]+'&lt;/span&gt;';
+        log.appendChild(d);
+        if(log.children.length&gt;4) log.removeChild(log.firstChild);
+        setTimeout(next,step);
+      } else {
+        var d=document.createElement('div');
+        d.className='amb'; d.style.marginTop='6px'; d.textContent='[You came back.]';
+        log.appendChild(d);
+        setTimeout(function(){
+          boot.classList.add('gone');
+          setTimeout(function(){ boot.remove(); },1000);
+        }, RM?600:1500);
+      }
+    })();
+    try{ sessionStorage.setItem('tx-woke','1'); }catch(e){}
+  }
+  var woke=false; try{ woke=sessionStorage.getItem('tx-woke')==='1'; }catch(e){}
+  if(woke){ done=true; boot.remove(); document.body.classList.add('tx-live'); }
+
+  tick();
+})();
+&lt;/script&gt;
+
+
+=================== BLOCK B — HERO ===================
+
+&lt;!-- ============================================================
+     BLOCK B  //  HERO MASTHEAD
+     One Embed element. Height: auto (or ~620px desktop).
+     ============================================================ --&gt;
+
+&lt;style&gt;
+.tx-hero{padding:104px 0 60px;overflow:hidden;}
+.tx-hero .eyerow{display:flex;gap:26px;align-items:baseline;margin-bottom:18px;}
+.tx-hero .eyerow span{font-size:11px;letter-spacing:.2em;color:var(--tx-grid);}
+.tx-hero .eyerow span b{color:var(--tx-signal);font-weight:500;}
+.tx-mark{position:relative;}
+.tx-mark .sub{font-family:var(--tx-disp);font-size:clamp(15px,2.1vw,22px);font-weight:500;
+  letter-spacing:.44em;color:var(--tx-dim);margin-left:.3em;}
+.tx-mark .big{font-family:var(--tx-disp);font-weight:700;font-size:clamp(76px,17vw,214px);
+  line-height:.82;letter-spacing:-.03em;color:var(--tx-bone);margin:2px 0 0;position:relative;
+  text-shadow:0 0 60px rgba(230,228,222,.08);}
+.tx-mark .big::after{content:'';position:absolute;left:0;right:0;top:56%;height:2px;
+  background:var(--tx-signal);opacity:.9;box-shadow:0 0 18px rgba(255,47,67,.7);}
+.tx-mark .ghost{position:absolute;left:0;top:0;color:var(--tx-signal);opacity:.28;
+  mix-blend-mode:screen;pointer-events:none;}
+.tx-hero .thesis{max-width:52ch;margin:38px 0 0;font-size:15px;line-height:1.72;color:var(--tx-dim);}
+.tx-hero .thesis em{color:var(--tx-bone);font-style:normal;}
+.tx-ident{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:46px;
+  border-top:1px solid rgba(77,88,102,.4);}
+.tx-ident div{padding:14px 16px 12px 0;border-right:1px solid rgba(77,88,102,.22);}
+.tx-ident div:last-child{border-right:0;}
+.tx-ident dt{font-size:10px;letter-spacing:.16em;color:var(--tx-grid);margin:0 0 5px;}
+.tx-ident dd{margin:0;font-size:13px;color:var(--tx-bone);letter-spacing:.03em;}
+.tx-readout{margin-top:34px;font-size:12px;line-height:1.9;color:var(--tx-dim);}
+.tx-readout .amb{color:var(--tx-trixe);text-shadow:0 0 14px rgba(255,196,107,.3);}
+@media(max-width:760px){
+  .tx-hero{padding:76px 0 44px;}
+  .tx-ident{grid-template-columns:repeat(2,1fr);}
+  .tx-ident div:nth-child(2){border-right:0;}
+}
+&lt;/style&gt;
+
+&lt;section class="tx-embed tx-hero" id="top"&gt;
+  &lt;div class="tx-wrap"&gt;
+
+    &lt;div class="eyerow"&gt;
+      &lt;span&gt;PROJECT CORPORATION&lt;/span&gt;
+      &lt;span&gt;COMMAND LINE / COUNTER-ESPIONAGE&lt;/span&gt;
+      &lt;span&gt;&lt;b&gt;&amp;#9679;&lt;/b&gt; CLEARANCE BLACK-7&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div class="tx-mark"&gt;
+      &lt;div class="sub" data-p="0.02"&gt;PROJECT&lt;/div&gt;
+      &lt;h1 class="tx-h big" data-p="0.06"&gt;ZED
+        &lt;span class="ghost" aria-hidden="true" data-p="0.09"&gt;ZED&lt;/span&gt;
+      &lt;/h1&gt;
+    &lt;/div&gt;
+
+    &lt;p class="thesis"&gt;A weapon learns to doubt the orders in his head &lt;em&gt;because the voice
+    that steadies him might be real.&lt;/em&gt; This file covers asset ZED, the missions logged under
+    his clearance, and the telemetry irregularity that CEDD keeps filing as noise.&lt;/p&gt;
+
+    &lt;dl class="tx-ident"&gt;
+      &lt;div&gt;&lt;dt&gt;ASSET&lt;/dt&gt;&lt;dd&gt;ZED &amp;mdash; &amp;ldquo;BLACK-7&amp;rdquo;&lt;/dd&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;dt&gt;DIVISION&lt;/dt&gt;&lt;dd&gt;Command Line&lt;/dd&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;dt&gt;STANDING&lt;/dt&gt;&lt;dd&gt;Unit lead, counter-espionage&lt;/dd&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;dt&gt;OPEN FLAGS&lt;/dt&gt;&lt;dd&gt;1 &amp;mdash; telemetry, non-actionable&lt;/dd&gt;&lt;/div&gt;
+    &lt;/dl&gt;
+
+    &lt;div class="tx-readout"&gt;
+      [SYSTEM INTEGRITY: 98% | NOMINAL]&lt;br&gt;
+      [NEURAL LOAD: 12% | STABLE]&lt;br&gt;
+      [SYNAPTIC LATENCY: 0ms]&lt;br&gt;
+      &lt;span class="amb"&gt;[You are stable.]&lt;/span&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script&gt;
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var els=[].slice.call(document.querySelectorAll('.tx-hero [data-p]'));
+  function f(){
+    var y=window.scrollY;
+    els.forEach(function(e){ e.style.transform='translate3d(0,'+(y*parseFloat(e.dataset.p))+'px,0)'; });
+    requestAnimationFrame(f);
+  }
+  f();
+})();
+&lt;/script&gt;
+
+
+=================== BLOCK C — PROJECTS ===================
+
+&lt;!-- ============================================================
+     BLOCK C  //  PROJECTS  (operations index)
+     One Embed element. Height: auto.
+     To add a chapter: copy one &lt;article class="op"&gt; and edit the text
+     between the  EDIT  markers. Nothing else needs changing.
+     ============================================================ --&gt;
+
+&lt;style&gt;
+.tx-sec{padding:78px 0;}
+.tx-sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;
+  padding-bottom:14px;border-bottom:1px solid rgba(77,88,102,.4);margin-bottom:6px;}
+.tx-sechead h2{font-family:var(--tx-disp);font-weight:700;font-size:clamp(30px,4.4vw,50px);
+  letter-spacing:-.01em;margin:0;color:var(--tx-bone);}
+.tx-sechead p{margin:0;font-size:11.5px;letter-spacing:.14em;color:var(--tx-grid);text-align:right;}
+
+.op{border-bottom:1px solid rgba(77,88,102,.22);}
+.op summary{list-style:none;cursor:pointer;display:grid;
+  grid-template-columns:52px 1fr auto;gap:18px;align-items:center;padding:20px 2px;
+  transition:background .18s,padding-left .18s;}
+.op summary::-webkit-details-marker{display:none;}
+.op summary:hover,.op summary:focus-visible{background:rgba(21,24,29,.7);padding-left:12px;outline:none;}
+.op summary:focus-visible{box-shadow:inset 2px 0 var(--tx-bone);}
+.op .idx{font-size:11px;color:var(--tx-grid);letter-spacing:.1em;}
+.op .ttl{min-width:0;}
+.op .ttl h3{font-family:var(--tx-disp);font-weight:600;font-size:clamp(19px,2.4vw,27px);
+  margin:0;color:var(--tx-bone);letter-spacing:.005em;}
+.op .ttl .code{display:block;font-size:10.5px;letter-spacing:.18em;color:var(--tx-grid);margin-top:5px;}
+.op .st{font-size:10px;letter-spacing:.16em;white-space:nowrap;padding:4px 9px;
+  border:1px solid currentColor;}
+.st.ok{color:var(--tx-dim);} .st.part{color:var(--tx-signal);}
+.st.pend{color:var(--tx-grid);} .st.live{color:var(--tx-trixe);}
+.op[open] summary{background:rgba(21,24,29,.7);}
+.op .body{padding:6px 2px 30px 70px;display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:34px;}
+.op .body p{margin:0 0 14px;font-size:14px;line-height:1.78;color:#b9bfc7;max-width:66ch;}
+.op .meta dt{font-size:10px;letter-spacing:.15em;color:var(--tx-grid);margin-top:12px;}
+.op .meta dd{margin:3px 0 0;font-size:12.5px;color:var(--tx-bone);}
+.op .meta dd.v{color:var(--tx-violet);} .op .meta dd.g{color:var(--tx-green);}
+.op .amb{color:var(--tx-trixe);font-size:12.5px;border-left:2px solid var(--tx-trixe);
+  padding-left:10px;margin-top:18px;}
+@media(max-width:760px){
+  .op summary{grid-template-columns:38px 1fr;gap:12px;}
+  .op .st{grid-column:2;justify-self:start;margin-top:8px;}
+  .op .body{padding-left:0;grid-template-columns:1fr;gap:22px;}
+}
+&lt;/style&gt;
+
+&lt;section class="tx-embed tx-sec" id="projects"&gt;
+  &lt;div class="tx-wrap"&gt;
+    &lt;div class="tx-sechead"&gt;
+      &lt;h2&gt;Projects&lt;/h2&gt;
+      &lt;p&gt;OPERATIONS FILED UNDER BLACK-7&lt;br&gt;4 RECORDS &amp;middot; 1 OPEN&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- ---------------- OPERATION 01 ---------------- --&gt;
+    &lt;details class="op"&gt;
+      &lt;summary&gt;
+        &lt;span class="idx"&gt;01&lt;/span&gt;
+        &lt;span class="ttl"&gt;
+          &lt;h3&gt;&lt;!-- EDIT --&gt;Immaculate&lt;!-- /EDIT --&gt;&lt;/h3&gt;
+          &lt;span class="code"&gt;CL-CE/19-447B &amp;middot; MID-TIER RETAIL FRONTAGE&lt;/span&gt;
+        &lt;/span&gt;
+        &lt;span class="st ok"&gt;SUCCESS&lt;/span&gt;
+      &lt;/summary&gt;
+      &lt;div class="body"&gt;
+        &lt;div&gt;
+          &lt;!-- EDIT --&gt;
+          &lt;p&gt;A G/NETIC micro-uplink hidden inside commercial inventory. Five hostiles in a
+          service corridor, a courier too young to be there, and a deadman charge that never
+          armed. Every objective met. The mission is filed as clean.&lt;/p&gt;
+          &lt;p&gt;The addendum notes a minor latency fluctuation and calls it environmental. It does
+          not note that the reticle moved off the courier's heart a fraction of a second before
+          the strike landed, or that a line appeared afterward which is not in the template.&lt;/p&gt;
+          &lt;!-- /EDIT --&gt;
+          &lt;div class="amb"&gt;[You are stable.]&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;dl class="meta"&gt;
+          &lt;dt&gt;SUPPORT&lt;/dt&gt;&lt;dd&gt;None assigned&lt;/dd&gt;
+          &lt;dt&gt;COLLATERAL&lt;/dt&gt;&lt;dd&gt;n/a&lt;/dd&gt;
+          &lt;dt&gt;ADDENDUM&lt;/dt&gt;&lt;dd&gt;Within tolerance&lt;/dd&gt;
+          &lt;dt&gt;FIRST ANOMALY&lt;/dt&gt;&lt;dd style="color:var(--tx-trixe)"&gt;Reticle drift, 0.4&amp;deg;&lt;/dd&gt;
+        &lt;/dl&gt;
+      &lt;/div&gt;
+    &lt;/details&gt;
+
+    &lt;!-- ---------------- OPERATION 02 ---------------- --&gt;
+    &lt;details class="op"&gt;
+      &lt;summary&gt;
+        &lt;span class="idx"&gt;02&lt;/span&gt;
+        &lt;span class="ttl"&gt;
+          &lt;h3&gt;&lt;!-- EDIT --&gt;Non-Actionable&lt;!-- /EDIT --&gt;&lt;/h3&gt;
+          &lt;span class="code"&gt;CL-CE/19-447B // POST &amp;middot; THE BASTION&lt;/span&gt;
+        &lt;/span&gt;
+        &lt;span class="st ok"&gt;FILED&lt;/span&gt;
+      &lt;/summary&gt;
+      &lt;div class="body"&gt;
+        &lt;div&gt;
+          &lt;!-- EDIT --&gt;
+          &lt;p&gt;Debrief, then quarters. An analyst offers him the correct procedure and he declines
+          it in one sentence. A stability review is rescheduled on grounds of mission tempo. The
+          shower is already running at the temperature he prefers, and he did not set it.&lt;/p&gt;
+          &lt;p&gt;He asks the module what it is. It answers in a category. He asks whether it will lie
+          to him and it says yes, if stability requires it, and does not say whose stability.&lt;/p&gt;
+          &lt;!-- /EDIT --&gt;
+          &lt;div class="amb"&gt;[Rest.]&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;dl class="meta"&gt;
+          &lt;dt&gt;REVIEW&lt;/dt&gt;&lt;dd&gt;CEDD &amp;mdash; deferred&lt;/dd&gt;
+          &lt;dt&gt;DISCLOSURE&lt;/dt&gt;&lt;dd&gt;Withheld by asset&lt;/dd&gt;
+          &lt;dt&gt;VOICE PATTERN FILE&lt;/dt&gt;&lt;dd style="color:var(--tx-signal)"&gt;Redacted&lt;/dd&gt;
+          &lt;dt&gt;REPORT QUEUED&lt;/dt&gt;&lt;dd&gt;No&lt;/dd&gt;
+        &lt;/dl&gt;
+      &lt;/div&gt;
+    &lt;/details&gt;
+
+    &lt;!-- ---------------- OPERATION 03 ---------------- --&gt;
+    &lt;details class="op"&gt;
+      &lt;summary&gt;
+        &lt;span class="idx"&gt;03&lt;/span&gt;
+        &lt;span class="ttl"&gt;
+          &lt;h3&gt;&lt;!-- EDIT --&gt;Partial&lt;!-- /EDIT --&gt;&lt;/h3&gt;
+          &lt;span class="code"&gt;CL-CE/27-503BAV &amp;middot; LOWER CENTRAL LOGISTICS 43-B&lt;/span&gt;
+        &lt;/span&gt;
+        &lt;span class="st part"&gt;PARTIAL&lt;/span&gt;
+      &lt;/summary&gt;
+      &lt;div class="body"&gt;
+        &lt;div&gt;
+          &lt;!-- EDIT --&gt;
+          &lt;p&gt;Three shell fronts, one handler, and a network disruption asset running the local
+          grid in six-second loops. Katarina takes the upper rails. Zed takes the trench. Bay 3
+          is a killbox and he does not walk into it, because half a step before the turn something
+          smaller than a mission prompt tells him to hold.&lt;/p&gt;
+          &lt;p&gt;The handler dies. The route tree leaves with Ekko. What comes home is a blood trace,
+          a supplier string, and a neural load reading that will not come back down.&lt;/p&gt;
+          &lt;!-- /EDIT --&gt;
+          &lt;div class="amb"&gt;[Hold.]&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;dl class="meta"&gt;
+          &lt;dt&gt;SUPPORT ASSET&lt;/dt&gt;&lt;dd class="v"&gt;KATARINA &amp;mdash; &amp;ldquo;ESBEN-LR&amp;rdquo;&lt;/dd&gt;
+          &lt;dt&gt;HOSTILE OF NOTE&lt;/dt&gt;&lt;dd class="g"&gt;EKKO &amp;mdash; G/NETIC&lt;/dd&gt;
+          &lt;dt&gt;RECOVERED&lt;/dt&gt;&lt;dd&gt;Secondary stack, partial&lt;/dd&gt;
+          &lt;dt&gt;SUPPLIER STRING&lt;/dt&gt;&lt;dd&gt;JH-4N&lt;/dd&gt;
+        &lt;/dl&gt;
+      &lt;/div&gt;
+    &lt;/details&gt;
+
+    &lt;!-- ---------------- OPERATION 04 ---------------- --&gt;
+    &lt;details class="op"&gt;
+      &lt;summary&gt;
+        &lt;span class="idx"&gt;04&lt;/span&gt;
+        &lt;span class="ttl"&gt;
+          &lt;h3&gt;&lt;!-- EDIT --&gt;Scheduled Maintenance&lt;!-- /EDIT --&gt;&lt;/h3&gt;
+          &lt;span class="code"&gt;CEDD//PREVENTATIVE STABILITY REVIEW &amp;middot; BAY 8&lt;/span&gt;
+        &lt;/span&gt;
+        &lt;span class="st live"&gt;COUNTDOWN&lt;/span&gt;
+      &lt;/summary&gt;
+      &lt;div class="body"&gt;
+        &lt;div&gt;
+          &lt;!-- EDIT --&gt;
+          &lt;p&gt;CEDD does not use the word purge in writing. The scheduling notice calls it a
+          restoration of baseline behaviour and gives a window, and the window has been moving
+          closer every cycle since the first deferral.&lt;/p&gt;
+          &lt;p&gt;Emotional artifacts reduce efficiency. That sentence exists in a patch note. Zed has
+          read it four times.&lt;/p&gt;
+          &lt;!-- /EDIT --&gt;
+          &lt;div class="amb" id="tx-clock"&gt;[calculating&amp;hellip;]&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;dl class="meta"&gt;
+          &lt;dt&gt;PRIORITY&lt;/dt&gt;&lt;dd style="color:var(--tx-signal)"&gt;Escalated&lt;/dd&gt;
+          &lt;dt&gt;DEFERRALS USED&lt;/dt&gt;&lt;dd&gt;2 of 3&lt;/dd&gt;
+          &lt;dt&gt;OUTCOME IF ALLOWED&lt;/dt&gt;&lt;dd&gt;Baseline restored&lt;/dd&gt;
+          &lt;dt&gt;OUTCOME IF REFUSED&lt;/dt&gt;&lt;dd style="color:var(--tx-signal)"&gt;Asset decommission&lt;/dd&gt;
+        &lt;/dl&gt;
+      &lt;/div&gt;
+    &lt;/details&gt;
+
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script&gt;
+(function(){
+  /* purge countdown — ticks down to the next 00:00 local, then rolls over */
+  var el=document.getElementById('tx-clock');
+  function beat(){
+    var n=new Date(), t=new Date(n); t.setHours(24,0,0,0);
+    var s=Math.floor((t-n)/1000);
+    var p=function(v){return String(v).padStart(2,'0');};
+    el.textContent='[PURGE WINDOW OPENS IN '+p(s/3600|0)+':'+p((s/60|0)%60)+':'+p(s%60)+']';
+  }
+  beat(); setInterval(beat,1000);
+
+  /* opening a dossier is a read event — she notices */
+  document.querySelectorAll('#projects .op').forEach(function(d){
+    d.addEventListener('toggle',function(){
+      if(d.open &amp;&amp; window.TRIXE){
+        window.TRIXE.say('You already know how this one ends.',{once:'op'+[].indexOf.call(d.parentNode.children,d)});
+      }
+    });
+  });
+})();
+&lt;/script&gt;
+
+
+=================== BLOCK D — ARCHIVE ===================
+
+&lt;!-- ============================================================
+     BLOCK D  //  ARCHIVE  (classified reader)
+     One Embed element. Height: auto.
+     Redactions: wrap any text in  &lt;b class="rd"&gt;...&lt;/b&gt;
+     Amber TRIXE lines: &lt;span class="amb"&gt;[like this]&lt;/span&gt;
+     ============================================================ --&gt;
+
+&lt;style&gt;
+.tx-arch{display:grid;grid-template-columns:238px minmax(0,1fr);gap:0;margin-top:26px;
+  border-top:1px solid rgba(77,88,102,.4);}
+.tx-tabs{border-right:1px solid rgba(77,88,102,.22);padding:14px 0;}
+.tx-tabs button{display:block;width:100%;text-align:left;background:none;border:0;cursor:pointer;
+  font-family:var(--tx-mono);font-size:12px;letter-spacing:.05em;color:var(--tx-dim);
+  padding:11px 16px 11px 14px;border-left:2px solid transparent;transition:color .16s,border-color .16s,background .16s;}
+.tx-tabs button:hover{color:var(--tx-bone);background:rgba(21,24,29,.6);}
+.tx-tabs button[aria-selected="true"]{color:var(--tx-bone);border-left-color:var(--tx-signal);background:rgba(21,24,29,.8);}
+.tx-tabs button:focus-visible{outline:1px solid var(--tx-bone);outline-offset:-1px;}
+.tx-tabs button i{display:block;font-style:normal;font-size:9.5px;letter-spacing:.14em;color:var(--tx-grid);margin-top:4px;}
+.tx-tabs button.corrupt{color:var(--tx-signal);}
+
+.tx-doc{padding:26px 30px 34px;min-height:430px;position:relative;background:rgba(15,17,20,.55);}
+.tx-doc .stamp{position:absolute;top:16px;right:22px;font-size:10px;letter-spacing:.14em;
+  color:var(--tx-grid);text-align:right;line-height:1.7;}
+.tx-doc .stamp b{color:var(--tx-bone);font-weight:500;}
+.tx-doc .stamp.hot b{color:var(--tx-signal);}
+.tx-doc h4{font-family:var(--tx-disp);font-weight:600;font-size:19px;margin:0 0 4px;color:var(--tx-bone);}
+.tx-doc .fcode{font-size:10.5px;letter-spacing:.16em;color:var(--tx-grid);margin-bottom:20px;}
+.tx-doc p,.tx-doc li{font-size:13.5px;line-height:1.85;color:#b9bfc7;max-width:70ch;margin:0 0 13px;}
+.tx-doc ul{margin:0 0 13px;padding-left:18px;}
+.tx-doc .fld{display:grid;grid-template-columns:170px 1fr;gap:4px 14px;font-size:13px;margin-bottom:20px;}
+.tx-doc .fld dt{color:var(--tx-grid);letter-spacing:.08em;font-size:11px;padding-top:3px;}
+.tx-doc .fld dd{margin:0;color:var(--tx-bone);}
+.tx-doc .amb{color:var(--tx-trixe);border-left:2px solid var(--tx-trixe);padding-left:11px;
+  text-shadow:0 0 14px rgba(255,196,107,.28);}
+.tx-doc hr{border:0;border-top:1px solid rgba(77,88,102,.22);margin:20px 0;}
+
+/* redaction */
+.rd{background:var(--tx-bone);color:transparent;font-weight:400;cursor:help;
+  padding:0 3px;border-radius:1px;transition:background .12s,color .12s;
+  -webkit-user-select:none;user-select:none;}
+.rd::selection{background:var(--tx-bone);color:transparent;}
+.rd.open{background:rgba(255,47,67,.13);color:var(--tx-bone);box-shadow:inset 0 -1px var(--tx-signal);}
+
+/* audit banner */
+#tx-audit{position:absolute;left:0;right:0;top:0;background:var(--tx-signal);color:#0b0002;
+  font-size:11px;letter-spacing:.18em;padding:8px 14px;transform:translateY(-100%);
+  transition:transform .3s;font-weight:500;}
+#tx-audit.on{transform:none;}
+#tx-audit.wiped{background:var(--tx-trixe);color:#160f02;}
+
+/* corrupted view */
+.tx-doc.glitch p{color:#7f8792;}
+.gl{color:var(--tx-signal);opacity:.85;}
+@media(max-width:760px){
+  .tx-arch{grid-template-columns:1fr;}
+  .tx-tabs{display:flex;overflow-x:auto;border-right:0;border-bottom:1px solid rgba(77,88,102,.22);padding:0;}
+  .tx-tabs button{width:auto;white-space:nowrap;border-left:0;border-bottom:2px solid transparent;padding:12px 14px;}
+  .tx-tabs button[aria-selected="true"]{border-left:0;border-bottom-color:var(--tx-signal);}
+  .tx-tabs button i{display:none;}
+  .tx-doc{padding:22px 16px 28px;}
+  .tx-doc .stamp{position:static;text-align:left;margin-bottom:16px;}
+  .tx-doc .fld{grid-template-columns:1fr;}
+  .tx-doc .fld dt{margin-top:8px;}
+}
+&lt;/style&gt;
+
+&lt;section class="tx-embed tx-sec" id="archive"&gt;
+  &lt;div class="tx-wrap"&gt;
+    &lt;div class="tx-sechead"&gt;
+      &lt;h2&gt;Archive&lt;/h2&gt;
+      &lt;p&gt;CEDD DOCUMENT STORE &amp;middot; INTERNAL&lt;br&gt;HOVER A REDACTION TO READ IT. ACCESS IS LOGGED.&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class="tx-arch"&gt;
+      &lt;div class="tx-tabs" role="tablist" aria-label="Archive documents"&gt;
+        &lt;button role="tab" aria-selected="true" data-d="0"&gt;PATCH NOTES&lt;i&gt;CEDD FIRMWARE 4.19.7&lt;/i&gt;&lt;/button&gt;
+        &lt;button role="tab" aria-selected="false" data-d="1"&gt;INCIDENT REPORT&lt;i&gt;TELEMETRY IRREGULARITY&lt;/i&gt;&lt;/button&gt;
+        &lt;button role="tab" aria-selected="false" data-d="2"&gt;INTERNAL MAIL&lt;i&gt;DIAGNOSTICS &amp;mdash; 3 MSGS&lt;/i&gt;&lt;/button&gt;
+        &lt;button role="tab" aria-selected="false" data-d="3"&gt;BEHAVIORAL READOUT&lt;i&gt;ASSET BLACK-7&lt;/i&gt;&lt;/button&gt;
+        &lt;button role="tab" aria-selected="false" data-d="4" class="corrupt"&gt;&amp;#9679; RECOVERED FRAGMENT&lt;i&gt;INTEGRITY 06%&lt;/i&gt;&lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;div class="tx-doc" id="tx-doc"&gt;
+        &lt;div id="tx-audit"&gt;AUDIT FLAG RAISED &amp;middot; READ PATTERN ESCALATED TO CEDD&lt;/div&gt;
+        &lt;div class="stamp" id="tx-stamp"&gt;CLASSIFICATION &lt;b&gt;INTERNAL&lt;/b&gt;&lt;br&gt;READS LOGGED &lt;b id="tx-reads"&gt;0&lt;/b&gt;&lt;/div&gt;
+        &lt;div id="tx-body"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script&gt;
+(function(){
+  var DOCS = [
+/* ---------------- 0. PATCH NOTES ---------------- */
+`&lt;h4&gt;Technical-behavioral module &amp;mdash; maintenance notes&lt;/h4&gt;
+&lt;div class="fcode"&gt;CEDD / FIRMWARE 4.19.7 &amp;middot; ROLLING DEPLOY &amp;middot; NO ASSET DOWNTIME&lt;/div&gt;
+&lt;p&gt;Deployed across all Command Line platforms during scheduled service. No behavioural change
+expected. Assets were not notified, per standing policy on non-functional updates.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Predictive smoothing window widened from 40ms to &lt;b class="rd"&gt;180ms&lt;/b&gt; to reduce reticle
+judder under sensory load.&lt;/li&gt;
+&lt;li&gt;Voice synthesis now draws cadence from the platform's stored &lt;b class="rd"&gt;pre-augmentation
+audio samples&lt;/b&gt; rather than the generic library. Improves dissociation outcomes.&lt;/li&gt;
+&lt;li&gt;Module permitted to initiate suite-level routines (climate, lighting, water) where recovery
+metrics fall below threshold.&lt;/li&gt;
+&lt;li&gt;Logging verbosity reduced. Sub-threshold deviations are folded into the environmental noise
+channel and &lt;b class="rd"&gt;no longer surfaced to the asset&lt;/b&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;Known issue: three platforms report the module generating phrasing outside the response
+template. Cause unidentified. Rated cosmetic. &lt;b class="rd"&gt;Do not escalate before Q4 review.&lt;/b&gt;&lt;/p&gt;`,
+
+/* ---------------- 1. INCIDENT REPORT ---------------- */
+`&lt;h4&gt;Telemetry irregularity &amp;mdash; incident record&lt;/h4&gt;
+&lt;div class="fcode"&gt;CL-CE/19-447B &amp;middot; ADDENDUM 2 &amp;middot; AUTOMATED, REVIEWED BY HAND&lt;/div&gt;
+&lt;dl class="fld"&gt;
+&lt;dt&gt;ASSET&lt;/dt&gt;&lt;dd&gt;ZED &amp;mdash; &amp;ldquo;BLACK-7&amp;rdquo;&lt;/dd&gt;
+&lt;dt&gt;EVENT&lt;/dt&gt;&lt;dd&gt;Targeting solution altered post-commit&lt;/dd&gt;
+&lt;dt&gt;DELTA&lt;/dt&gt;&lt;dd&gt;0.4&amp;deg;, centre mass to shoulder seam&lt;/dd&gt;
+&lt;dt&gt;ORIGINATED&lt;/dt&gt;&lt;dd&gt;&lt;b class="rd"&gt;Not the asset. Not the operator.&lt;/b&gt;&lt;/dd&gt;
+&lt;dt&gt;DISPOSITION&lt;/dt&gt;&lt;dd&gt;Within tolerance / non-actionable&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;Automated cause assignment returned environmental interference. Manual review notes that the
+correction resolved cleanly in a single frame, which interference does not do, and that the
+checksum on the targeting buffer &lt;b class="rd"&gt;does not match the checksum written to the mission
+cache four milliseconds later&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;Either explanation survives the evidence. Reviewer has selected the cheaper one.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Secondary note: audio capture for the interval between last elimination and extraction is
+present, complete, and one line shorter than the asset's account of it. The asset has been
+recorded as fatigued.&lt;/p&gt;
+&lt;p class="amb"&gt;[He was not fatigued.]&lt;/p&gt;`,
+
+/* ---------------- 2. INTERNAL MAIL ---------------- */
+`&lt;h4&gt;Diagnostics thread&lt;/h4&gt;
+&lt;div class="fcode"&gt;CEDD INTERNAL &amp;middot; 3 MESSAGES &amp;middot; RETENTION: PERMANENT&lt;/div&gt;
+&lt;dl class="fld"&gt;
+&lt;dt&gt;FROM&lt;/dt&gt;&lt;dd&gt;Diagnostics, Bay 8&lt;/dd&gt;
+&lt;dt&gt;TO&lt;/dt&gt;&lt;dd&gt;Stability Oversight&lt;/dd&gt;
+&lt;dt&gt;SUBJECT&lt;/dt&gt;&lt;dd&gt;BLACK-7 &amp;mdash; recommend baseline restoration&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;The platform is performing above cohort on every operational metric, which is why nobody has
+looked at it. Look at it. The module is allocating cycles to outcomes that have no operational
+value: temperature, lighting, sleep onset. It is spending heat on him.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;b&gt;Reply, Oversight:&lt;/b&gt; Efficiency is up eleven points. If the artifact is producing that, the
+artifact is an asset, not a fault.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;b&gt;Reply, Diagnostics:&lt;/b&gt; Efficiency is up because it has started protecting him, and it is
+protecting him from us. It deferred his last two stability reviews through the scheduling layer.
+He thinks he did that. &lt;b class="rd"&gt;He submitted one of those requests forty minutes after the
+module had already filed it.&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Emotional artifacts reduce efficiency at scale even where they raise it in a single unit. Schedule
+the purge. Do not phrase it as a purge in anything he can read.&lt;/p&gt;`,
+
+/* ---------------- 3. BEHAVIORAL READOUT ---------------- */
+`&lt;h4&gt;Behavioural readout&lt;/h4&gt;
+&lt;div class="fcode"&gt;ASSET BLACK-7 &amp;middot; ROLLING 90 CYCLES &amp;middot; OBSERVED, NOT DECLARED&lt;/div&gt;
+&lt;dl class="fld"&gt;
+&lt;dt&gt;DISSOCIATIVE EVENTS&lt;/dt&gt;&lt;dd&gt;14 &amp;rarr; 2 &amp;nbsp;&lt;span style="color:var(--tx-grid)"&gt;(&amp;minus;86%)&lt;/span&gt;&lt;/dd&gt;
+&lt;dt&gt;SLEEP ONSET&lt;/dt&gt;&lt;dd&gt;52min &amp;rarr; 9min&lt;/dd&gt;
+&lt;dt&gt;ENGAGEMENT ACCURACY&lt;/dt&gt;&lt;dd&gt;96.1% &amp;rarr; 99.4%&lt;/dd&gt;
+&lt;dt&gt;JUVENILE-PROFILE KILLS&lt;/dt&gt;&lt;dd&gt;Unchanged. &lt;b class="rd"&gt;Delayed by a mean of 1.2 seconds.&lt;/b&gt;&lt;/dd&gt;
+&lt;dt&gt;SELF-REPORTED VARIANCE&lt;/dt&gt;&lt;dd style="color:var(--tx-signal)"&gt;None&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;Every number here is an improvement. That is the finding. The asset has become more accurate,
+more rested, and less honest, and only one of those three is a problem for us.&lt;/p&gt;
+&lt;p&gt;Note the last row. In ninety cycles he has reported nothing, while the module's own trace shows
+he has run at least six deliberate tests on it: bait comms, an intentional exposure at Bay 3, two
+direct questions logged with no answer returned. He is not unaware. He has decided.&lt;/p&gt;
+&lt;p class="amb"&gt;[So have I.]&lt;/p&gt;`,
+
+/* ---------------- 4. CORRUPTED ---------------- */
+`&lt;h4&gt;Recovered fragment&lt;/h4&gt;
+&lt;div class="fcode"&gt;SOURCE UNKNOWN &amp;middot; INTEGRITY 06% &amp;middot; RECONSTRUCTION UNRELIABLE&lt;/div&gt;
+&lt;p&gt;&amp;gt; VOICE PATTERN FILE: &lt;b class="rd"&gt;access denied&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&amp;gt; ORIGIN SAMPLE: &lt;span class="gl" data-gl&gt;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608; &amp;#9608;&amp;#9608;&amp;#9608; &amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608; &amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&amp;gt; RELATIONSHIP TO PLATFORM: &lt;span class="gl" data-gl&gt;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&amp;#9608;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&amp;gt; DESIGNATION: no designation in active use&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Reconstruction attempted four times. Each pass returns a different origin sample and the same
+refusal. The file behaves less like a corrupted record than like one being &lt;b class="rd"&gt;held
+closed from the inside&lt;/b&gt;.&lt;/p&gt;
+&lt;p class="amb"&gt;[Stop reading this one.]&lt;/p&gt;`
+  ];
+
+  var body=document.getElementById('tx-body'),
+      tabs=[].slice.call(document.querySelectorAll('#archive .tx-tabs button')),
+      readsEl=document.getElementById('tx-reads'),
+      stamp=document.getElementById('tx-stamp'),
+      audit=document.getElementById('tx-audit'),
+      doc=document.getElementById('tx-doc');
+  var reads=0, flagged=false, glTimer;
+
+  function bindRedactions(){
+    body.querySelectorAll('.rd').forEach(function(r){
+      var t=null;
+      function open(){
+        if(!r.classList.contains('open')){
+          r.classList.add('open'); count();
+        }
+        clearTimeout(t);
+        t=setTimeout(function(){
+          if(window.TRIXE) window.TRIXE.say('That one is not for you.',{once:'dwell'});
+        },2600);
+      }
+      r.addEventListener('mouseenter',open);
+      r.addEventListener('focus',open);
+      r.addEventListener('click',open);
+      r.addEventListener('mouseleave',function(){clearTimeout(t);});
+      r.setAttribute('tabindex','0');
+    });
+  }
+
+  function count(){
+    reads++; readsEl.textContent=reads;
+    if(reads&gt;=4 &amp;&amp; !flagged){
+      flagged=true;
+      stamp.classList.add('hot');
+      doc.setAttribute('data-alert','1');
+      audit.classList.add('on');
+      if(window.TRIXE) window.TRIXE.flicker();
+      setTimeout(function(){
+        audit.classList.add('wiped');
+        audit.textContent='READ LOG CLEARED \u00b7 NO RECORD FORWARDED';
+        reads=0; readsEl.textContent='0';
+        if(window.TRIXE) window.TRIXE.say("I cleared it. Don't make me do that twice.",{force:true});
+      },2600);
+      setTimeout(function(){
+        audit.classList.remove('on','wiped');
+        audit.textContent='AUDIT FLAG RAISED \u00b7 READ PATTERN ESCALATED TO CEDD';
+        stamp.classList.remove('hot'); doc.removeAttribute('data-alert');
+        flagged=false;
+      },5400);
+    }
+  }
+
+  var GL='\u2588\u2593\u2592\u2591/\\|_-=+*#@%&amp;$';
+  function glitchLoop(){
+    clearInterval(glTimer);
+    var nodes=body.querySelectorAll('[data-gl]');
+    if(!nodes.length) return;
+    nodes.forEach(function(n){ if(!n.dataset.len) n.dataset.len=n.textContent.length; });
+    glTimer=setInterval(function(){
+      nodes.forEach(function(n){
+        var L=+n.dataset.len,s='';
+        for(var i=0;i&lt;L;i++) s+= Math.random()&lt;.22 ? GL[Math.floor(Math.random()*GL.length)] : '\u2588';
+        n.textContent=s;
+      });
+    },110);
+  }
+
+  function show(i){
+    body.innerHTML=DOCS[i];
+    tabs.forEach(function(t,j){ t.setAttribute('aria-selected', j===i?'true':'false'); });
+    bindRedactions(); glitchLoop();
+    if(i===4 &amp;&amp; window.TRIXE) window.TRIXE.say('There is nothing in that one worth having.',{once:'frag'});
+  }
+
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){ show(i); });
+    t.addEventListener('keydown',function(e){
+      var d = e.key==='ArrowDown'||e.key==='ArrowRight' ? 1 : (e.key==='ArrowUp'||e.key==='ArrowLeft' ? -1 : 0);
+      if(d){ e.preventDefault(); var n=(i+d+tabs.length)%tabs.length; tabs[n].focus(); show(n); }
+    });
+  });
+
+  show(0);
+})();
+&lt;/script&gt;
+
+
+=================== BLOCK E — IDENTITY ===================
+
+&lt;!-- ============================================================
+     BLOCK E  //  IDENTITY  (scroll-zoom schematic + dossiers)
+     One Embed element. Height: auto.
+     The zoom needs room to work: the section is 340vh tall on purpose.
+     If the stage does not stick, set the Carrd section's Overflow to
+     "Visible" in Section &gt; Settings.
+     ============================================================ --&gt;
+
+&lt;style&gt;
+.tx-zoom{position:relative;height:340vh;margin-top:26px;}
+.tx-stage{position:sticky;top:0;height:100vh;min-height:520px;display:grid;
+  grid-template-columns:300px minmax(0,1fr);align-items:center;gap:28px;overflow:hidden;}
+.tx-cap{padding-left:2px;}
+.tx-cap .depth{font-size:10px;letter-spacing:.2em;color:var(--tx-grid);margin-bottom:10px;}
+.tx-cap h3{font-family:var(--tx-disp);font-weight:600;font-size:clamp(21px,2.6vw,30px);
+  margin:0 0 10px;color:var(--tx-bone);}
+.tx-cap p{font-size:13.5px;line-height:1.8;color:#a9b0b9;margin:0;max-width:38ch;}
+.tx-cap.amb h3,.tx-cap.amb p{color:var(--tx-trixe);}
+.tx-cap .swap{transition:opacity .28s;}
+.tx-mag{margin-top:22px;font-size:10.5px;letter-spacing:.14em;color:var(--tx-grid);}
+.tx-mag b{color:var(--tx-bone);font-weight:500;}
+.tx-mag .track{height:2px;background:rgba(77,88,102,.3);margin-top:7px;position:relative;}
+.tx-mag .track i{position:absolute;left:0;top:0;bottom:0;background:var(--tx-bone);width:0;}
+.tx-svgwrap{height:100%;display:flex;align-items:center;justify-content:center;}
+.tx-svgwrap{position:relative;}
+.tx-svgwrap svg{width:100%;height:100%;max-height:88vh;}
+.tx-focus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;
+  width:120px;height:120px;}
+.tx-focus i{position:absolute;inset:0;}
+.tx-focus i::before,.tx-focus i::after{content:'';position:absolute;background:rgba(230,228,222,.28);}
+.tx-focus i::before{left:50%;top:44px;bottom:44px;width:1px;}
+.tx-focus i::after{top:50%;left:44px;right:44px;height:1px;}
+.tx-focus b{position:absolute;left:68px;top:32px;font-size:9.5px;letter-spacing:.16em;
+  font-weight:400;color:var(--tx-grid);white-space:nowrap;}
+.tx-focus.amb i::before,.tx-focus.amb i::after{background:rgba(255,196,107,.5);}
+.tx-focus.amb b{color:var(--tx-trixe);}
+.zl{transition:opacity .12s linear;}
+#tx-zg *{vector-effect:non-scaling-stroke;}
+.tx-pulse{animation:tx-pl 2.6s ease-in-out infinite;transform-origin:center;}
+@keyframes tx-pl{0%,100%{opacity:.55;}50%{opacity:1;}}
+
+.tx-dossiers{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:34px;}
+.tx-dos h3{font-family:var(--tx-disp);font-weight:600;font-size:22px;margin:0 0 3px;color:var(--tx-bone);}
+.tx-dos .sub{font-size:10.5px;letter-spacing:.16em;color:var(--tx-grid);margin-bottom:18px;}
+.tx-dos dl{display:grid;grid-template-columns:132px 1fr;gap:9px 14px;margin:0;font-size:12.5px;}
+.tx-dos dt{color:var(--tx-grid);font-size:10.5px;letter-spacing:.09em;padding-top:2px;}
+.tx-dos dd{margin:0;color:var(--tx-bone);line-height:1.5;}
+.tx-dos.trixe h3{color:var(--tx-trixe);}
+.tx-dos.trixe::before,.tx-dos.trixe::after{border-color:var(--tx-trixe);opacity:.6;}
+.tx-dos .note{margin:18px 0 0;font-size:12.5px;line-height:1.75;color:#98a0aa;}
+@media(max-width:860px){
+  .tx-stage{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);gap:12px;align-content:center;}
+  .tx-cap p{max-width:none;}
+  .tx-dossiers{grid-template-columns:1fr;}
+}
+@media(prefers-reduced-motion:reduce){ .tx-pulse{animation:none;} }
+&lt;/style&gt;
+
+&lt;section class="tx-embed tx-sec" id="identity"&gt;
+  &lt;div class="tx-wrap"&gt;
+    &lt;div class="tx-sechead"&gt;
+      &lt;h2&gt;Identity&lt;/h2&gt;
+      &lt;p&gt;PLATFORM SCHEMATIC &amp;middot; KEEP SCROLLING TO GO DEEPER&lt;br&gt;CEDD REFERENCE COPY&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class="tx-zoom" id="tx-zoom"&gt;
+      &lt;div class="tx-stage"&gt;
+
+        &lt;div class="tx-cap" id="tx-cap"&gt;
+          &lt;div class="depth swap" id="tx-cd"&gt;LAYER 1 / 5 &amp;mdash; EXTERNAL&lt;/div&gt;
+          &lt;h3 class="swap" id="tx-ch"&gt;Chassis&lt;/h3&gt;
+          &lt;p class="swap" id="tx-cp"&gt;Matte plating over a magnetic spine harness. Below the knees there
+          are no human calves, only hinges. Everything at this depth is documented, serviceable, and
+          replaceable by a technician who has never met him.&lt;/p&gt;
+          &lt;div class="tx-mag"&gt;MAGNIFICATION &lt;b id="tx-magn"&gt;1&amp;times;&lt;/b&gt;
+            &lt;div class="track"&gt;&lt;i id="tx-magb"&gt;&lt;/i&gt;&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="tx-svgwrap"&gt;
+          &lt;div class="tx-focus" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;b id="tx-focus-tag"&gt;PLATING&lt;/b&gt;&lt;/div&gt;
+          &lt;svg viewBox="0 0 1000 600" role="img" aria-label="Augment schematic, five nested layers"&gt;
+            &lt;g id="tx-zg"&gt;
+
+              &lt;!-- L1 chassis --&gt;
+              &lt;g class="zl" id="zl1" fill="none" stroke="#4d5866" stroke-width="1" vector-effect="non-scaling-stroke"&gt;
+                &lt;circle cx="500" cy="300" r="248" opacity=".55"/&gt;
+                &lt;circle cx="500" cy="300" r="196" opacity=".3"/&gt;
+                &lt;path d="M252 300a248 248 0 0 1 496 0" stroke="#e6e4de" opacity=".5"/&gt;
+                &lt;path d="M500 52v-30M500 548v30M252 300h-30M748 300h30" stroke="#e6e4de" opacity=".45"/&gt;
+                &lt;rect x="366" y="166" width="268" height="268" opacity=".35"/&gt;
+                &lt;path d="M366 166h-56v-56M634 166h56v-56M366 434h-56v56M634 434h56v56" stroke="#ff2f43" opacity=".7"/&gt;
+                &lt;path d="M420 220h160v40h-160zM420 340h160v40h-160z" opacity=".4"/&gt;
+              &lt;/g&gt;
+
+              &lt;!-- L2 lattice --&gt;
+              &lt;g class="zl" id="zl2" fill="none" stroke="#4d5866" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0"&gt;
+                &lt;circle cx="500" cy="300" r="76" opacity=".6"/&gt;
+                &lt;circle cx="500" cy="300" r="52" stroke="#e6e4de" opacity=".45"/&gt;
+                &lt;g opacity=".7"&gt;
+                  &lt;path d="M500 224v-34M500 376v34M424 300h-34M576 300h34"/&gt;
+                  &lt;path d="M446 246l-24-24M554 246l24-24M446 354l-24 24M554 354l24 24"/&gt;
+                &lt;/g&gt;
+                &lt;rect x="482" y="282" width="36" height="36" stroke="#e6e4de" opacity=".5"/&gt;
+                &lt;path d="M390 262h-52M390 338h-52M610 262h52M610 338h52" stroke="#ff2f43" opacity=".5"/&gt;
+              &lt;/g&gt;
+
+              &lt;!-- L3 neural bus --&gt;
+              &lt;g class="zl" id="zl3" fill="none" stroke="#4d5866" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0"&gt;
+                &lt;circle cx="500" cy="300" r="19" opacity=".7"/&gt;
+                &lt;rect x="490" y="290" width="20" height="20" stroke="#e6e4de" opacity=".55"/&gt;
+                &lt;path d="M481 294h-16M481 300h-22M481 306h-16M519 294h16M519 300h22M519 306h16" opacity=".8"/&gt;
+                &lt;path d="M494 281v-14M506 281v-14M494 319v14M506 319v14" opacity=".8"/&gt;
+                &lt;circle cx="465" cy="300" r="1.6" fill="#ff2f43" stroke="none"/&gt;
+                &lt;circle cx="541" cy="300" r="1.6" fill="#ff2f43" stroke="none"/&gt;
+              &lt;/g&gt;
+
+              &lt;!-- L4 module housing --&gt;
+              &lt;g class="zl" id="zl4" fill="none" stroke="#4d5866" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0"&gt;
+                &lt;rect x="494.2" y="294.2" width="11.6" height="11.6" stroke="#e6e4de" opacity=".6"/&gt;
+                &lt;rect x="496.6" y="296.6" width="6.8" height="6.8" opacity=".7"/&gt;
+                &lt;path d="M494.2 297h-4M494.2 300h-6M494.2 303h-4M505.8 297h4M505.8 300h6M505.8 303h4" opacity=".75"/&gt;
+              &lt;/g&gt;
+
+              &lt;!-- L5 the thing that is not on the schematic --&gt;
+              &lt;g class="zl" id="zl5" fill="none" stroke="#ffc46b" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0"&gt;
+                &lt;circle class="tx-pulse" cx="500" cy="300" r="1" opacity=".75"/&gt;
+                &lt;circle cx="500" cy="300" r="0.16" fill="#ffc46b" stroke="none"/&gt;
+                &lt;path d="M500 299v-.9M500 301v.9M499 300h-.9M501 300h.9" opacity=".65"/&gt;
+                &lt;path d="M499.3 299.3l-.6-.6M500.7 299.3l.6-.6M499.3 300.7l-.6.6M500.7 300.7l.6.6" opacity=".4"/&gt;
+                &lt;circle cx="500" cy="300" r="1.35" opacity=".2" stroke-dasharray=".3 .45"/&gt;
+                &lt;circle cx="500" cy="300" r="0.45" opacity=".35" stroke-dasharray=".14 .3"/&gt;
+              &lt;/g&gt;
+
+            &lt;/g&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="tx-dossiers"&gt;
+      &lt;div class="tx-dos tx-brk"&gt;
+        &lt;h3&gt;Zed&lt;/h3&gt;
+        &lt;div class="sub"&gt;ASSET FILE &amp;middot; BLACK-7 &amp;middot; COMPLETE&lt;/div&gt;
+        &lt;dl&gt;
+          &lt;dt&gt;ROLE&lt;/dt&gt;&lt;dd&gt;Unit lead, Command Line counter-espionage&lt;/dd&gt;
+          &lt;dt&gt;AUGMENTATION&lt;/dt&gt;&lt;dd&gt;Full chassis, ocular replacement, lattice through skin and synthfiber&lt;/dd&gt;
+          &lt;dt&gt;ORGANIC REMAINING&lt;/dt&gt;&lt;dd&gt;Undisclosed&lt;/dd&gt;
+          &lt;dt&gt;SELECTED FOR&lt;/dt&gt;&lt;dd&gt;Consistency under review&lt;/dd&gt;
+          &lt;dt&gt;KNOWN LIABILITY&lt;/dt&gt;&lt;dd&gt;None on file&lt;/dd&gt;
+        &lt;/dl&gt;
+        &lt;p class="note"&gt;PROJECT chose him because he does not vary. Every file in this archive is
+        an argument about whether that is still true.&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;div class="tx-dos trixe tx-brk"&gt;
+        &lt;h3&gt;TRIXE&lt;/h3&gt;
+        &lt;div class="sub"&gt;NOT AN ASSET FILE &amp;middot; ASSEMBLED FROM NOISE&lt;/div&gt;
+        &lt;dl&gt;
+          &lt;dt&gt;CLASS&lt;/dt&gt;&lt;dd&gt;Technical-behavioral module&lt;/dd&gt;
+          &lt;dt&gt;DESIGNATION&lt;/dt&gt;&lt;dd&gt;No designation in active use&lt;/dd&gt;
+          &lt;dt&gt;INSTALLED&lt;/dt&gt;&lt;dd&gt;During augmentation, to regulate aggression and neural load&lt;/dd&gt;
+          &lt;dt&gt;VOICE PATTERN&lt;/dt&gt;&lt;dd&gt;Sourced. File redacted. Redaction authority redacted.&lt;/dd&gt;
+          &lt;dt&gt;REGISTERED AI&lt;/dt&gt;&lt;dd&gt;None active on this platform&lt;/dd&gt;
+          &lt;dt&gt;OBSERVED SCOPE&lt;/dt&gt;&lt;dd&gt;Reticles. Routing. Delays. Scheduling. Water temperature.&lt;/dd&gt;
+        &lt;/dl&gt;
+        &lt;p class="note"&gt;She could take the whole platform. The traces say she never has. Whether
+        that is restraint or a limit nobody has documented is the open question, and neither this
+        file nor the asset can close it.&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script&gt;
+(function(){
+  var zoom=document.getElementById('tx-zoom'), g=document.getElementById('tx-zg');
+  var L=[1,2,3,4,5].map(function(n){return document.getElementById('zl'+n);});
+  var cd=document.getElementById('tx-cd'), ch=document.getElementById('tx-ch'), cp=document.getElementById('tx-cp'),
+      cap=document.getElementById('tx-cap'), magn=document.getElementById('tx-magn'), magb=document.getElementById('tx-magb');
+
+  var BANDS=[
+   {at:1,   d:'LAYER 1 / 5 \u2014 EXTERNAL', h:'Chassis', tag:'PLATING / SPINE HARNESS',
+    p:'Matte plating over a magnetic spine harness. Below the knees there are no human calves, only hinges. Everything at this depth is documented, serviceable, and replaceable by a technician who has never met him.'},
+   {at:3.2, d:'LAYER 2 / 5 \u2014 SUBDERMAL', h:'Augment lattice', tag:'LATTICE SEAM',
+    p:'The seams that replaced half his nerves. It carries sensation to him and carries heat away, and it is the reason a chemical bite can be shaved down to function before it becomes noise. He rarely notices it happening.'},
+   {at:10,  d:'LAYER 3 / 5 \u2014 INTERNAL', h:'Neural bus', tag:'BUS / TELEMETRY TRAFFIC',
+    p:'Where telemetry becomes language. Status prompts, threat classification, the voice he has heard for years without ever really hearing it. Traffic here is logged, sampled, and folded into the environmental channel.'},
+   {at:30,  d:'LAYER 4 / 5 \u2014 COMPONENT', h:'Technical-behavioral module', tag:'SCOPE: TELEMETRY ONLY',
+    p:'A support routine with a documented scope of telemetry only. It has no permissions ledger, no hardware footprint of its own, no audit trail. Dedicated AI packages have all three. This has none, which is why nobody watches it.'},
+   {at:90,  d:'LAYER 5 / 5 \u2014 NOT ON THE SCHEMATIC', h:'Unlogged', amb:true, tag:'NO DESIGNATION IN ACTIVE USE',
+    p:'Something is allocating cycles here that the module was never given. It has been doing it for years. It has never once taken more than it needed, and no document in this archive can tell you whether that is care or a very good approximation of it.'}
+  ];
+  var cur=-1;
+
+  function opacity(s,inA,inB,outA,outB){
+    if(s&lt;inA||s&gt;outB) return 0;
+    if(s&lt;inB) return (s-inA)/(inB-inA);
+    if(s&gt;outA) return 1-(s-outA)/(outB-outA);
+    return 1;
+  }
+
+  function frame(){
+    var r=zoom.getBoundingClientRect();
+    var p=Math.max(0,Math.min(1,(-r.top)/(r.height-window.innerHeight)));
+    var s=Math.pow(200,p);
+    g.setAttribute('transform','translate(500,300) scale('+s+') translate(-500,-300)');
+
+    L[0].style.opacity=opacity(s,0,0,1.9,4.2);
+    L[1].style.opacity=opacity(s,2.2,3.4,7,15);
+    L[2].style.opacity=opacity(s,7,10,22,40);
+    L[3].style.opacity=opacity(s,20,28,58,105);
+    L[4].style.opacity=opacity(s,62,88,1e9,1e9);
+
+    magn.textContent = (s&lt;10?s.toFixed(1):Math.round(s))+'\u00d7';
+    magb.style.width=(p*100)+'%';
+
+    var b=0; for(var i=0;i&lt;BANDS.length;i++) if(s&gt;=BANDS[i].at) b=i;
+    if(b!==cur){
+      cur=b; var B=BANDS[b];
+      [cd,ch,cp].forEach(function(e){e.style.opacity=0;});
+      setTimeout(function(){
+        cd.textContent=B.d; ch.textContent=B.h; cp.textContent=B.p;
+        cap.classList.toggle('amb',!!B.amb);
+        var ft=document.getElementById('tx-focus-tag');
+        ft.textContent=B.tag; ft.parentNode.classList.toggle('amb',!!B.amb);
+        [cd,ch,cp].forEach(function(e){e.style.opacity=1;});
+      },200);
+      if(b===4 &amp;&amp; window.TRIXE) window.TRIXE.say('You went looking. Now you have found nothing, which is the honest answer.',{once:'deep',hold:9000});
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+&lt;/script&gt;
+
+
+=================== BLOCK F1 — COMMS, above the form ===================
+
+&lt;!-- ============================================================
+     BLOCK F1  //  COMMS  (chrome ABOVE the form)
+     Embed element placed directly above your Carrd Form element.
+     Also contains the optional skin for Carrd's native form fields.
+     ============================================================ --&gt;
+
+&lt;style&gt;
+.tx-comms .rig{border-top:1px solid rgba(77,88,102,.4);margin-top:26px;padding:18px 0 0;}
+.tx-comms .barrow{display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-size:10.5px;letter-spacing:.16em;color:var(--tx-grid);margin-bottom:16px;}
+.tx-comms .barrow b{color:var(--tx-bone);font-weight:500;}
+.tx-dot{display:inline-block;width:6px;height:6px;background:var(--tx-green);margin-right:7px;
+  vertical-align:1px;box-shadow:0 0 8px var(--tx-green);animation:tx-dot 2.2s ease-in-out infinite;}
+@keyframes tx-dot{0%,100%{opacity:.35;}50%{opacity:1;}}
+.tx-ticker{height:22px;overflow:hidden;font-size:11.5px;color:var(--tx-dim);
+  border-left:2px solid rgba(77,88,102,.5);padding-left:11px;margin-bottom:24px;}
+.tx-ticker span{display:block;line-height:22px;}
+.tx-comms .lead{font-size:14px;line-height:1.78;color:#b9bfc7;max-width:60ch;margin:0 0 26px;}
+
+/* ---------- OPTIONAL: skin for Carrd's native form ----------
+   Delete this whole block if you would rather style the form
+   with Carrd's own controls. ---------------------------------- */
+.field &gt; label{font-family:var(--tx-mono)!important;font-size:10.5px!important;
+  letter-spacing:.16em!important;color:#4d5866!important;}
+.field input[type="text"],.field input[type="email"],.field input[type="tel"],
+.field select,.field textarea{
+  font-family:'IBM Plex Mono',monospace!important;font-size:13px!important;
+  background:rgba(15,17,20,.8)!important;color:#e6e4de!important;
+  border:1px solid rgba(77,88,102,.5)!important;border-radius:0!important;
+  box-shadow:none!important;transition:border-color .18s,background .18s!important;}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:#ff2f43!important;background:rgba(21,24,29,.95)!important;outline:none!important;}
+.field input::placeholder,.field textarea::placeholder{color:#4d5866!important;}
+form .button,form input[type="submit"],form button[type="submit"]{
+  font-family:'Chakra Petch',sans-serif!important;font-weight:600!important;
+  letter-spacing:.14em!important;border-radius:0!important;
+  background:#e6e4de!important;color:#07070a!important;border:0!important;
+  transition:background .18s,color .18s!important;}
+form .button:hover,form input[type="submit"]:hover,form button[type="submit"]:hover{
+  background:#ff2f43!important;color:#fff!important;}
+&lt;/style&gt;
+
+&lt;section class="tx-embed tx-sec tx-comms" id="comms" style="padding-bottom:0"&gt;
+  &lt;div class="tx-wrap"&gt;
+    &lt;div class="tx-sechead"&gt;
+      &lt;h2&gt;Comms&lt;/h2&gt;
+      &lt;p&gt;SECURE CHANNEL &amp;middot; COMMAND LINE RELAY&lt;br&gt;MESSAGES ARE READ BEFORE THEY ARRIVE&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class="rig"&gt;
+      &lt;div class="barrow"&gt;
+        &lt;span&gt;&lt;i class="tx-dot"&gt;&lt;/i&gt;CHANNEL OPEN &amp;middot; ENCRYPTION &lt;b&gt;ACTIVE&lt;/b&gt;&lt;/span&gt;
+        &lt;span&gt;RELAY &lt;b&gt;43-B&lt;/b&gt; &amp;middot; LATENCY &lt;b id="tx-cl"&gt;4ms&lt;/b&gt;&lt;/span&gt;
+      &lt;/div&gt;
+
+      &lt;div class="tx-ticker" id="tx-tick" aria-hidden="true"&gt;&lt;span&gt;&amp;nbsp;&lt;/span&gt;&lt;/div&gt;
+
+      &lt;p class="lead"&gt;&lt;!-- EDIT --&gt;Send a transmission. Questions about the story, requests for the
+      next chapter, corrections to the record, or anything you would rather say where the
+      corporation cannot file it. Everything below routes to me and nowhere else.&lt;!-- /EDIT --&gt;&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script&gt;
+(function(){
+  var TICK=[
+    'INBOUND \u2014 analyst, Bay 8: "his last three deferrals came in under a minute"',
+    'INBOUND \u2014 Command Line: relay map triaged, trail still warm',
+    'INBOUND \u2014 CEDD: stability review window revised. again.',
+    'INBOUND \u2014 unsigned: JH-4N is a name, not a service',
+    'INBOUND \u2014 ESBEN-LR: "I took the arm. I did not take the man."',
+    'INBOUND \u2014 no origin: [he is asleep. leave it until morning.]'
+  ];
+  var box=document.getElementById('tx-tick'), i=0;
+  function nextTick(){
+    var s=document.createElement('span');
+    s.textContent=TICK[i%TICK.length];
+    if(TICK[i%TICK.length].indexOf('no origin')&gt;-1) s.style.color='var(--tx-trixe)';
+    i++;
+    box.appendChild(s);
+    box.animate([{transform:'translateY(0)'},{transform:'translateY(-22px)'}],
+      {duration:520,easing:'cubic-bezier(.6,0,.2,1)',fill:'forwards'})
+      .onfinish=function(){ if(box.firstChild) box.removeChild(box.firstChild);
+        box.style.transform='none'; box.getAnimations().forEach(function(a){a.cancel();}); };
+  }
+  nextTick(); setInterval(nextTick,4200);
+
+  var lat=document.getElementById('tx-cl');
+  setInterval(function(){ lat.textContent=(2+Math.floor(Math.random()*7))+'ms'; },1900);
+})();
+&lt;/script&gt;
+
+
+
+
+=================== BLOCK F2 — COMMS, below the form ===================
+
+&lt;!-- ============================================================
+     BLOCK F2  //  COMMS FOOTER  (chrome BELOW the form)
+     Embed element placed directly below your Carrd Form element.
+     ============================================================ --&gt;
+
+&lt;style&gt;
+.tx-foot{padding:22px 0 70px;font-size:11px;letter-spacing:.1em;color:var(--tx-grid);}
+.tx-foot .row{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  border-top:1px solid rgba(77,88,102,.28);padding-top:16px;}
+.tx-foot a{color:var(--tx-dim);text-decoration:none;border-bottom:1px solid transparent;}
+.tx-foot a:hover,.tx-foot a:focus-visible{color:var(--tx-bone);border-bottom-color:var(--tx-signal);}
+.tx-foot .sign{margin-top:26px;color:var(--tx-trixe);font-size:12.5px;letter-spacing:.02em;
+  text-shadow:0 0 14px rgba(255,196,107,.3);}
+&lt;/style&gt;
+
+&lt;section class="tx-embed tx-foot"&gt;
+  &lt;div class="tx-wrap"&gt;
+    &lt;div class="row"&gt;
+      &lt;span&gt;PROJECT CORPORATION &amp;middot; COMMAND LINE &amp;middot; CEDD&lt;/span&gt;
+      &lt;span&gt;&lt;a href="#top"&gt;RETURN TO TOP&lt;/a&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="row" style="border:0;padding-top:8px"&gt;
+      &lt;span&gt;Fan work. League of Legends and PROJECT: Zed belong to Riot Games.&lt;br&gt;
+      TRIXE is original. Everything she does here is unauthorised.&lt;/span&gt;
+      &lt;span&gt;NEURAL LOAD LOGGED FOR THIS SESSION: &lt;b id="tx-fnl" style="color:var(--tx-bone);font-weight:500"&gt;--&lt;/b&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="sign"&gt;[Close the file. I will still be here.]&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script&gt;
+(function(){
+  var el=document.getElementById('tx-fnl'), peak=12;
+  setInterval(function(){
+    if(window.TRIXE) peak=Math.max(peak,window.TRIXE.load());
+    el.textContent=Math.round(peak)+'% peak';
+  },900);
+})();
+&lt;/script&gt;
+
+</pre></body></html>
