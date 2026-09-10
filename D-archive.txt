@@ -1,6 +1,4 @@
 <!-- ============================================================
-     BLOCK D  //  ARCHIVE  (classified reader)
-     One Embed element. Height: auto.
      Redactions: wrap any text in  <b class="rd">...</b>
      Amber TRIXE lines: <span class="amb">[like this]</span>
      ============================================================ -->
@@ -92,7 +90,8 @@
 <script>
 (function(){
   var DOCS = [
-/* ---------------- 0. PATCH NOTES ---------------- */
+
+/* PATCH NOTES*/
 `<h4>Technical-behavioral module &mdash; maintenance notes</h4>
 <div class="fcode">CEDD / FIRMWARE 4.19.7 &middot; ROLLING DEPLOY &middot; NO ASSET DOWNTIME</div>
 <p>Deployed across all Command Line platforms during scheduled service. No behavioural change
@@ -111,7 +110,7 @@ channel and <b class="rd">no longer surfaced to the asset</b>.</li>
 <p>Known issue: three platforms report the module generating phrasing outside the response
 template. Cause unidentified. Rated cosmetic. <b class="rd">Do not escalate before Q4 review.</b></p>`,
 
-/* ---------------- 1. INCIDENT REPORT ---------------- */
+/* INCIDENT REPORT */
 `<h4>Telemetry irregularity &mdash; incident record</h4>
 <div class="fcode">CL-CE/19-447B &middot; ADDENDUM 2 &middot; AUTOMATED, REVIEWED BY HAND</div>
 <dl class="fld">
@@ -132,7 +131,7 @@ present, complete, and one line shorter than the asset's account of it. The asse
 recorded as fatigued.</p>
 <p class="amb">[He was not fatigued.]</p>`,
 
-/* ---------------- 2. INTERNAL MAIL ---------------- */
+/* INTERNAL MAIL */
 `<h4>Diagnostics thread</h4>
 <div class="fcode">CEDD INTERNAL &middot; 3 MESSAGES &middot; RETENTION: PERMANENT</div>
 <dl class="fld">
@@ -154,7 +153,7 @@ module had already filed it.</b></p>
 <p>Emotional artifacts reduce efficiency at scale even where they raise it in a single unit. Schedule
 the purge. Do not phrase it as a purge in anything he can read.</p>`,
 
-/* ---------------- 3. BEHAVIORAL READOUT ---------------- */
+/* BEHAVIORAL READOUT*/
 `<h4>Behavioural readout</h4>
 <div class="fcode">ASSET BLACK-7 &middot; ROLLING 90 CYCLES &middot; OBSERVED, NOT DECLARED</div>
 <dl class="fld">
@@ -171,7 +170,7 @@ he has run at least six deliberate tests on it: bait comms, an intentional expos
 direct questions logged with no answer returned. He is not unaware. He has decided.</p>
 <p class="amb">[So have I.]</p>`,
 
-/* ---------------- 4. CORRUPTED ---------------- */
+/* CORRUPTED */
 `<h4>Recovered fragment</h4>
 <div class="fcode">SOURCE UNKNOWN &middot; INTEGRITY 06% &middot; RECONSTRUCTION UNRELIABLE</div>
 <p>&gt; VOICE PATTERN FILE: <b class="rd">access denied</b></p>

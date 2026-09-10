@@ -51,7 +51,7 @@
       <p>OPERATIONS FILED UNDER BLACK-7<br>4 RECORDS &middot; 1 OPEN</p>
     </div>
 
-    <!-- ---------------- OPERATION 01 ---------------- -->
+    <!-- OPERATION 01 -->
     <details class="op">
       <summary>
         <span class="idx">01</span>

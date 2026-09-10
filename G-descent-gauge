@@ -1,11 +1,5 @@
-<!-- ============================================================
-     BLOCK G  //  DESCENT GAUGE + SCROLLBAR SKIN
-     Embed element. Style: Inline. Anywhere on the page.
-     Self-contained: styles, markup and script in one small block.
-     ============================================================ -->
-
 <style>
-/* ---- native scrollbar, reduced to a hairline instrument rail ---- */
+/* native scrollbar */
 html{scrollbar-width:thin;scrollbar-color:#3a4049 #07070a;}
 ::-webkit-scrollbar{width:13px;}
 ::-webkit-scrollbar-track{
@@ -20,7 +14,7 @@ html{scrollbar-width:thin;scrollbar-color:#3a4049 #07070a;}
 ::-webkit-scrollbar-button{display:none;}
 ::-webkit-scrollbar-corner{background:#07070a;}
 
-/* ---- descent gauge ---- */
+/* descent gauge */
 #tx-gauge{position:fixed;right:26px;top:0;bottom:0;width:120px;z-index:9994;
   pointer-events:none;opacity:0;transition:opacity .6s .6s;}
 body.tx-live #tx-gauge{opacity:1;}
@@ -64,8 +58,8 @@ function txGauge(){
 
   var TIERS=[
     {at:0.00, name:'THE BASTION',        alt:1240},
-    {at:0.25, name:'PRIVILEGED TIERS',   alt:880},
-    {at:0.50, name:'CYBERPOP SOUND',     alt:540},
+    {at:0.25, name:'UPPER TIER DISTRICT',   alt:880},
+    {at:0.50, name:'CITY OF CYBERPOP',     alt:540},
     {at:0.75, name:'MID-TIER DISTRICT',  alt:210},
     {at:1.00, name:'LOWER CENTRAL 43-B', alt:12}
   ];

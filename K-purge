@@ -1,10 +1,3 @@
-<!-- ============================================================
-     BLOCK K  //  "PURGE" EASTER EGG
-     Embed element. Style: Inline. Anywhere on the page.
-     Type P-U-R-G-E anywhere (outside a form field) and CEDD
-     starts the purge. It does not finish.
-     ============================================================ -->
-
 <style>
 #tx-purge{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -20,10 +13,6 @@
 #tx-purge.abort .hdr,#tx-purge.abort .num{color:var(--tx-trixe,#ffc46b);text-shadow:0 0 26px rgba(255,196,107,.4);}
 #tx-purge.abort .sub{color:rgba(255,196,107,.75);}
 
-/* The flinch lives on the overlay, never on <body>. A transform on body
-   would make it the containing block for every position:fixed element on
-   the page, which throws the HUD, the nav and this overlay itself out of
-   the viewport. */
 #tx-purge.on .num{animation:tx-shake .3s steps(2) infinite;}
 #tx-purge.on .hdr{animation:tx-shake .42s steps(2) infinite reverse;}
 @keyframes tx-shake{0%{transform:translate3d(0,0,0);}50%{transform:translate3d(-2px,1px,0);}100%{transform:translate3d(2px,-1px,0);}}
@@ -50,7 +39,7 @@ function txPurge(){
     if(busy) return;
     var t=e.target, tag=t&&t.tagName;
     if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable)) return;
-    if(document.getElementById('tx-boot')) return;          /* not before the gate is cleared */
+    if(document.getElementById('tx-boot')) return;         
     if(!/^[a-z]$/i.test(e.key)) return;
     buf=(buf+e.key.toLowerCase()).slice(-WORD.length);
     if(buf===WORD){ buf=''; run(); }
@@ -70,7 +59,6 @@ function txPurge(){
       if(n>0){ num.textContent='0'+n; if(window.TXA) window.TXA.tick(); return; }
       clearInterval(t);
 
-      /* she stops it one second before it lands */
       box.classList.add('abort');
       hdr.textContent='PURGE ABORTED';
       sub.textContent='SCHEDULING LAYER RETURNED AN ERROR \u00b7 NO RECORD FORWARDED';

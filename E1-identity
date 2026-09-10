@@ -1,9 +1,8 @@
 <style>
-/* spacer: this is the only part that sits in Carrd's flow.
-It exists purely to give the zoom something to scroll through. */
+
 .tx-zoom{height:340vh;position:relative;margin-top:26px;}
 
-/* the stage is moved to <body> by E2 and pinned to the viewport */
+
 #tx-stage{position:fixed;inset:0;z-index:3;pointer-events:none;
 opacity:0;visibility:hidden;transition:opacity .25s linear;}
 #tx-stage.on{opacity:1;visibility:visible;}

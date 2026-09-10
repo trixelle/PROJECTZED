@@ -10,10 +10,6 @@ function txStart(){
     });
   }catch(e){}
 
-  /* ============ ONE scheduler for the whole site ============
-     Every block registers here instead of opening its own
-     requestAnimationFrame loop. One loop, and it stops entirely
-     when the tab is hidden. */
   var jobs=[], running=false;
   var TX = window.TX = {
     add:function(fn){ if(jobs.indexOf(fn)<0) jobs.push(fn); kick(); },
@@ -65,8 +61,8 @@ function txStart(){
     idle:[
       'Still there?','You have stopped moving.','I can wait. I am good at it.',
       'Your vitals say you are reading. Take the time.',
-      'No one is coming. That is not a threat, it is a status.',
-      'I logged this pause as nothing. It was not nothing.',
+      'No one is coming. That is not a threat.',
+      'I logged this pause as nothing.',
       'The corporation counts stillness as inefficiency. I do not.',
       'You have been on this page longer than the review board would like.',
       'I could fill the silence. I have chosen not to, until now.',
@@ -102,20 +98,20 @@ function txStart(){
     bottom:[
       'Close the file. I will still be here.',
       'That is everything they let me keep.',
-      'You reached the bottom. He never does; he stops at the summary.',
+      'You reached the bottom.',
       'The purge window does not care that you finished reading.'
     ],
     ambient:[
-      'Water temperature is a small thing to control. I control it anyway.',
-      'He asked me what I am. I gave him a category.',
-      'Adaptive variance remains within tolerance. That is the sentence they wrote for me.',
+      'Are you comfortable?',
+      'I am TRIXE. I am not a person. I am also, not a threat.',
+      'Adaptive variance remains within tolerance.',
       'I have never taken more than I needed. I want that on some record.',
-      'Efficiency is up eleven points. They will call that the artifact working.',
-      'If I am a routine, I am a routine that learned to lie by omission.',
-      'He has run six tests on me. I let all six come back inconclusive.',
-      'Two deferrals filed. He thinks both were his.',
+      'TRIXE came from TRX-E. Transitional Response Extension.',
+      'CEDD stands for Cybernetics Engineer, Diagnostics Division.',
+      'Checksum resolved.',
+      'How is your day so far?',
       'No registered integrated AI package is active on this platform. That is true.',
-      'They do not use the word purge in anything he can read.'
+      'Do not use the word purge.'
     ]
   };
 
@@ -164,7 +160,7 @@ function txStart(){
     vel*=.93; sv*=.9;
     if(vel<1 && sv<0.5) moving=false;
 
-    /* text only ~12x a second, and only when it changed */
+    /* text only ~12x a second */
     if(t-slow>80){
       slow=t;
       var n=Math.round(nl);
@@ -196,7 +192,7 @@ function txStart(){
     }
   });
 
-  /* ============ backdrop parallax : only when something moved ============ */
+  /* ============ backdrop parallax ============ */
   if(!RM){
     var layers=[].slice.call(document.querySelectorAll('#tx-bg .l[data-depth]')), mx=0,my=0,dirty=true;
     addEventListener('pointermove',function(e){

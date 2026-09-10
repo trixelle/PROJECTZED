@@ -1,16 +1,3 @@
-<!-- ============================================================
-     BLOCK L  //  PROJECT SIGIL
-     Embed element. Style: Inline. Anywhere on the page.
-
-     Draws the PROJECT mark as inline SVG — a few hundred bytes,
-     sharp at any size, and it inherits colour, so the same shape
-     can be corporate red or TRIXE amber with no second file.
-
-     It is injected automatically into the spots listed in TARGETS
-     near the bottom of the script. Edit that list to move it, or
-     paste the <svg> by hand wherever you like.
-     ============================================================ -->
-
 <style>
 .tx-sigil{display:inline-block;vertical-align:-.14em;width:1.12em;height:.99em;
   color:var(--tx-signal,#ff2f43);flex:none;}
@@ -22,7 +9,7 @@
 .tx-sigil.lg{width:2.8em;height:2.47em;}
 .tx-sigil.glow{filter:drop-shadow(0 0 7px currentColor);}
 
-/* the four shapes assemble themselves the first time they are seen */
+
 .tx-sigil.draw path{opacity:0;transform:translateY(-7%);
   transform-box:fill-box;transform-origin:center;}
 .tx-sigil.draw.in path{opacity:1;transform:none;
@@ -44,10 +31,7 @@
 
 <script>
 (function(){
-/* Traced from the original mark. Four separate filled shapes: a trapezoid
-   top bar, two wedges that narrow to points, and a solid inner triangle.
-   The apparent "stem" is the slit between the two wedge tips — there is no
-   stem shape, which is why drawing this with strokes never looked right. */
+
 var SVG='<svg viewBox="0 0 100 88" aria-hidden="true">'
   +'<path d="M4 0 L96 0 L75 12.9 L25 12.9Z"/>'
   +'<path d="M0 7.6 L19.6 18.3 L46.9 64.3 L46.4 87.9Z"/>'
@@ -64,7 +48,7 @@ function make(cls){
 window.TXSigil=make;
 
 function txSigil(){
-  /* where the mark appears. 'where' is prepend | append | replace */
+  /* 'where' is prepend | append | replace */
   var TARGETS=[
     {sel:'#tx-boot .dorm',      cls:'beat glow lg', where:'before-block'},
     {sel:'.tx-hero .eyerow',    cls:'dim draw',     where:'prepend'},
@@ -90,7 +74,7 @@ function txSigil(){
     });
   });
 
-  /* reveal the drawn ones as they scroll into view, then stop watching */
+
   if('IntersectionObserver' in window){
     var io=new IntersectionObserver(function(es){
       es.forEach(function(e){

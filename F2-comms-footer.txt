@@ -1,8 +1,3 @@
-<!-- ============================================================
-     BLOCK F2  //  COMMS FOOTER  (chrome BELOW the form)
-     Embed element placed directly below your Carrd Form element.
-     ============================================================ -->
-
 <style>
 .tx-foot{padding:22px 0 70px;font-size:11px;letter-spacing:.1em;color:var(--tx-grid);}
 .tx-foot .row{border-top:1px solid rgba(77,88,102,.28);padding-top:16px;text-align:left;}
