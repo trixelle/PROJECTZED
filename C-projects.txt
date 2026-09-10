@@ -1,9 +1,4 @@
-<!-- ============================================================
-     BLOCK C  //  PROJECTS  (operations index)
-     One Embed element. Height: auto.
-     To add a chapter: copy one <article class="op"> and edit the text
-     between the  EDIT  markers. Nothing else needs changing.
-     ============================================================ -->
+<!--add a chapter: copy one <article class="op"> and edit the text between the  EDIT  markers -->
 
 <style>
 .tx-sec{padding:78px 0;}
