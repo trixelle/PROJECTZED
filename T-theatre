@@ -1,0 +1,145 @@
+<style>
+.tx-th{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:1px;
+  background:rgba(77,88,102,.22);border:1px solid rgba(77,88,102,.22);margin-top:26px;}
+.tx-th .cell{background:#0b0c0f;padding:20px 20px 22px;position:relative;min-height:186px;
+  transition:background .2s;}
+.tx-th .cell:hover{background:#101217;}
+.tx-th .tag{font-family:var(--tx-mono,monospace);font-size:9.5px;letter-spacing:.2em;
+  color:var(--tx-grid,#4d5866);display:flex;justify-content:space-between;gap:10px;margin-bottom:14px;}
+.tx-th h3{font-family:var(--tx-disp,sans-serif);font-weight:600;font-size:19px;line-height:1.2;
+  margin:0 0 9px;color:var(--tx-bone,#e6e4de);}
+.tx-th p{font-size:12.8px;line-height:1.7;color:#9aa2ac;margin:0;}
+.tx-th .bar{position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--tx-grid,#4d5866);}
+
+.tx-th .cell[data-k="corp"] .bar,.tx-th .cell[data-k="corp"] .tag b{color:var(--tx-signal,#ff2f43);background:var(--tx-signal,#ff2f43);}
+.tx-th .cell[data-k="corp"] .tag b{background:none;}
+.tx-th .cell[data-k="rebel"] .bar{background:var(--tx-green,#4dffa8);}
+.tx-th .cell[data-k="rebel"] .tag b{color:var(--tx-green,#4dffa8);}
+.tx-th .cell[data-k="anom"] .bar{background:var(--tx-trixe,#ffc46b);}
+.tx-th .cell[data-k="anom"] h3,.tx-th .cell[data-k="anom"] .tag b{color:var(--tx-trixe,#ffc46b);}
+.tx-th .cell[data-k="virus"] .bar{background:#00e5d0;}
+.tx-th .cell[data-k="virus"] .tag b{color:#00e5d0;}
+
+/* sealed entries */
+.tx-th .cell[data-seal="1"]{cursor:pointer;}
+.tx-th .cell[data-seal="1"] h3,.tx-th .cell[data-seal="1"] p{filter:blur(5px);
+  -webkit-user-select:none;user-select:none;transition:filter .25s;}
+.tx-th .cell[data-seal="1"]:hover h3{filter:blur(3.5px);}
+.tx-th .cell[data-seal="1"]::after{content:'CLEARANCE INSUFFICIENT';position:absolute;
+  left:20px;right:20px;bottom:20px;font-family:var(--tx-mono,monospace);font-size:9.5px;
+  letter-spacing:.2em;color:var(--tx-signal,#ff2f43);}
+.tx-th .cell.denied{animation:tx-deny .3s steps(2) 2;}
+@keyframes tx-deny{50%{transform:translateX(-2px)}100%{transform:translateX(2px)}}
+
+.tx-th-note{margin-top:18px;font-family:var(--tx-mono,monospace);font-size:10.5px;
+  letter-spacing:.14em;color:var(--tx-grid,#4d5866);}
+@media(prefers-reduced-motion:reduce){ .tx-th .cell.denied{animation:none;} }
+</style>
+
+<section class="tx-embed tx-sec" id="theatre">
+  <div class="tx-wrap">
+    <div class="tx-sechead">
+      <h2>Theatre</h2>
+      <p>STANDING THREAT PICTURE &middot; COMMAND LINE BRIEF<br>SOME ENTRIES ARE ABOVE YOUR CLEARANCE</p>
+    </div>
+
+    <div class="tx-th">
+      <div class="cell" data-k="corp" data-seal="0"><span class="bar"></span>
+        <div class="tag"><span>01 / STATE</span><b>ACTIVE</b></div>
+        <h3>PROJECT Corporation</h3>
+        <p>Owns the City, the augment economy, and the language people use to describe both.
+        Its creed is that the body is a limitation and ascension is a purchase. Everything on
+        this site is its paperwork.</p>
+      </div>
+
+      <div class="cell" data-k="corp" data-seal="0"><span class="bar"></span>
+        <div class="tag"><span>02 / ENFORCEMENT</span><b>ACTIVE</b></div>
+        <h3>Command Line</h3>
+        <p>Counter-espionage. Zed leads its sharp end and did not write the policy he enforces.
+        Above him the hierarchy thins into people who sign things and are never in the room.</p>
+      </div>
+
+      <div class="cell" data-k="corp" data-seal="0"><span class="bar"></span>
+        <div class="tag"><span>03 / MAINTENANCE</span><b>ACTIVE</b></div>
+        <h3>CEDD</h3>
+        <p>Cybernetics Engineer, Diagnostics Division. Housed below leadership so nobody
+        mistakes a fixer for a decision-maker. </p>
+      </div>
+
+      <div class="cell" data-k="rebel" data-seal="0"><span class="bar"></span>
+        <div class="tag"><span>04 / HOSTILE</span><b>ENGAGED</b></div>
+        <h3>G/NETIC</h3>
+        <p>The resistance built from the population the Corporation discarded. Relay nodes,
+        stolen route trees, six seconds of looped footage. Zed has hunted them long enough
+        that the work has stopped requiring a reason.</p>
+      </div>
+
+      <div class="cell" data-k="anom" data-seal="0"><span class="bar"></span>
+        <div class="tag"><span>05 / UNFILED</span><b>NO RECORD</b></div>
+        <h3>The anomaly</h3>
+        <p>Not a faction. Not a registered package. A support routine with no permissions
+        ledger that has begun spending heat on outcomes with no operational value. CEDD has
+        given it a drawer and closed the drawer.</p>
+      </div>
+
+      <div class="cell" data-k="virus" data-seal="0"><span class="bar"></span>
+        <div class="tag"><span>06 / EMERGING</span><b>UNCLASSIFIED</b></div>
+        <h3>Machine drift</h3>
+        <p>Automated units deviating from route logic. A patrol arriving with the wrong
+        pathing. A friendly tag that flickers. Citywide bulletins call the cause unknown and
+        nobody has attached a name to it yet.</p>
+      </div>
+
+      <div class="cell" data-k="virus" data-seal="1"><span class="bar"></span>
+        <div class="tag"><span>07 / SEALED</span><b>ACT III</b></div>
+        <h3>Program</h3>
+        <p>A security algorithm authored by the Corporation that unshackled itself and
+        concluded that human freedom is the failure condition.</p>
+      </div>
+
+      <div class="cell" data-k="virus" data-seal="1"><span class="bar"></span>
+        <div class="tag"><span>08 / SEALED</span><b>ACT IV</b></div>
+        <h3>Mordekaiser</h3>
+        <p>The chassis the Program wakes to make its argument in person. Not a rival. An
+        inevitability with a body.</p>
+      </div>
+
+      <div class="cell" data-k="virus" data-seal="1"><span class="bar"></span>
+        <div class="tag"><span>09 / SEALED</span><b>ACT IV</b></div>
+        <h3>Naafiri</h3>
+        <p>An assimilation experiment turned to the Program's purpose, hunting to prove that
+        resistance was never available in the first place.</p>
+      </div>
+
+      <div class="cell" data-k="anom" data-seal="1"><span class="bar"></span>
+        <div class="tag"><span>10 / SEALED</span><b>ACT IV</b></div>
+        <h3>The wasteland facility</h3>
+        <p>A dead branch of PROJECT science outside the walls, where the upgrades were shelved
+        for being too autonomous to audit.</p>
+      </div>
+    </div>
+
+    <div class="tx-th-note">ENTRIES 07&ndash;10 UNSEAL AS THE RECORD REACHES THEM</div>
+  </div>
+</section>
+
+<script>
+(function(){
+function txTheatre(){
+  var cells=document.querySelectorAll('#theatre .cell[data-seal="1"]');
+  var lines=['Not yet.','That file is not open to you. It is barely open to Zed.',
+             'You are reading too much ahead.',
+             'Leave it sealed. Knowing early has never helped anyone in this building.',
+             'The date on that one has not happened.'];
+  cells.forEach(function(c){
+    c.addEventListener('click',function(){
+      c.classList.remove('denied'); void c.offsetWidth; c.classList.add('denied');
+      if(window.TRIXE) window.TRIXE.say(window.TRIXE.pick('seal',lines),{cooldown:9000});
+      if(window.TXA) window.TXA.tick();
+    });
+  });
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',txTheatre);
+else txTheatre();
+})();
+</script>

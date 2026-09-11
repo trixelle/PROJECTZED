@@ -1,0 +1,246 @@
+<style>
+/*  modal shell */
+#tx-modal{position:fixed;inset:0;z-index:9996;display:none;}
+#tx-modal.on{display:block;}
+#tx-modal .scrim{position:absolute;inset:0;background:rgba(4,4,6,.88);
+  backdrop-filter:blur(3px);animation:tx-fade .25s ease-out;}
+@keyframes tx-fade{from{opacity:0}to{opacity:1}}
+#tx-modal .panel{position:absolute;inset:3vh 0;max-width:820px;margin:0 auto;
+  background:#0b0c0f;overflow-y:auto;overscroll-behavior:contain;
+  animation:tx-panel .3s cubic-bezier(.2,.7,.2,1);
+  box-shadow:0 0 0 1px rgba(77,88,102,.35),0 40px 80px rgba(0,0,0,.6);}
+@keyframes tx-panel{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+#tx-modal .x{position:sticky;top:0;float:right;z-index:2;margin:14px 14px 0 0;
+  background:rgba(11,12,15,.92);border:1px solid rgba(77,88,102,.5);color:var(--tx-dim,#8a919b);
+  font-family:var(--tx-mono,monospace);font-size:10px;letter-spacing:.18em;
+  padding:9px 13px;cursor:pointer;transition:color .16s,border-color .16s;}
+#tx-modal .x:hover,#tx-modal .x:focus-visible{color:var(--tx-bone,#e6e4de);
+  border-color:var(--tx-signal,#ff2f43);outline:none;}
+#tx-modal .panel::-webkit-scrollbar{width:10px;}
+#tx-modal .panel::-webkit-scrollbar-track{background:#0b0c0f;}
+#tx-modal .panel::-webkit-scrollbar-thumb{background:rgba(77,88,102,.6);}
+#tx-prog{position:absolute;left:0;top:0;height:2px;width:0;background:var(--tx-signal,#ff2f43);z-index:3;}
+body.tx-locked{overflow:hidden;}
+
+/* chapter typography */
+.rdx{padding:0 0 70px;}
+.rdx-wrap{max-width:660px;margin:0 auto;padding:0 26px;}
+.rdx-head{padding:54px 0 28px;border-bottom:1px solid rgba(77,88,102,.34);margin-bottom:36px;}
+.rdx-meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--tx-mono,monospace);
+  font-size:10px;letter-spacing:.2em;color:var(--tx-grid,#4d5866);margin-bottom:15px;}
+.rdx-meta span:nth-child(2){color:var(--tx-signal,#ff2f43);}
+.rdx-title{font-family:var(--tx-disp,sans-serif);font-weight:700;
+  font-size:clamp(32px,5.4vw,54px);line-height:1.02;letter-spacing:-.015em;
+  color:var(--tx-bone,#e6e4de);margin:0;}
+.rdx p{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:17px;line-height:1.78;
+  color:#c6ccd3;margin:0 0 1.25em;text-wrap:pretty;}
+.rdx-file{font-family:var(--tx-mono,monospace);font-size:12px;line-height:2;letter-spacing:.07em;
+  color:#9aa2ac;background:rgba(21,24,29,.85);padding:18px 20px;margin:0 0 1.6em;position:relative;}
+.rdx-file::before,.rdx-file::after{content:'';position:absolute;width:11px;height:11px;
+  border:1px solid var(--tx-signal,#ff2f43);opacity:.8;}
+.rdx-file::before{top:0;left:0;border-right:0;border-bottom:0;}
+.rdx-file::after{bottom:0;right:0;border-left:0;border-top:0;}
+.rdx-hud{font-family:var(--tx-mono,monospace)!important;font-size:12.5px!important;
+  line-height:1.85!important;letter-spacing:.06em;color:#8f97a1!important;margin:0 0 .35em!important;}
+.rdx-hud+.rdx-hud{margin-top:-.35em!important;}
+.rdx-hud+p,.rdx-trx+p{margin-top:1.5em;}
+.rdx-trx{font-family:var(--tx-mono,monospace)!important;font-size:13.5px!important;
+  line-height:1.7!important;color:var(--tx-trixe,#ffc46b)!important;
+  border-left:2px solid var(--tx-trixe,#ffc46b);padding-left:13px;margin:1.3em 0!important;
+  text-shadow:0 0 16px rgba(255,196,107,.3);}
+.rdx-doc{font-family:var(--tx-disp,sans-serif);font-weight:700;
+  font-size:clamp(17px,2.6vw,23px);line-height:1.55;letter-spacing:.12em;
+  color:var(--tx-bone,#e6e4de);margin:1.7em 0;padding-left:18px;
+  border-left:3px solid var(--tx-signal,#ff2f43);}
+.rdx-stamp{font-family:var(--tx-mono,monospace)!important;font-size:13px!important;
+  letter-spacing:.18em;color:var(--tx-bone,#e6e4de)!important;margin:1.5em 0!important;
+  padding:9px 14px;display:inline-block;border:1px solid rgba(77,88,102,.6);background:rgba(21,24,29,.8);}
+.rdx-end{margin-top:46px;padding-top:22px;border-top:1px solid rgba(77,88,102,.3);
+  font-family:var(--tx-mono,monospace);font-size:10.5px;letter-spacing:.18em;color:var(--tx-grid,#4d5866);}
+
+@media(max-width:700px){
+  #tx-modal .panel{inset:0;}
+  .rdx p{font-size:16px;}
+  .rdx-head{padding:34px 0 22px;margin-bottom:26px;}
+}
+@media(prefers-reduced-motion:reduce){
+  #tx-modal .scrim,#tx-modal .panel{animation:none;}
+}
+</style>
+
+<div id="tx-modal" aria-hidden="true">
+  <div class="scrim" data-close></div>
+  <div class="panel" role="dialog" aria-modal="true" aria-label="Chapter">
+    <div id="tx-prog"></div>
+    <button class="x" type="button" data-close>CLOSE &times;</button>
+    <div class="rdx"><div class="rdx-wrap" id="tx-modal-body"></div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+function txModal(){
+  var modal=document.getElementById('tx-modal');
+  if(!modal) return;
+  try{ if(modal.parentNode!==document.body) document.body.appendChild(modal); }catch(e){}
+  var body=document.getElementById('tx-modal-body'),
+      panel=modal.querySelector('.panel'),
+      prog=document.getElementById('tx-prog'),
+      chapters={}, lastFocus=null;
+
+  /* find the pasted chapters */
+  var MARK='::CHAPTER';
+
+  /* Rebuild the lines from the DOM rather than innerText. innerText returns
+     an empty string for anything hidden, so the moment the source section is
+     hidden in Carrd the chapters would silently vanish. */
+  function readLines(el){
+    var out=[], buf='';
+    (function walk(node){
+      for(var c=node.firstChild;c;c=c.nextSibling){
+        if(c.nodeType===3){
+          /* a pasted block arrives as one text node with real newlines in it,
+             so those count as line breaks too, not just <br> */
+          var parts=c.nodeValue.split('\n');
+          for(var i=0;i<parts.length;i++){
+            if(i){ out.push(buf); buf=''; }
+            buf+=parts[i];
+          }
+        }
+        else if(c.nodeType===1){
+          var tag=c.tagName;
+          if(tag==='BR'){ out.push(buf); buf=''; }
+          else{
+            var block=/^(P|DIV|LI|H[1-6]|SECTION|ARTICLE|BLOCKQUOTE|TR)$/.test(tag);
+            if(block && buf.trim()){ out.push(buf); buf=''; }
+            walk(c);
+            if(block && buf.trim()){ out.push(buf); buf=''; }
+          }
+        }
+      }
+    })(el);
+    if(buf.trim()) out.push(buf);
+    return out.map(function(l){ return l.replace(/\s+/g,' ').trim(); });
+  }
+
+  var found=[];
+  document.querySelectorAll('div,p,section,article').forEach(function(el){
+    var t=(el.textContent||'').trim();
+    if(t.indexOf(MARK)===0) found.push({el:el,len:t.length});
+  });
+  found.forEach(function(f){ var d=0,e=f.el; while(e){d++;e=e.parentElement;} f.depth=d; });
+  found.sort(function(a,b){ return (a.len-b.len) || (b.depth-a.depth); });  /* innermost wins */
+  var claimed=[];
+  found.forEach(function(f){
+    if(claimed.some(function(c){ return c.contains(f.el); })) return;
+    claimed.push(f.el);
+    var lines=readLines(f.el).filter(function(l){ return l; });
+    var head=(lines.shift()||'').replace(MARK,'').split('::').map(function(s){return s.trim();});
+    var n=parseInt(head[0],10);
+    if(!n) return;
+    chapters[n]={num:n,title:head[1]||('Chapter '+n),code:head[2]||'',place:head[3]||'',lines:lines};
+    f.el.style.display='none';
+    var sec=f.el.closest('section');
+    if(sec) sec.setAttribute('data-tx-source','1');
+  });
+  /* collapse a section that now holds nothing but hidden chapters */
+  document.querySelectorAll('[data-tx-source]').forEach(function(sec){
+    var rest=Array.prototype.filter.call(sec.querySelectorAll('*'),function(e){
+      return e.style.display!=='none' && e.textContent.trim() && !e.querySelector('*');
+    });
+    if(!rest.length) sec.style.display='none';
+  });
+
+  /* voice detection, same rules as the source files- */
+  var DOCTRINE=['UPGRADE TO ASCEND','SAFETY IS COMPLIANCE','THE BODY IS A LIMITATION'];
+  var EXACT=['Command Line / Counter-Espionage Division','Arrival window confirmed','Debrief bay reserved'];
+  function fileish(s){
+    if(s.length>90) return false;
+    if(EXACT.indexOf(s)>-1 || s.indexOf('CEDD//')===0 || /\/\/$/.test(s)) return true;
+    if(s===s.toUpperCase() && /[A-Z]/.test(s)){
+      var w=s.split(/\s+/).length; if(w>1 && w<=8) return true;
+    }
+    return /^[A-Z][A-Za-z ()/-]{2,34}:/.test(s) && !/,$/.test(s);
+  }
+  function classify(s){
+    if(DOCTRINE.indexOf(s)>-1) return 'doc';
+    if(s.charAt(0)==='[' && s.charAt(s.length-1)===']'){
+      var inner=s.slice(1,-1);
+      /* Telemetry never punctuates. A bracketed line that ends in a full stop
+         or a question mark is her speaking, even when the source has it in
+         caps — [YOU ARE STABLE.] is hers, [END OF LOG] is the system's. */
+      if(/[.?!]$/.test(inner)) return 'trx';
+      var L=inner.replace(/[^A-Za-z]/g,''), up=0;
+      for(var i=0;i<L.length;i++) if(L[i]===L[i].toUpperCase()) up++;
+      return (up/Math.max(1,L.length))>=0.7 ? 'hud' : 'trx';
+    }
+    if(fileish(s)) return 'file';
+    if(/^[A-Z0-9 \-/#:.,%'"{}]{4,60}$/.test(s) && s.split(/\s+/).length<=7) return 'stamp';
+    return 'p';
+  }
+
+  function render(n){
+    var c=chapters[n];
+    if(!c){ body.innerHTML='<div class="rdx-head"><h2 class="rdx-title">Not filed</h2></div>'+
+      '<p>This chapter has not been pasted into the page yet.</p>'; return; }
+    var html='<div class="rdx-head"><div class="rdx-meta"><span>CHAPTER '+
+      ('0'+c.num).slice(-2)+'</span><span>'+esc(c.code)+'</span><span>'+esc(c.place)+
+      '</span></div><h2 class="rdx-title">'+esc(c.title)+'</h2></div>';
+    var run=null, runType=null;
+    function flush(){
+      if(run){ html+='<div class="rdx-'+runType+'">'+run.join('<br>')+'</div>'; run=null; runType=null; }
+    }
+    c.lines.forEach(function(raw){
+      var s=raw.trim(); if(!s) return;
+      var k=classify(s);
+      if(k==='file'||k==='doc'){
+        if(runType!==k) flush();
+        runType=k; (run=run||[]).push(esc(s)); return;
+      }
+      flush();
+      if(k==='p') html+='<p>'+esc(s)+'</p>';
+      else html+='<p class="rdx-'+k+'">'+esc(s)+'</p>';
+    });
+    flush();
+    html+='<div class="rdx-end">END OF CHAPTER '+('0'+c.num).slice(-2)+' &middot; '+esc(c.code)+'</div>';
+    body.innerHTML=html;
+  }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function open(n){
+    lastFocus=document.activeElement;
+    render(n);
+    modal.classList.add('on'); modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('tx-locked');
+    panel.scrollTop=0; prog.style.width='0';
+    modal.querySelector('.x').focus();
+    if(window.TRIXE) window.TRIXE.say(window.TRIXE.pick('open',[
+      'Take your time with it.','You have read this one before.',
+      'This is the version they approved.','I was there. My account differs.'
+    ]),{cooldown:15000});
+  }
+  function close(){
+    modal.classList.remove('on'); modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('tx-locked');
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  document.addEventListener('click',function(e){
+    var t=e.target.closest ? e.target.closest('[data-open-ch]') : null;
+    if(t){ e.preventDefault(); open(parseInt(t.getAttribute('data-open-ch'),10)); return; }
+    if(e.target.closest && e.target.closest('[data-close]')) close();
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape' && modal.classList.contains('on')) close();
+  });
+  panel.addEventListener('scroll',function(){
+    var m=panel.scrollHeight-panel.clientHeight;
+    prog.style.width=(m>0?(panel.scrollTop/m*100):0)+'%';
+  },{passive:true});
+
+  window.TXChapters=chapters;
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',txModal);
+else txModal();
+})();
+</script>

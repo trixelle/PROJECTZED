@@ -1,9 +1,12 @@
 <style>
 #tx-dot{position:fixed;left:0;top:0;width:26px;height:26px;margin:-13px 0 0 -13px;
   border:1px solid var(--tx-trixe,#ffc46b);border-radius:50%;z-index:9993;pointer-events:none;
-  opacity:0;transition:opacity .4s,width .18s,height .18s,margin .18s,border-color .18s;
-  box-shadow:0 0 14px rgba(255,196,107,.18);}
-body.tx-live #tx-dot{opacity:.55;}
+  opacity:0;will-change:transform;
+  transition:opacity .4s,width .18s,height .18s,margin .18s,border-color .18s;
+  box-shadow:0 0 16px rgba(255,196,107,.25);}
+/* Visible as soon as the pointer moves. It used to wait for body.tx-live,
+   which meant one missing class anywhere on the page left it invisible. */
+#tx-dot.live{opacity:.7;}
 #tx-dot.near{width:44px;height:44px;margin:-22px 0 0 -22px;border-color:var(--tx-signal,#ff2f43);}
 #tx-dot i{position:absolute;inset:50% auto auto 50%;width:2px;height:2px;margin:-1px 0 0 -1px;
   background:var(--tx-trixe,#ffc46b);border-radius:50%;}
@@ -41,10 +44,12 @@ function txExtras(){
     if(btn.parentNode!==document.body) document.body.appendChild(btn);
   }catch(e){}
 
-  /* ---------------- cursor follower ---------------- */
-  var tx=innerWidth/2, ty=innerHeight/2, dx=tx, dy=ty, near=false;
+  /* cursor follower */
+  var tx=innerWidth/2, ty=innerHeight/2, dx=tx, dy=ty, near=false, shown=false;
+  dot.style.transform='translate3d('+dx+'px,'+dy+'px,0)';
   addEventListener('pointermove',function(e){
     tx=e.clientX; ty=e.clientY;
+    if(!shown){ shown=true; dot.classList.add('live'); }
     var el=e.target, n=!!(el&&el.closest&&el.closest('a,button,summary,.rd,#tx-nav a,.op summary,.tx-tabs button,#tx-gauge .node'));
     if(n!==near){ near=n; dot.classList.toggle('near',n); if(n) TXA.tick(); }
   },{passive:true});
@@ -58,14 +63,17 @@ function txExtras(){
   if(window.TX) window.TX.add(follow);
   else (function r(){ follow(); requestAnimationFrame(r); })();
 
-  /* generated audio */
+  /*generated audio*/
   var AC=window.AudioContext||window.webkitAudioContext, ctx=null, master=null, amb=null, on=false, built=false;
-  var DEFAULT_ON = false;      
-  var AMBIENT_LEVEL = 0.30;   
+  var DEFAULT_ON = true;      /* set to false if you would rather it start muted */
+  var AMBIENT_LEVEL = 0.30;   /* drone + rain only. Blips are not affected. */
+
   function build(){
     if(built) return; built=true;
     ctx=new AC();
     master=ctx.createGain(); master.gain.value=0; master.connect(ctx.destination);
+    /* the hum and the rain sit behind their own fader so they can be
+       pulled right down without thinning out the ticks and the chime */
     amb=ctx.createGain(); amb.gain.value=AMBIENT_LEVEL; amb.connect(master);
 
     var lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=210; lp.Q.value=6;
@@ -76,6 +84,7 @@ function txExtras(){
       g.gain.value=[0.5,0.28,0.14][i];
       o.connect(g); g.connect(lp); o.start();
     });
+
     var lfo=ctx.createOscillator(), la=ctx.createGain();
     lfo.frequency.value=0.045; la.gain.value=60;
     lfo.connect(la); la.connect(lp.frequency); lfo.start();

@@ -1,6 +1,6 @@
 <style>
-.tx-hero{padding:104px 0 60px;overflow:hidden;}
-.tx-hero .eyerow{display:flex;gap:26px;align-items:baseline;margin-bottom:18px;}
+.tx-hero{padding:46px 0 48px;overflow:hidden;}
+.tx-hero .eyerow{display:flex;gap:26px;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;}
 .tx-hero .eyerow span{font-size:11px;letter-spacing:.2em;color:var(--tx-grid);}
 .tx-hero .eyerow span b{color:var(--tx-signal);font-weight:500;}
 .tx-mark{position:relative;}
@@ -13,18 +13,18 @@
   background:var(--tx-signal);opacity:.9;box-shadow:0 0 18px rgba(255,47,67,.7);}
 .tx-mark .ghost{position:absolute;left:0;top:0;color:var(--tx-signal);opacity:.28;
   mix-blend-mode:screen;pointer-events:none;}
-.tx-hero .thesis{max-width:52ch;margin:38px 0 0;font-size:15px;line-height:1.72;color:var(--tx-dim);}
+.tx-hero .thesis{max-width:52ch;margin:30px 0 0;font-size:15px;line-height:1.72;color:var(--tx-dim);}
 .tx-hero .thesis em{color:var(--tx-bone);font-style:normal;}
-.tx-ident{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:46px;
+.tx-ident{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:34px;
   border-top:1px solid rgba(77,88,102,.4);}
 .tx-ident div{padding:14px 16px 12px 0;border-right:1px solid rgba(77,88,102,.22);}
 .tx-ident div:last-child{border-right:0;}
 .tx-ident dt{font-size:10px;letter-spacing:.16em;color:var(--tx-grid);margin:0 0 5px;}
 .tx-ident dd{margin:0;font-size:13px;color:var(--tx-bone);letter-spacing:.03em;}
-.tx-readout{margin-top:34px;font-size:12px;line-height:1.9;color:var(--tx-dim);}
+.tx-readout{margin-top:26px;font-size:12px;line-height:1.9;color:var(--tx-dim);}
 .tx-readout .amb{color:var(--tx-trixe);text-shadow:0 0 14px rgba(255,196,107,.3);}
 @media(max-width:760px){
-  .tx-hero{padding:76px 0 44px;}
+  .tx-hero{padding:34px 0 36px;}
   .tx-ident{grid-template-columns:repeat(2,1fr);}
   .tx-ident div:nth-child(2){border-right:0;}
 }
@@ -46,7 +46,9 @@
       </h1>
     </div>
 
-    <p class="thesis">An archive of operational, technical, and personnel records associated with Command Line asset ZED. Contents are indexed by record type and displayed according to current clearance.</p>
+    <p class="thesis">A weapon learns to doubt the orders in his head <em>because the voice
+    that steadies him might be real.</em> This file covers asset ZED, the missions logged under
+    his clearance, and the telemetry irregularity that CEDD keeps filing as noise.</p>
 
     <dl class="tx-ident">
       <div><dt>ASSET</dt><dd>ZED &mdash; &ldquo;BLACK-7&rdquo;</dd></div>
@@ -59,6 +61,7 @@
       [SYSTEM INTEGRITY: 98% | NOMINAL]<br>
       [NEURAL LOAD: 12% | STABLE]<br>
       [SYNAPTIC LATENCY: 0ms]<br>
+      <span class="amb">[You are stable.]</span>
     </div>
 
   </div>
