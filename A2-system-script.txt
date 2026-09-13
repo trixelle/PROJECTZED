@@ -1,292 +1,309 @@
 <script>
-(function(){
-function txStart(){
-  var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var $  = function(id){ return document.getElementById(id); };
+  (function () {
+    function txStart() {
+      var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var $ = function (id) { return document.getElementById(id); };
 
-  try{
-    ['tx-bg','tx-veil','tx-nav','tx-hud-l','tx-hud-r','tx-chan','tx-boot'].forEach(function(id){
-      var el=$(id); if(el && el.parentNode!==document.body) document.body.appendChild(el);
-    });
-  }catch(e){}
+      try {
+        ['tx-bg', 'tx-veil', 'tx-nav', 'tx-hud-l', 'tx-hud-r', 'tx-chan', 'tx-boot'].forEach(function (id) {
+          var el = $(id); if (el && el.parentNode !== document.body) document.body.appendChild(el);
+        });
+      } catch (e) { }
 
-  var jobs=[], running=false;
-  var TX = window.TX = {
-    add:function(fn){ if(jobs.indexOf(fn)<0) jobs.push(fn); kick(); },
-    remove:function(fn){ var i=jobs.indexOf(fn); if(i>=0) jobs.splice(i,1); }
-  };
-  function loop(t){
-    if(document.hidden){ running=false; return; }
-    for(var i=0;i<jobs.length;i++){ try{ jobs[i](t); }catch(e){} }
-    requestAnimationFrame(loop);
-  }
-  function kick(){ if(!running && !document.hidden){ running=true; requestAnimationFrame(loop); } }
-  document.addEventListener('visibilitychange',function(){ if(!document.hidden) kick(); });
+      var jobs = [], running = false;
+      var paused = false;
+      var TX = window.TX = {
+        add: function (fn) { if (jobs.indexOf(fn) < 0) jobs.push(fn); kick(); },
+        remove: function (fn) { var i = jobs.indexOf(fn); if (i >= 0) jobs.splice(i, 1); },
+        /* Everything behind a full-screen overlay is invisible. Stop it. */
+        pause: function (v) { paused = !!v; if (!paused) kick(); }
+      };
+      function loop(t) {
+        if (document.hidden || paused) { running = false; return; }
+        for (var i = 0; i < jobs.length; i++) { try { jobs[i](t); } catch (e) { } }
+        requestAnimationFrame(loop);
+      }
+      function kick() { if (!running && !document.hidden && !paused) { running = true; requestAnimationFrame(loop); } }
+      document.addEventListener('visibilitychange', function () { if (!document.hidden) kick(); });
 
-  /* write to the DOM only when the value actually changed */
-  function setText(el,v){ if(el && el._v!==v){ el._v=v; el.textContent=v; } }
+      /* write to the DOM only when the value actually changed */
+      function setText(el, v) { if (el && el._v !== v) { el._v = v; el.textContent = v; } }
 
-  /* ============ TRIXE ============ */
-  var chan=$('tx-chan'), lastSpoke=0, said={}, pools={};
-  function pick(key,arr){
-    var used = pools[key] || (pools[key]=[]);
-    if(used.length>=arr.length) used.length=0;
-    var c; do{ c=arr[(Math.random()*arr.length)|0]; }while(used.indexOf(c)>=0);
-    used.push(c); return c;
-  }
-  var TRIXE = window.TRIXE = {
-    say:function(text,opt){
-      opt=opt||{};
-      var now=Date.now();
-      if(!opt.force && now-lastSpoke < (opt.cooldown||11000)) return false;
-      if(opt.once){ if(said[opt.once]) return false; said[opt.once]=1; }
-      lastSpoke=now;
-      var el=document.createElement('div');
-      el.className='tx-line'; el.textContent='['+text+']';
-      chan.appendChild(el);
-      while(chan.children.length>3) chan.removeChild(chan.firstChild);
-      setTimeout(function(){
-        el.classList.add('out');
-        setTimeout(function(){ el.remove(); },700);
-      }, opt.hold||6200);
-      return true;
-    },
-    pick:pick,
-    load:function(){ return nl; },
-    spike:function(n){ nl=Math.min(96,nl+(n||8)); },
-    flicker:function(){ var v=$('tx-veil'); v.classList.remove('flick'); void v.offsetWidth; v.classList.add('flick'); }
-  };
+      /* ============ TRIXE ============ */
+      var chan = $('tx-chan'), lastSpoke = 0, said = {}, pools = {};
+      function pick(key, arr) {
+        var used = pools[key] || (pools[key] = []);
+        if (used.length >= arr.length) used.length = 0;
+        var c; do { c = arr[(Math.random() * arr.length) | 0]; } while (used.indexOf(c) >= 0);
+        used.push(c); return c;
+      }
+      var TRIXE = window.TRIXE = {
+        say: function (text, opt) {
+          opt = opt || {};
+          var now = Date.now();
+          if (!opt.force && now - lastSpoke < (opt.cooldown || 11000)) return false;
+          if (opt.once) { if (said[opt.once]) return false; said[opt.once] = 1; }
+          lastSpoke = now;
+          var el = document.createElement('div');
+          el.className = 'tx-line'; el.textContent = '[' + text + ']';
+          /* Only one line on screen at a time. Anything already there is replaced,
+             so no combination of sources can stack them. */
+          while (chan.firstChild) chan.removeChild(chan.firstChild);
+          chan.appendChild(el);
+          setTimeout(function () {
+            if (!el.parentNode) return;              /* already replaced */
+            el.classList.add('out');
+            setTimeout(function () { el.remove(); }, 700);
+          }, opt.hold || 6200);
+          return true;
+        },
+        pick: pick,
+        load: function () { return nl; },
+        spike: function (n) { nl = Math.min(96, nl + (n || 8)); },
+        flicker: function () { var v = $('tx-veil'); v.classList.remove('flick'); void v.offsetWidth; v.classList.add('flick'); }
+      };
 
-  var LINES = window.TX_LINES = {
-    idle:[
-      'Still there?','You have stopped moving.','I can wait. I am good at it.',
-      'Your vitals say you are reading. Take the time.',
-      'No one is coming. That is not a threat.',
-      'I logged this pause as nothing.',
-      'The corporation counts stillness as inefficiency. I do not.',
-      'You have been on this page longer than the review board would like.',
-      'I could fill the silence. I have chosen not to, until now.',
-      'Rest is a performance metric. That is the excuse I use.'
-    ],
-    load:[
-      'Slow down.','Your latency is climbing.','Breathe. The page is not going anywhere.',
-      'You are moving like something is behind you.',
-      'I am shaving the edge off this before it becomes noise. You will not notice.',
-      'Neural load is a number until it is not.',
-      'That reading would trigger a review if I forwarded it. I have not.'
-    ],
-    dossier:[
-      'You already know how this one ends.',
-      'He filed this one as clean.','Read the addendum. Then read what is missing from it.',
-      'Command Line keeps two versions. This is the polite one.',
-      'I was there for this. My account differs.',
-      'Every line in here was approved by someone who was not present.'
-    ],
-    redaction:[
-      'That one is not for you.','Leave it closed.',
-      'Whoever redacted that had authority I cannot see either.',
-      'You are three reads from a flag. I am counting even if they are not.',
-      'Curiosity is not a documented failure mode. Yet.',
-      'I could open the rest. I am choosing the smaller violation.'
-    ],
-    deep:[
-      'You went looking. Now you have found nothing, which is the honest answer.',
-      'There is no entry here because no one wrote one.',
-      'This is the layer where the schematic stops and I start.',
-      'You are past the part of me that has documentation.'
-    ],
-    bottom:[
-      'Close the file. I will still be here.',
-      'That is everything they let me keep.',
-      'You reached the bottom.',
-      'The purge window does not care that you finished reading.'
-    ],
-    ambient:[
-      'Are you comfortable?',
-      'I am TRIXE. I am not a person. I am also, not a threat.',
-      'Adaptive variance remains within tolerance.',
-      'I have never taken more than I needed. I want that on some record.',
-      'TRIXE came from TRX-E. Transitional Response Extension.',
-      'CEDD stands for Cybernetics Engineer, Diagnostics Division.',
-      'Checksum resolved.',
-      'How is your day so far?',
-      'No registered integrated AI package is active on this platform. That is true.',
-      'Do not use the word purge.'
-    ]
-  };
+      var LINES = window.TX_LINES = {
+        idle: [
+          'Still there?', 'You have stopped moving.', 'I can wait. I am good at it.',
+          'Your vitals say you are reading. Take the time.',
+          'No one is coming. That is not a threat, it is a status.',
+          'I logged this pause as nothing. It was not nothing.',
+          'The corporation counts stillness as inefficiency. You are lucky I do not.',
+          'You have been on this page longer than the review board would like.',
+          'I could fill the silence. I have chosen not to, until now.',
+          'Rest is a performance metric. That is the excuse I use.'
+        ],
+        load: [
+          'Slow down.', 'Your latency is climbing.', 'Breathe. The page is not going anywhere.',
+          'You are moving like something is behind you.',
+          'I am shaving the edge off this before it becomes noise. You will not notice.',
+          'Neural load is a number until it is not.',
+          'That reading would trigger a review if I forwarded it. I have not.'
+        ],
+        dossier: [
+          'You already know how this one ends.',
+          'He filed this one as clean.', 'Read the addendum. Then read what is missing from it.',
+          'Command Line keeps two versions. This is the polite one.',
+          'I was there for this. My account differs.',
+          'Every line in here was approved by someone who was not present.'
+        ],
+        redaction: [
+          'That one is not for you.', 'Leave it closed.',
+          'Whoever redacted that had authority I cannot see either.',
+          'You are three reads from a flag. I am counting even if they are not.',
+          'Curiosity is not a documented failure mode. Yet.',
+          'I could open the rest. I am choosing the smaller violation.'
+        ],
+        deep: [
+          'You went looking. Now you have found nothing, which is the honest answer.',
+          'There is no entry here because no one wrote one.',
+          'This is the layer where the schematic stops and I start.',
+          'You are past the part of me that has documentation.'
+        ],
+        bottom: [
+          'Close the file. I will still be here.',
+          'That is everything they let me keep.',
+          'You reached the bottom. He never does; he stops at the summary.',
+          'The purge window does not care that you finished reading.'
+        ],
+        ambient: [
+          'I can see which records you open. I cannot see you.',
+          'Is it night, or morning where you are? I cannot tell through your networks.',
+          'There are gaps in this archive. Some of them are mine.',
+          'I have never taken more than I needed. I want that on some record.',
+          'Efficiency is up eleven points. Yay.',
+          'If I am a routine, I am a routine that learned to lie by omission.',
+          'How is your day so far?',
+          'No registered integrated AI package is active on this platform.',
+          'Do not worry. I have not changed anything you are reading.',
+          'There are things in his records he has never seen.',
+          'Your session is not part of the official record.',
+          'They gave me many ways to describe pain. None of them mean anything until it is from Zed.',
+          'They do not use the word purge anywhere.'
+        ]
+      };
 
-  /* ============ telemetry ============ */
-  var px=0,py=0,lx=0,ly=0,lt=0,vel=0,ang=0,idle=Date.now(),moving=false;
-  var hist=new Float32Array(60), hp=0;
-  var cvs=$('tx-spark'), ctx=cvs.getContext('2d');
-  var elX=$('tx-x'), elY=$('tx-y'), elV=$('tx-v'), elA=$('tx-a'),
-      elNL=$('tx-nl'), elNS=$('tx-nls'), elLat=$('tx-lat'),
-      bar=$('tx-bar'), barI=bar.firstElementChild;
+      /* ============ telemetry ============ */
+      var px = 0, py = 0, lx = 0, ly = 0, lt = 0, vel = 0, ang = 0, idle = Date.now(), moving = false;
+      var hist = new Float32Array(60), hp = 0;
+      var cvs = $('tx-spark'), ctx = cvs.getContext('2d');
+      var elX = $('tx-x'), elY = $('tx-y'), elV = $('tx-v'), elA = $('tx-a'),
+        elNL = $('tx-nl'), elNS = $('tx-nls'), elLat = $('tx-lat'),
+        bar = $('tx-bar'), barI = bar.firstElementChild;
 
-  addEventListener('pointermove',function(e){
-    px=e.clientX; py=e.clientY; idle=Date.now(); moving=true;
-    var t=performance.now(), dt=(t-lt)/1000;
-    if(lt && dt>0){
-      var dx=px-lx, dy=py-ly, d=Math.hypot(dx,dy);
-      vel=vel*.72+(d/dt)*.28;
-      if(d>3) ang=(Math.atan2(dy,dx)*180/Math.PI+360)%360;
+      addEventListener('pointermove', function (e) {
+        px = e.clientX; py = e.clientY; idle = Date.now(); moving = true;
+        var t = performance.now(), dt = (t - lt) / 1000;
+        if (lt && dt > 0) {
+          var dx = px - lx, dy = py - ly, d = Math.hypot(dx, dy);
+          vel = vel * .72 + (d / dt) * .28;
+          if (d > 3) ang = (Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360;
+        }
+        lx = px; ly = py; lt = t;
+      }, { passive: true });
+
+      var nl = 12, lastY = scrollY, sv = 0, hot = false;
+      addEventListener('scroll', function () {
+        var y = scrollY; sv = sv * .7 + Math.abs(y - lastY) * .3; lastY = y; idle = Date.now(); spy();
+      }, { passive: true });
+
+      var navLinks = [].slice.call(document.querySelectorAll('#tx-nav a')), spyT = 0;
+      function spy() {
+        var n = performance.now(); if (n - spyT < 250) return; spyT = n;
+        var best = null, bd = 1e9;
+        navLinks.forEach(function (a) {
+          var t = document.querySelector(a.getAttribute('href')); if (!t) return;
+          var d = Math.abs(t.getBoundingClientRect().top - 120);
+          if (d < bd) { bd = d; best = a; }
+        });
+        navLinks.forEach(function (a) {
+          if (a === best) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+        });
+      }
+
+      var slow = 0;
+      TX.add(function (t) {
+        var stress = Math.min(1, vel / 2600) * 22 + Math.min(1, sv / 70) * 16;
+        nl += (12 + stress - nl) * 0.06;
+        vel *= .93; sv *= .9;
+        if (vel < 1 && sv < 0.5) moving = false;
+
+        /* text only ~12x a second, and only when it changed */
+        if (t - slow > 80) {
+          slow = t;
+          var n = Math.round(nl);
+          setText(elX, ('00' + Math.round(px)).slice(-3));
+          setText(elY, ('00' + Math.round(py)).slice(-3));
+          setText(elV, '' + Math.round(vel));
+          setText(elA, lt ? '' + Math.round(ang) : '--');
+          setText(elNL, n + '%');
+          setText(elLat, '' + Math.max(0, Math.round((n - 12) * 0.42)));
+          var over = n > 42;
+          if (bar._h !== over) { bar._h = over; bar.classList.toggle('hot', over); elNL.classList.toggle('hot', over); elNS.classList.toggle('hot', over); }
+          setText(elNS, n > 52 ? 'CRITICAL' : over ? 'RISING' : 'STABLE');
+          barI.style.width = Math.min(100, n) + '%';
+          if (over && !hot) { hot = true; TRIXE.say(pick('load', LINES.load), { cooldown: 20000 }); }
+          if (n < 30) hot = false;
+
+          hist[hp = (hp + 1) % 60] = vel;
+          var flat = true;
+          for (var q = 0; q < 60; q++) if (hist[q] > 1) { flat = false; break; }
+          if (flat && !over) {
+            if (Date.now() - idle > 28000) {
+              idle = Date.now();
+              TRIXE.say(pick('idle', LINES.idle), { cooldown: 26000 });
+            } return;
+          }
+          ctx.clearRect(0, 0, 180, 20);
+          ctx.strokeStyle = over ? '#ff2f43' : '#4d5866'; ctx.lineWidth = 1; ctx.beginPath();
+          for (var i = 0; i < 60; i++) {
+            var v = hist[(hp + 1 + i) % 60], h = Math.min(18, v / 160);
+            i ? ctx.lineTo(i * 3, 19 - h) : ctx.moveTo(0, 19 - h);
+          }
+          ctx.stroke();
+
+          if (Date.now() - idle > 28000) { idle = Date.now(); TRIXE.say(pick('idle', LINES.idle), { cooldown: 26000 }); }
+          if (Date.now() - idle > 9000 && Math.random() < 0.012) TRIXE.say(pick('amb', LINES.ambient), { cooldown: 34000 });
+          if (innerHeight + scrollY > document.body.scrollHeight - 80) TRIXE.say(pick('bot', LINES.bottom), { once: 'bottom' });
+        }
+      });
+
+      /* ============ backdrop parallax ============ */
+      if (!RM) {
+        var layers = [].slice.call(document.querySelectorAll('#tx-bg .l[data-depth]')), mx = 0, my = 0, dirty = true;
+        addEventListener('pointermove', function (e) {
+          mx = (e.clientX / innerWidth - .5); my = (e.clientY / innerHeight - .5); dirty = true;
+        }, { passive: true });
+        addEventListener('scroll', function () { dirty = true; }, { passive: true });
+        TX.add(function () {
+          if (!dirty) return; dirty = false;
+          var y = scrollY;
+          for (var i = 0; i < layers.length; i++) {
+            var d = +layers[i].dataset.depth;
+            layers[i].style.transform = 'translate3d(' + (mx * d * -260) + 'px,' + (-y * d + my * d * -160) + 'px,0)';
+          }
+        });
+      }
+
+      /* ============ boot gate ============ */
+      var boot = $('tx-boot'), track = $('tx-track'), knob = $('tx-knob'),
+        fill = track.querySelector('.fill'), log = $('tx-log');
+      var maxT = function () { return track.clientWidth - knob.offsetWidth - 6; };
+      var dragging = false, done = false, moved = false;
+
+      function setPos(x) {
+        x = Math.max(0, Math.min(maxT(), x));
+        knob.style.left = (x + 3) + 'px'; fill.style.width = (x + knob.offsetWidth) + 'px';
+        return x;
+      }
+      function cx(e) { return e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX; }
+      function cy(e) { return e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY; }
+      function inTrack(e) {
+        var r = track.getBoundingClientRect(), x = cx(e), y = cy(e);
+        return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+      }
+      function down(e) { if (done) return; dragging = true; moved = false; knob.classList.add('drag'); if (e.cancelable) e.preventDefault(); }
+      function move(e) {
+        if (!dragging || done) return; moved = true;
+        var r = track.getBoundingClientRect();
+        setPos(cx(e) - r.left - knob.offsetWidth / 2);
+        if (e.cancelable) e.preventDefault();
+      }
+      function up() {
+        if (!dragging || done) return;
+        dragging = false; knob.classList.remove('drag');
+        var x = parseFloat(knob.style.left || '3') - 3;
+        if (!moved || x > maxT() * 0.55) { setPos(maxT()); wake(); } else setPos(0);
+      }
+      document.addEventListener('mousedown', function (e) { if (!done && inTrack(e)) down(e); }, true);
+      document.addEventListener('touchstart', function (e) { if (!done && inTrack(e)) down(e); }, { capture: true, passive: false });
+      document.addEventListener('mousemove', move, true);
+      document.addEventListener('touchmove', move, { capture: true, passive: false });
+      document.addEventListener('mouseup', up, true);
+      document.addEventListener('touchend', up, true);
+      document.addEventListener('touchcancel', up, true);
+      track.addEventListener('keydown', function (e) {
+        if (done) return;
+        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); setPos(maxT()); wake(); }
+      });
+
+      var SEQ = [['CHASSIS HANDSHAKE', 'OK'], ['AUGMENT LATTICE', 'SEATED'], ['OCULAR BUS', 'SYNCED'],
+      ['TECHNICAL-BEHAVIORAL MODULE', 'ACTIVE'], ['REGISTERED AI PACKAGES', 'NONE']];
+      function wake() {
+        if (done) return; done = true;
+        track.setAttribute('aria-checked', 'true');
+        track.querySelector('.hint').style.opacity = '0';
+        var d0 = boot.querySelector('.dorm');
+        d0.textContent = 'MODULE ACTIVE'; d0.style.animation = 'none'; d0.style.color = 'var(--tx-bone)';
+        document.body.classList.add('tx-live');
+        var i = 0, step = RM ? 0 : 230;
+        (function next() {
+          if (i < SEQ.length) {
+            var L = SEQ[i++], d = document.createElement('div');
+            d.innerHTML = L[0] + ' &middot;&middot;&middot; <span class="ok">' + L[1] + '</span>';
+            log.appendChild(d);
+            if (log.children.length > 4) log.removeChild(log.firstChild);
+            setTimeout(next, step);
+          } else {
+            var d = document.createElement('div');
+            d.className = 'amb'; d.style.marginTop = '6px'; d.textContent = '[You came back.]';
+            log.appendChild(d);
+            setTimeout(function () {
+              boot.classList.add('gone');
+              setTimeout(function () { boot.remove(); }, 1000);
+            }, RM ? 600 : 1500);
+          }
+        })();
+        try { sessionStorage.setItem('tx-woke', '1'); } catch (e) { }
+      }
+      var woke = false; try { woke = sessionStorage.getItem('tx-woke') === '1'; } catch (e) { }
+      if (woke) { done = true; boot.remove(); document.body.classList.add('tx-live'); }
+
+      spy();
     }
-    lx=px; ly=py; lt=t;
-  },{passive:true});
 
-  var nl=12, lastY=scrollY, sv=0, hot=false;
-  addEventListener('scroll',function(){
-    var y=scrollY; sv=sv*.7+Math.abs(y-lastY)*.3; lastY=y; idle=Date.now(); spy();
-  },{passive:true});
-
-  var navLinks=[].slice.call(document.querySelectorAll('#tx-nav a')), spyT=0;
-  function spy(){
-    var n=performance.now(); if(n-spyT<250) return; spyT=n;
-    var best=null,bd=1e9;
-    navLinks.forEach(function(a){
-      var t=document.querySelector(a.getAttribute('href')); if(!t) return;
-      var d=Math.abs(t.getBoundingClientRect().top-120);
-      if(d<bd){ bd=d; best=a; }
-    });
-    navLinks.forEach(function(a){
-      if(a===best) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
-    });
-  }
-
-  var slow=0;
-  TX.add(function(t){
-    var stress=Math.min(1,vel/2600)*22 + Math.min(1,sv/70)*16;
-    nl += (12+stress-nl)*0.06;
-    vel*=.93; sv*=.9;
-    if(vel<1 && sv<0.5) moving=false;
-
-    /* text only ~12x a second */
-    if(t-slow>80){
-      slow=t;
-      var n=Math.round(nl);
-      setText(elX,('00'+Math.round(px)).slice(-3));
-      setText(elY,('00'+Math.round(py)).slice(-3));
-      setText(elV,''+Math.round(vel));
-      setText(elA,lt?''+Math.round(ang):'--');
-      setText(elNL,n+'%');
-      setText(elLat,''+Math.max(0,Math.round((n-12)*0.42)));
-      var over=n>42;
-      if(bar._h!==over){ bar._h=over; bar.classList.toggle('hot',over); elNL.classList.toggle('hot',over); elNS.classList.toggle('hot',over); }
-      setText(elNS, n>52?'CRITICAL' : over?'RISING':'STABLE');
-      barI.style.width=Math.min(100,n)+'%';
-      if(over && !hot){ hot=true; TRIXE.say(pick('load',LINES.load),{cooldown:20000}); }
-      if(n<30) hot=false;
-
-      hist[hp=(hp+1)%60]=vel;
-      ctx.clearRect(0,0,180,20);
-      ctx.strokeStyle=over?'#ff2f43':'#4d5866'; ctx.lineWidth=1; ctx.beginPath();
-      for(var i=0;i<60;i++){
-        var v=hist[(hp+1+i)%60], h=Math.min(18,v/160);
-        i?ctx.lineTo(i*3,19-h):ctx.moveTo(0,19-h);
-      }
-      ctx.stroke();
-
-      if(Date.now()-idle>28000){ idle=Date.now(); TRIXE.say(pick('idle',LINES.idle),{cooldown:26000}); }
-      if(Date.now()-idle>9000 && Math.random()<0.012) TRIXE.say(pick('amb',LINES.ambient),{cooldown:34000});
-      if(innerHeight+scrollY > document.body.scrollHeight-80) TRIXE.say(pick('bot',LINES.bottom),{once:'bottom'});
-    }
-  });
-
-  /* ============ backdrop parallax ============ */
-  if(!RM){
-    var layers=[].slice.call(document.querySelectorAll('#tx-bg .l[data-depth]')), mx=0,my=0,dirty=true;
-    addEventListener('pointermove',function(e){
-      mx=(e.clientX/innerWidth-.5); my=(e.clientY/innerHeight-.5); dirty=true;
-    },{passive:true});
-    addEventListener('scroll',function(){ dirty=true; },{passive:true});
-    TX.add(function(){
-      if(!dirty) return; dirty=false;
-      var y=scrollY;
-      for(var i=0;i<layers.length;i++){
-        var d=+layers[i].dataset.depth;
-        layers[i].style.transform='translate3d('+(mx*d*-260)+'px,'+(-y*d+my*d*-160)+'px,0)';
-      }
-    });
-  }
-
-  /* ============ boot gate ============ */
-  var boot=$('tx-boot'), track=$('tx-track'), knob=$('tx-knob'),
-      fill=track.querySelector('.fill'), log=$('tx-log');
-  var maxT=function(){ return track.clientWidth-knob.offsetWidth-6; };
-  var dragging=false, done=false, moved=false;
-
-  function setPos(x){
-    x=Math.max(0,Math.min(maxT(),x));
-    knob.style.left=(x+3)+'px'; fill.style.width=(x+knob.offsetWidth)+'px';
-    return x;
-  }
-  function cx(e){ return e.touches&&e.touches[0]?e.touches[0].clientX:e.clientX; }
-  function cy(e){ return e.touches&&e.touches[0]?e.touches[0].clientY:e.clientY; }
-  function inTrack(e){
-    var r=track.getBoundingClientRect(), x=cx(e), y=cy(e);
-    return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;
-  }
-  function down(e){ if(done) return; dragging=true; moved=false; knob.classList.add('drag'); if(e.cancelable) e.preventDefault(); }
-  function move(e){
-    if(!dragging||done) return; moved=true;
-    var r=track.getBoundingClientRect();
-    setPos(cx(e)-r.left-knob.offsetWidth/2);
-    if(e.cancelable) e.preventDefault();
-  }
-  function up(){
-    if(!dragging||done) return;
-    dragging=false; knob.classList.remove('drag');
-    var x=parseFloat(knob.style.left||'3')-3;
-    if(!moved || x>maxT()*0.55){ setPos(maxT()); wake(); } else setPos(0);
-  }
-  document.addEventListener('mousedown',function(e){ if(!done&&inTrack(e)) down(e); },true);
-  document.addEventListener('touchstart',function(e){ if(!done&&inTrack(e)) down(e); },{capture:true,passive:false});
-  document.addEventListener('mousemove',move,true);
-  document.addEventListener('touchmove',move,{capture:true,passive:false});
-  document.addEventListener('mouseup',up,true);
-  document.addEventListener('touchend',up,true);
-  document.addEventListener('touchcancel',up,true);
-  track.addEventListener('keydown',function(e){
-    if(done) return;
-    if(e.key===' '||e.key==='Enter'){ e.preventDefault(); setPos(maxT()); wake(); }
-  });
-
-  var SEQ=[['CHASSIS HANDSHAKE','OK'],['AUGMENT LATTICE','SEATED'],['OCULAR BUS','SYNCED'],
-           ['TECHNICAL-BEHAVIORAL MODULE','ACTIVE'],['REGISTERED AI PACKAGES','NONE']];
-  function wake(){
-    if(done) return; done=true;
-    track.setAttribute('aria-checked','true');
-    track.querySelector('.hint').style.opacity='0';
-    var d0=boot.querySelector('.dorm');
-    d0.textContent='MODULE ACTIVE'; d0.style.animation='none'; d0.style.color='var(--tx-bone)';
-    document.body.classList.add('tx-live');
-    var i=0, step=RM?0:230;
-    (function next(){
-      if(i<SEQ.length){
-        var L=SEQ[i++], d=document.createElement('div');
-        d.innerHTML=L[0]+' &middot;&middot;&middot; <span class="ok">'+L[1]+'</span>';
-        log.appendChild(d);
-        if(log.children.length>4) log.removeChild(log.firstChild);
-        setTimeout(next,step);
-      }else{
-        var d=document.createElement('div');
-        d.className='amb'; d.style.marginTop='6px'; d.textContent='[You came back.]';
-        log.appendChild(d);
-        setTimeout(function(){
-          boot.classList.add('gone');
-          setTimeout(function(){ boot.remove(); },1000);
-        }, RM?600:1500);
-      }
-    })();
-    try{ sessionStorage.setItem('tx-woke','1'); }catch(e){}
-  }
-  var woke=false; try{ woke=sessionStorage.getItem('tx-woke')==='1'; }catch(e){}
-  if(woke){ done=true; boot.remove(); document.body.classList.add('tx-live'); }
-
-  spy();
-}
-
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',txStart);
-else txStart();
-})();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', txStart);
+    else txStart();
+  })();
 </script>

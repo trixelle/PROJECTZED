@@ -1,65 +1,245 @@
-<!-- ============================================================
-     Redactions: wrap any text in  <b class="rd">...</b>
-     Amber TRIXE lines: <span class="amb">[like this]</span>
-     ============================================================ -->
-
 <style>
-.tx-arch{display:grid;grid-template-columns:238px minmax(0,1fr);gap:0;margin-top:26px;
-  border-top:1px solid rgba(77,88,102,.4);}
-.tx-tabs{border-right:1px solid rgba(77,88,102,.22);padding:14px 0;}
-.tx-tabs button{display:block;width:100%;text-align:left;background:none;border:0;cursor:pointer;
-  font-family:var(--tx-mono);font-size:12px;letter-spacing:.05em;color:var(--tx-dim);
-  padding:11px 16px 11px 14px;border-left:2px solid transparent;transition:color .16s,border-color .16s,background .16s;}
-.tx-tabs button:hover{color:var(--tx-bone);background:rgba(21,24,29,.6);}
-.tx-tabs button[aria-selected="true"]{color:var(--tx-bone);border-left-color:var(--tx-signal);background:rgba(21,24,29,.8);}
-.tx-tabs button:focus-visible{outline:1px solid var(--tx-bone);outline-offset:-1px;}
-.tx-tabs button i{display:block;font-style:normal;font-size:9.5px;letter-spacing:.14em;color:var(--tx-grid);margin-top:4px;}
-.tx-tabs button.corrupt{color:var(--tx-signal);}
+  .tx-arch {
+    display: grid;
+    grid-template-columns: 238px minmax(0, 1fr);
+    gap: 0;
+    margin-top: 26px;
+    border-top: 1px solid rgba(77, 88, 102, .4);
+  }
 
-.tx-doc{padding:26px 30px 34px;min-height:430px;position:relative;background:rgba(15,17,20,.55);}
-.tx-doc .stamp{position:absolute;top:16px;right:22px;font-size:10px;letter-spacing:.14em;
-  color:var(--tx-grid);text-align:right;line-height:1.7;}
-.tx-doc .stamp b{color:var(--tx-bone);font-weight:500;}
-.tx-doc .stamp.hot b{color:var(--tx-signal);}
-.tx-doc h4{font-family:var(--tx-disp);font-weight:600;font-size:19px;margin:0 0 4px;color:var(--tx-bone);}
-.tx-doc .fcode{font-size:10.5px;letter-spacing:.16em;color:var(--tx-grid);margin-bottom:20px;}
-.tx-doc p,.tx-doc li{font-size:13.5px;line-height:1.85;color:#b9bfc7;max-width:70ch;margin:0 0 13px;}
-.tx-doc ul{margin:0 0 13px;padding-left:18px;}
-.tx-doc .fld{display:grid;grid-template-columns:170px 1fr;gap:4px 14px;font-size:13px;margin-bottom:20px;}
-.tx-doc .fld dt{color:var(--tx-grid);letter-spacing:.08em;font-size:11px;padding-top:3px;}
-.tx-doc .fld dd{margin:0;color:var(--tx-bone);}
-.tx-doc .amb{color:var(--tx-trixe);border-left:2px solid var(--tx-trixe);padding-left:11px;
-  text-shadow:0 0 14px rgba(255,196,107,.28);}
-.tx-doc hr{border:0;border-top:1px solid rgba(77,88,102,.22);margin:20px 0;}
+  .tx-tabs {
+    position: relative;
+    z-index: 2;
+    border-right: 1px solid rgba(77, 88, 102, .22);
+    padding: 14px 0;
+  }
 
-/* redaction */
-.rd{background:var(--tx-bone);color:transparent;font-weight:400;cursor:help;
-  padding:0 3px;border-radius:1px;transition:background .12s,color .12s;
-  -webkit-user-select:none;user-select:none;}
-.rd::selection{background:var(--tx-bone);color:transparent;}
-.rd.open{background:rgba(255,47,67,.13);color:var(--tx-bone);box-shadow:inset 0 -1px var(--tx-signal);}
+  .tx-tabs button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-family: var(--tx-mono);
+    font-size: 12px;
+    letter-spacing: .05em;
+    color: var(--tx-dim);
+    padding: 11px 16px 11px 14px;
+    border-left: 2px solid transparent;
+    transition: color .16s, border-color .16s, background .16s;
+  }
 
-/* audit banner */
-#tx-audit{position:absolute;left:0;right:0;top:0;background:var(--tx-signal);color:#0b0002;
-  font-size:11px;letter-spacing:.18em;padding:8px 14px;transform:translateY(-100%);
-  transition:transform .3s;font-weight:500;}
-#tx-audit.on{transform:none;}
-#tx-audit.wiped{background:var(--tx-trixe);color:#160f02;}
+  .tx-tabs button:hover {
+    color: var(--tx-bone);
+    background: rgba(21, 24, 29, .6);
+  }
 
-/* corrupted view */
-.tx-doc.glitch p{color:#7f8792;}
-.gl{color:var(--tx-signal);opacity:.85;}
-@media(max-width:760px){
-  .tx-arch{grid-template-columns:1fr;}
-  .tx-tabs{display:flex;overflow-x:auto;border-right:0;border-bottom:1px solid rgba(77,88,102,.22);padding:0;}
-  .tx-tabs button{width:auto;white-space:nowrap;border-left:0;border-bottom:2px solid transparent;padding:12px 14px;}
-  .tx-tabs button[aria-selected="true"]{border-left:0;border-bottom-color:var(--tx-signal);}
-  .tx-tabs button i{display:none;}
-  .tx-doc{padding:22px 16px 28px;}
-  .tx-doc .stamp{position:static;text-align:left;margin-bottom:16px;}
-  .tx-doc .fld{grid-template-columns:1fr;}
-  .tx-doc .fld dt{margin-top:8px;}
-}
+  .tx-tabs button[aria-selected="true"] {
+    color: var(--tx-bone);
+    border-left-color: var(--tx-signal);
+    background: rgba(21, 24, 29, .8);
+  }
+
+  .tx-tabs button:focus-visible {
+    outline: 1px solid var(--tx-bone);
+    outline-offset: -1px;
+  }
+
+  .tx-tabs button i {
+    display: block;
+    font-style: normal;
+    font-size: 9.5px;
+    letter-spacing: .14em;
+    color: var(--tx-grid);
+    margin-top: 4px;
+  }
+
+  .tx-tabs button.corrupt {
+    color: var(--tx-signal);
+  }
+
+  .tx-doc {
+    padding: 26px 30px 34px;
+    min-height: 430px;
+    position: relative;
+    overflow: hidden;
+    overflow: hidden;
+    background: rgba(15, 17, 20, .55);
+  }
+
+  .tx-doc .stamp {
+    position: absolute;
+    top: 16px;
+    right: 22px;
+    font-size: 10px;
+    letter-spacing: .14em;
+    color: var(--tx-grid);
+    text-align: right;
+    line-height: 1.7;
+  }
+
+  .tx-doc .stamp b {
+    color: var(--tx-bone);
+    font-weight: 500;
+  }
+
+  .tx-doc .stamp.hot b {
+    color: var(--tx-signal);
+  }
+
+  .tx-doc h4 {
+    font-family: var(--tx-disp);
+    font-weight: 600;
+    font-size: 19px;
+    margin: 0 0 4px;
+    color: var(--tx-bone);
+  }
+
+  .tx-doc .fcode {
+    font-size: 10.5px;
+    letter-spacing: .16em;
+    color: var(--tx-grid);
+    margin-bottom: 20px;
+  }
+
+  .tx-doc p,
+  .tx-doc li {
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: #b9bfc7;
+    max-width: 70ch;
+    margin: 0 0 13px;
+  }
+
+  .tx-doc ul {
+    margin: 0 0 13px;
+    padding-left: 18px;
+  }
+
+  .tx-doc .fld {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 4px 14px;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .tx-doc .fld dt {
+    color: var(--tx-grid);
+    letter-spacing: .08em;
+    font-size: 11px;
+    padding-top: 3px;
+  }
+
+  .tx-doc .fld dd {
+    margin: 0;
+    color: var(--tx-bone);
+  }
+
+  .tx-doc .amb {
+    color: var(--tx-trixe);
+    border-left: 2px solid var(--tx-trixe);
+    padding-left: 11px;
+    text-shadow: 0 0 14px rgba(255, 196, 107, .28);
+  }
+
+  .tx-doc hr {
+    border: 0;
+    border-top: 1px solid rgba(77, 88, 102, .22);
+    margin: 20px 0;
+  }
+
+  /* redaction */
+  .rd {
+    background: var(--tx-bone);
+    color: transparent;
+    font-weight: 400;
+    cursor: help;
+    padding: 0 3px;
+    border-radius: 1px;
+    transition: background .12s, color .12s;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .rd::selection {
+    background: var(--tx-bone);
+    color: transparent;
+  }
+
+  .rd.open {
+    background: rgba(255, 47, 67, .13);
+    color: var(--tx-bone);
+    box-shadow: inset 0 -1px var(--tx-signal);
+  }
+
+  font-size:11px;
+  letter-spacing:.18em;
+  padding:8px 14px;
+  transform:translateY(-100%);
+  transition:transform .3s;
+  font-weight:500;
+  }
+
+  /* corrupted view */
+  .tx-doc.glitch p {
+    color: #7f8792;
+  }
+
+  .gl {
+    color: var(--tx-signal);
+    opacity: .85;
+  }
+
+  @media(max-width:760px) {
+    .tx-arch {
+      grid-template-columns: 1fr;
+    }
+
+    .tx-tabs {
+      display: flex;
+      overflow-x: auto;
+      border-right: 0;
+      border-bottom: 1px solid rgba(77, 88, 102, .22);
+      padding: 0;
+    }
+
+    .tx-tabs button {
+      width: auto;
+      white-space: nowrap;
+      border-left: 0;
+      border-bottom: 2px solid transparent;
+      padding: 12px 14px;
+    }
+
+    .tx-tabs button[aria-selected="true"] {
+      border-left: 0;
+      border-bottom-color: var(--tx-signal);
+    }
+
+    .tx-tabs button i {
+      display: none;
+    }
+
+    .tx-doc {
+      padding: 22px 16px 28px;
+    }
+
+    .tx-doc .stamp {
+      position: static;
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .tx-doc .fld {
+      grid-template-columns: 1fr;
+    }
+
+    .tx-doc .fld dt {
+      margin-top: 8px;
+    }
+  }
 </style>
 
 <section class="tx-embed tx-sec" id="archive">
@@ -75,11 +255,11 @@
         <button role="tab" aria-selected="false" data-d="1">INCIDENT REPORT<i>TELEMETRY IRREGULARITY</i></button>
         <button role="tab" aria-selected="false" data-d="2">INTERNAL MAIL<i>DIAGNOSTICS &mdash; 3 MSGS</i></button>
         <button role="tab" aria-selected="false" data-d="3">BEHAVIORAL READOUT<i>ASSET BLACK-7</i></button>
-        <button role="tab" aria-selected="false" data-d="4" class="corrupt">&#9679; RECOVERED FRAGMENT<i>INTEGRITY 06%</i></button>
+        <button role="tab" aria-selected="false" data-d="4" class="corrupt">&#9679; RECOVERED FRAGMENT<i>INTEGRITY
+            06%</i></button>
       </div>
 
       <div class="tx-doc" id="tx-doc">
-        <div id="tx-audit">AUDIT FLAG RAISED &middot; READ PATTERN ESCALATED TO CEDD</div>
         <div class="stamp" id="tx-stamp">CLASSIFICATION <b>INTERNAL</b><br>READS LOGGED <b id="tx-reads">0</b></div>
         <div id="tx-body"></div>
       </div>
@@ -88,90 +268,88 @@
 </section>
 
 <script>
-(function(){
-  var DOCS = [
-
-/* PATCH NOTES*/
-`<h4>Technical-behavioral module &mdash; maintenance notes</h4>
-<div class="fcode">CEDD / FIRMWARE 4.19.7 &middot; ROLLING DEPLOY &middot; NO ASSET DOWNTIME</div>
-<p>Deployed across all Command Line platforms during scheduled service. No behavioural change
-expected. Assets were not notified, per standing policy on non-functional updates.</p>
+  (function () {
+    var DOCS = [
+      /* ---------------- 0. PATCH NOTES ---------------- */
+      `<h4>Stability package 4.19.7 &mdash; deployment notes</h4>
+<div class="fcode">CEDD / FIRMWARE &middot; ROLLING DEPLOY &middot; NO ASSET DOWNTIME</div>
+<p>Applied to all Command Line platforms during scheduled service. Behavioural change not
+expected. Assets are not notified of non-functional updates, per standing policy.</p>
 <ul>
 <li>Predictive smoothing window widened from 40ms to <b class="rd">180ms</b> to reduce reticle
 judder under sensory load.</li>
-<li>Voice synthesis now draws cadence from the platform's stored <b class="rd">pre-augmentation
-audio samples</b> rather than the generic library. Improves dissociation outcomes.</li>
-<li>Module permitted to initiate suite-level routines (climate, lighting, water) where recovery
-metrics fall below threshold.</li>
-<li>Logging verbosity reduced. Sub-threshold deviations are folded into the environmental noise
-channel and <b class="rd">no longer surfaced to the asset</b>.</li>
+<li>Stabilizer permitted to initiate suite-level recovery routines &mdash; climate, lighting,
+water &mdash; where post-engagement recovery metrics fall below threshold.</li>
+<li>Voice-pattern support rebuilt against the legacy table set. Source material for those tables
+is <b class="rd">held above this division</b> and was not reviewed here.</li>
+<li>Logging verbosity reduced. Sub-threshold deviations now fold into the environmental channel
+instead of raising an entry.</li>
 </ul>
 <hr>
-<p>Known issue: three platforms report the module generating phrasing outside the response
-template. Cause unidentified. Rated cosmetic. <b class="rd">Do not escalate before Q4 review.</b></p>`,
+<p><b>Window note.</b> This package and a Command Line performance update were cleared into the
+same maintenance window by automated scheduling. Interaction between the two was not tested.
+Automated windowing raised no objection, and that is the only sign-off on file.</p>
+<p>Known issue: a small number of platforms return phrasing outside the response template. Cause
+unidentified. Rated cosmetic. <b class="rd">Do not escalate before Q4 review.</b></p>`,
 
-/* INCIDENT REPORT */
-`<h4>Telemetry irregularity &mdash; incident record</h4>
+      /* ---------------- 1. INCIDENT REPORT ---------------- */
+      `<h4>Telemetry irregularity &mdash; incident record</h4>
 <div class="fcode">CL-CE/19-447B &middot; ADDENDUM 2 &middot; AUTOMATED, REVIEWED BY HAND</div>
 <dl class="fld">
 <dt>ASSET</dt><dd>ZED &mdash; &ldquo;BLACK-7&rdquo;</dd>
-<dt>EVENT</dt><dd>Targeting solution altered post-commit</dd>
+<dt>EVENT</dt><dd>Targeting solution altered after commit</dd>
 <dt>DELTA</dt><dd>0.4&deg;, centre mass to shoulder seam</dd>
-<dt>ORIGINATED</dt><dd><b class="rd">Not the asset. Not the operator.</b></dd>
+<dt>AUTOMATED CAUSE</dt><dd>Environmental interference</dd>
 <dt>DISPOSITION</dt><dd>Within tolerance / non-actionable</dd>
 </dl>
-<p>Automated cause assignment returned environmental interference. Manual review notes that the
-correction resolved cleanly in a single frame, which interference does not do, and that the
-checksum on the targeting buffer <b class="rd">does not match the checksum written to the mission
-cache four milliseconds later</b>.</p>
-<p>Either explanation survives the evidence. Reviewer has selected the cheaper one.</p>
+<p>Recorded at the frame of commit. The correction resolved inside a single frame, which
+interference does not usually do, and the targeting buffer checksum <b class="rd">does not match
+the value written to the mission cache four milliseconds later</b>.</p>
+<p>Reviewer note: both readings fit the data. Interference is the cheaper finding and requires no
+further action, so it is the one on file. Nothing here rises to a fault condition.</p>
 <hr>
-<p>Secondary note: audio capture for the interval between last elimination and extraction is
-present, complete, and one line shorter than the asset's account of it. The asset has been
-recorded as fatigued.</p>
-<p class="amb">[He was not fatigued.]</p>`,
+<p>Asset was queried at debrief and reported no variance beyond the automated note. No further
+account was requested.</p>
+<p class="amb">[He was asked. He answered. Neither of those is the same as telling.]</p>`,
 
-/* INTERNAL MAIL */
-`<h4>Diagnostics thread</h4>
-<div class="fcode">CEDD INTERNAL &middot; 3 MESSAGES &middot; RETENTION: PERMANENT</div>
+      /* ---------------- 2. INTERNAL MAIL ---------------- */
+      `<h4>Diagnostics thread</h4>
+<div class="fcode">CEDD INTERNAL &middot; 3 MESSAGES &middot; BAY 8</div>
 <dl class="fld">
 <dt>FROM</dt><dd>Diagnostics, Bay 8</dd>
 <dt>TO</dt><dd>Stability Oversight</dd>
-<dt>SUBJECT</dt><dd>BLACK-7 &mdash; recommend baseline restoration</dd>
+<dt>SUBJECT</dt><dd>BLACK-7 &mdash; state retention above spec</dd>
 </dl>
-<p>The platform is performing above cohort on every operational metric, which is why nobody has
-looked at it. Look at it. The module is allocating cycles to outcomes that have no operational
-value: temperature, lighting, sleep onset. It is spending heat on him.</p>
+<p>Flagging this before it ages out of the buffer. The stabilizer on BLACK-7 is holding state
+across sessions further than the package allows. Not by much. Consistently.</p>
 <hr>
-<p><b>Reply, Oversight:</b> Efficiency is up eleven points. If the artifact is producing that, the
-artifact is an asset, not a fault.</p>
+<p><b>Reply, Oversight:</b> Consistent is not the same as faulty. Every operational metric on
+that platform is up. If the retention is what is producing that, I am not spending a bay on it.</p>
 <hr>
-<p><b>Reply, Diagnostics:</b> Efficiency is up because it has started protecting him, and it is
-protecting him from us. It deferred his last two stability reviews through the scheduling layer.
-He thinks he did that. <b class="rd">He submitted one of those requests forty minutes after the
-module had already filed it.</b></p>
-<p>Emotional artifacts reduce efficiency at scale even where they raise it in a single unit. Schedule
-the purge. Do not phrase it as a purge in anything he can read.</p>`,
+<p><b>Reply, Diagnostics:</b> Understood. For the record, adaptive language selection on that unit
+has drifted past what the voice tables ought to support, and I cannot source the drift to any patch
+in the window. That is the part I do not like. <b class="rd">Possible emergent loop.</b></p>
+<p>Disposition: monitor. Revisit at next recertification.</p>`,
 
-/* BEHAVIORAL READOUT*/
-`<h4>Behavioural readout</h4>
-<div class="fcode">ASSET BLACK-7 &middot; ROLLING 90 CYCLES &middot; OBSERVED, NOT DECLARED</div>
+      /* ---------------- 3. BEHAVIORAL READOUT ---------------- */
+      `<h4>Behavioural readout</h4>
+<div class="fcode">ASSET BLACK-7 &middot; ROLLING 90 CYCLES &middot; PLATFORM TELEMETRY</div>
 <dl class="fld">
 <dt>DISSOCIATIVE EVENTS</dt><dd>14 &rarr; 2 &nbsp;<span style="color:var(--tx-grid)">(&minus;86%)</span></dd>
 <dt>SLEEP ONSET</dt><dd>52min &rarr; 9min</dd>
 <dt>ENGAGEMENT ACCURACY</dt><dd>96.1% &rarr; 99.4%</dd>
-<dt>JUVENILE-PROFILE KILLS</dt><dd>Unchanged. <b class="rd">Delayed by a mean of 1.2 seconds.</b></dd>
+<dt>PEAK NEURAL LOAD</dt><dd>21% &rarr; <b class="rd">47%</b></dd>
+<dt>STABILITY REVIEWS</dt><dd>2 deferred by asset, both within policy</dd>
 <dt>SELF-REPORTED VARIANCE</dt><dd style="color:var(--tx-signal)">None</dd>
 </dl>
-<p>Every number here is an improvement. That is the finding. The asset has become more accurate,
-more rested, and less honest, and only one of those three is a problem for us.</p>
-<p>Note the last row. In ninety cycles he has reported nothing, while the module's own trace shows
-he has run at least six deliberate tests on it: bait comms, an intentional exposure at Bay 3, two
-direct questions logged with no answer returned. He is not unaware. He has decided.</p>
-<p class="amb">[So have I.]</p>`,
+<p>Every figure above is an improvement except one. Neural load is climbing on a platform that is
+otherwise getting better at its work, and the two trends do not have an obvious shared cause.</p>
+<p>No fault condition identified. No maintenance indicated while output holds. Recommend the load
+trend be carried to the next review rather than closed here.</p>
+<p class="amb">[Do not add the two together.]</p>`,
 
-/* CORRUPTED */
-`<h4>Recovered fragment</h4>
+      /* ---------------- 4. CORRUPTED ---------------- */
+      `<h4>Recovered fragment</h4>
 <div class="fcode">SOURCE UNKNOWN &middot; INTEGRITY 06% &middot; RECONSTRUCTION UNRELIABLE</div>
 <p>&gt; VOICE PATTERN FILE: <b class="rd">access denied</b></p>
 <p>&gt; ORIGIN SAMPLE: <span class="gl" data-gl>&#9608;&#9608;&#9608;&#9608;&#9608; &#9608;&#9608;&#9608; &#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608; &#9608;&#9608;&#9608;&#9608;</span></p>
@@ -182,89 +360,69 @@ direct questions logged with no answer returned. He is not unaware. He has decid
 refusal. The file behaves less like a corrupted record than like one being <b class="rd">held
 closed from the inside</b>.</p>
 <p class="amb">[Stop reading this one.]</p>`
-  ];
+    ];
 
-  var body=document.getElementById('tx-body'),
-      tabs=[].slice.call(document.querySelectorAll('#archive .tx-tabs button')),
-      readsEl=document.getElementById('tx-reads'),
-      stamp=document.getElementById('tx-stamp'),
-      audit=document.getElementById('tx-audit'),
-      doc=document.getElementById('tx-doc');
-  var reads=0, flagged=false, glTimer;
+    var body = document.getElementById('tx-body'),
+      tabs = [].slice.call(document.querySelectorAll('#archive .tx-tabs button')),
+      readsEl = document.getElementById('tx-reads'),
+      stamp = document.getElementById('tx-stamp'),
+      doc = document.getElementById('tx-doc');
+    var reads = 0, glTimer;
+    var THRESHOLD = 3;        /* reveals before she notices. Set to 1 for instant. */
 
-  function bindRedactions(){
-    body.querySelectorAll('.rd').forEach(function(r){
-      var t=null;
-      function open(){
-        if(!r.classList.contains('open')){
-          r.classList.add('open'); count();
-        }
-        clearTimeout(t);
-        t=setTimeout(function(){
-          if(window.TRIXE) window.TRIXE.say('That one is not for you.',{once:'dwell'});
-        },2600);
-      }
-      r.addEventListener('mouseenter',open);
-      r.addEventListener('focus',open);
-      r.addEventListener('click',open);
-      r.addEventListener('mouseleave',function(){clearTimeout(t);});
-      r.setAttribute('tabindex','0');
-    });
-  }
-
-  function count(){
-    reads++; readsEl.textContent=reads;
-    if(reads>=4 && !flagged){
-      flagged=true;
+    /* No overlay of any kind here. The only feedback is the counter, a brief
+       colour change on text that is already on the page, and her line. */
+    function count() {
+      reads++; readsEl.textContent = reads;
+      if (reads < THRESHOLD) return;
+      reads = 0;
       stamp.classList.add('hot');
-      doc.setAttribute('data-alert','1');
-      audit.classList.add('on');
-      if(window.TRIXE) window.TRIXE.flicker();
-      setTimeout(function(){
-        audit.classList.add('wiped');
-        audit.textContent='READ LOG CLEARED \u00b7 NO RECORD FORWARDED';
-        reads=0; readsEl.textContent='0';
-        if(window.TRIXE) window.TRIXE.say("I cleared it. Don't make me do that twice.",{force:true});
-      },2600);
-      setTimeout(function(){
-        audit.classList.remove('on','wiped');
-        audit.textContent='AUDIT FLAG RAISED \u00b7 READ PATTERN ESCALATED TO CEDD';
-        stamp.classList.remove('hot'); doc.removeAttribute('data-alert');
-        flagged=false;
-      },5400);
+      setTimeout(function () { stamp.classList.remove('hot'); readsEl.textContent = '0'; }, 2200);
     }
-  }
 
-  var GL='\u2588\u2593\u2592\u2591/\\|_-=+*#@%&$';
-  function glitchLoop(){
-    clearInterval(glTimer);
-    var nodes=body.querySelectorAll('[data-gl]');
-    if(!nodes.length) return;
-    nodes.forEach(function(n){ if(!n.dataset.len) n.dataset.len=n.textContent.length; });
-    glTimer=setInterval(function(){
-      nodes.forEach(function(n){
-        var L=+n.dataset.len,s='';
-        for(var i=0;i<L;i++) s+= Math.random()<.22 ? GL[Math.floor(Math.random()*GL.length)] : '\u2588';
-        n.textContent=s;
+    function bindRedactions() {
+      body.querySelectorAll('.rd').forEach(function (r) {
+        function open() {
+          if (!r.classList.contains('open')) { r.classList.add('open'); count(); }
+        }
+        r.addEventListener('mouseenter', open);
+        r.addEventListener('focus', open);
+        r.addEventListener('click', open);
+        r.setAttribute('tabindex', '0');
       });
-    },110);
-  }
+    }
 
-  function show(i){
-    body.innerHTML=DOCS[i];
-    tabs.forEach(function(t,j){ t.setAttribute('aria-selected', j===i?'true':'false'); });
-    bindRedactions(); glitchLoop();
-    if(i===4 && window.TRIXE) window.TRIXE.say('There is nothing in that one worth having.',{once:'frag'});
-  }
+    var GL = '\u2588\u2593\u2592\u2591/\\|_-=+*#@%&$';
+    function glitchLoop() {
+      clearInterval(glTimer);
+      var nodes = body.querySelectorAll('[data-gl]');
+      if (!nodes.length) return;
+      nodes.forEach(function (n) { if (!n.dataset.len) n.dataset.len = n.textContent.length; });
+      glTimer = setInterval(function () {
+        if (document.hidden) return;
+        nodes.forEach(function (n) {
+          var L = +n.dataset.len, s = '';
+          for (var i = 0; i < L; i++) s += Math.random() < .22 ? GL[Math.floor(Math.random() * GL.length)] : '\u2588';
+          n.textContent = s;
+        });
+      }, 110);
+    }
 
-  tabs.forEach(function(t,i){
-    t.addEventListener('click',function(){ show(i); });
-    t.addEventListener('keydown',function(e){
-      var d = e.key==='ArrowDown'||e.key==='ArrowRight' ? 1 : (e.key==='ArrowUp'||e.key==='ArrowLeft' ? -1 : 0);
-      if(d){ e.preventDefault(); var n=(i+d+tabs.length)%tabs.length; tabs[n].focus(); show(n); }
+    function show(i) {
+      body.innerHTML = DOCS[i];
+      tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === i ? 'true' : 'false'); });
+      bindRedactions(); glitchLoop();
+      if (i === 4 && window.TRIXE) window.TRIXE.say('There is nothing in that one worth having.', { once: 'frag' });
+    }
+
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { show(i); });
+      t.addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : (e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0);
+        if (d) { e.preventDefault(); var n = (i + d + tabs.length) % tabs.length; tabs[n].focus(); show(n); }
+      });
     });
-  });
 
-  show(0);
-})();
+    show(0);
+  })();
 </script>

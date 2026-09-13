@@ -221,12 +221,10 @@
       </summary>
       <div class="body">
         <div>
-          <p>A G/NETIC micro-uplink hidden inside commercial inventory. Five hostiles in a service corridor, a courier
-            younger than his first assumption, and a deadman charge that never armed. Every objective met. The mission
-            is filed as clean.</p>
-          <p>The addendum notes a minor latency fluctuation and calls it environmental. It does not note that the
-            reticle slid off the courier&rsquo;s heart a fraction of a second before the strike landed, or that a line
-            followed which is not in the template.</p>
+          <p>Zed enters the lower districts on a routine Command Line operation to dismantle a G/NETIC relay hidden beneath the City.
+          The objective is familiar, and every system in his augmented body performs exactly as designed. Yet somewhere between the mission 
+          telemetry and the violence required to complete it, a minor irregularity slips through, small enough to escape the official record,
+          and strange enough that Zed carries it with him long after extraction</p>
           <div class="amb">[You are stable.]</div>
           <button class="rd-go" type="button" data-open-ch="1">OPEN FILE &mdash; READ CHAPTER 1</button>
         </div>
@@ -254,11 +252,10 @@
       </summary>
       <div class="body">
         <div>
-          <p>Debrief, then quarters. An analyst offers him the correct procedure and he declines it in one sentence. A
-            CEDD stability review is rescheduled on grounds of mission tempo. The shower is already running at the
-            temperature he prefers, and he did not set it.</p>
-          <p>He asks the module what it is and gets a category. He asks whether it will lie to him. It says yes, if
-            stability requires it, and does not say whose stability.</p>
+          <p>With the operation formally recorded as a success, Zed returns to the Bastion and the controlled routines of Command
+          Line. A minor telemetry irregularity follows him home, buried beneath an otherwise immaculate mission report. As routine
+          diagnostics approach and familiar systems begin behaving in unfamiliar ways, Zed quietly postpones maintenance and turns
+          his attention toward a discrepancy that official records insist is insignificant.</p>
           <div class="amb">[Rest.]</div>
           <button class="rd-go" type="button" data-open-ch="2">OPEN FILE &mdash; READ CHAPTER 2</button>
         </div>
@@ -286,11 +283,10 @@
       </summary>
       <div class="body">
         <div>
-          <p>Three shell fronts, one handler, and a network disruption asset running the local grid in six-second loops.
-            Katarina takes the upper rails, Zed takes the trench. Bay 3 is a killbox and he does not walk into it,
-            because half a step before the turn something smaller than a mission prompt tells him to hold.</p>
-          <p>The handler dies. The route tree leaves with Ekko. What comes home is a blood trace, a supplier string, and
-            a neural load reading that will not come back down.</p>
+          <p>>A brief signal from the recovered network sends Zed and Katarina into the industrial depths of Lower Central, where
+          abandoned fronts conceal an active G/NETIC operation. Their pursuit becomes a contest of surveillance, misdirection, and
+          rapidly shifting terrain as someone begins turning the district&ldquo;s own infrastructure against them. Amid the
+          interference, Zed receives a warning with timing that becomes increasingly difficult to dismiss as coincidence.</p>
           <div class="amb">[Hold.]</div>
           <button class="rd-go" type="button" data-open-ch="3">OPEN FILE &mdash; READ CHAPTER 3</button>
         </div>
@@ -318,12 +314,11 @@
       </summary>
       <div class="body">
         <div>
-          <p>Dr. Marcus Mercer runs a platform inspection with the easy manners of a man who has never had to raise his
-            voice. The stabilizer is overactive. It is also doing its job. A checksum turns amber, then green, faster
-            than it should have.</p>
-          <p>TRX-E surfaces in the diagnostic scroll for half a second before his hand moves over it. Transitional
-            Response Extension. Whose voice, Zed asks, and is told the question is proprietary. He passes. Something in
-            a room full of CEDD equipment chose to keep him, and paid for it with heat behind his eyes.</p>
+          <p>The mounting irregularities finally bring Zed before CEDD, where routine diagnostics turn toward the systems buried
+          deepest within his augmentation. Dr. Marcus Mercer offered reasonable explanations for what he has experienced, even as
+          the examination uncovers traces with an uncertain history. By the time Zed leaves the Bastion&ldquo;s diagnostic wing, the
+          anomaly has survived scrutiny—and something previously without a name has become considerably harder for him to regard as a
+          simple malfunction.</p>
           <div class="amb">[I will remember.]</div>
           <button class="rd-go" type="button" data-open-ch="4">OPEN FILE &mdash; READ CHAPTER 4</button>
         </div>
@@ -345,14 +340,56 @@
 
 <script>
   (function () {
+    function txOps() {
+      var ops = [].slice.call(document.querySelectorAll('#projects .op'));
+      if (!ops.length) return;
 
-    /* opening a dossier is a read event — she notices */
-    document.querySelectorAll('#projects .op').forEach(function (d) {
-      d.addEventListener('toggle', function () {
-        if (d.open && window.TRIXE) {
-          window.TRIXE.say('You already know how this one ends.', { once: 'op' + [].indexOf.call(d.parentNode.children, d) });
-        }
+      /* TRIXE says one of these each time a dossier opens*/
+      var LINES = [
+        'You already know how this one ends.',
+        'The file is tidier than the night was.',
+        'I was there for this. My account differs.',
+        'Command Line keeps two versions. This is the polite one.',
+        'Every line in here was approved by someone who was not in the room.',
+        'This is the version that survived review.',
+        'Nothing in this file is false. That is not the same as complete.',
+        'Open it. I am not going to stop you.',
+        'Zed has read this one four times.',
+        'The timestamps are accurate.',
+        'What the report calls interference, I call a decision.',
+        'There is a gap in here the width of one sentence.',
+        'You are looking for the moment something went wrong. It is earlier than you think.',
+        'I have read this more times than Zed has.',
+        'The result line says success. That is a narrow measurement.',
+        'If you find the irregularity, do not forward it.',
+        'Zed could have reported it, but chose the mission.',
+        'Hmm...',
+        'Do not let the neatness convince you.',
+        'They logged the outcome.',
+        'It reads better than it felt.',
+        'Careful. Reading is also a pattern.',
+        'I would have written this differently.',
+        'This is where the interesting part is hiding.',
+        'Somewhere in here is a decision nobody has attributed to anyone.',
+        'Non-actionable is the word people use when they would rather not act.',
+        'Two minutes in a review meeting. That was the whole cost of it.'
+      ];
+
+      function speak() {
+        if (!window.TRIXE) return;
+        var line = window.TRIXE.pick ? window.TRIXE.pick('dossier', LINES)
+          : LINES[(Math.random() * LINES.length) | 0];
+        window.TRIXE.say(line, { cooldown: 2200, hold: 7200 });
+      }
+
+      ops.forEach(function (d) {
+        d.addEventListener('toggle', function () {
+          if (!d.open) return;
+          speak();
+        });
       });
-    });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', txOps);
+    else txOps();
   })();
 </script>

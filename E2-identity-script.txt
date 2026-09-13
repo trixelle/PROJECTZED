@@ -1,94 +1,112 @@
 <script>
-(function(){
-function txIdentity(){
-  var zoom  = document.getElementById('tx-zoom'),
-      stage = document.getElementById('tx-stage');
-  if(!zoom || !stage) return;
+  (function () {
+    function txIdentity() {
+      var zoom = document.getElementById('tx-zoom'),
+        stage = document.getElementById('tx-stage');
+      if (!zoom || !stage) return;
 
-  try{ if(stage.parentNode!==document.body) document.body.appendChild(stage); }catch(e){}
+      /* Pin the stage to <body>. A fixed element stops tracking the viewport the
+         moment any ancestor has a transform, filter or contain — which is exactly
+         what Carrd puts on its sections. Reparenting is what makes this survive. */
+      try { if (stage.parentNode !== document.body) document.body.appendChild(stage); } catch (e) { }
 
-  var g    = document.getElementById('tx-zg'),
-      cap  = document.getElementById('tx-cap'),
-      cd   = document.getElementById('tx-cd'),
-      ch   = document.getElementById('tx-ch'),
-      cp   = document.getElementById('tx-cp'),
-      tag  = document.getElementById('tx-focus-tag'),
-      magn = document.getElementById('tx-magn'),
-      magb = document.getElementById('tx-magb'),
-      L    = [1,2,3,4,5].map(function(n){ return document.getElementById('zl'+n); });
+      var g = document.getElementById('tx-zg'),
+        cap = document.getElementById('tx-cap'),
+        cd = document.getElementById('tx-cd'),
+        ch = document.getElementById('tx-ch'),
+        cp = document.getElementById('tx-cp'),
+        tag = document.getElementById('tx-focus-tag'),
+        magn = document.getElementById('tx-magn'),
+        magb = document.getElementById('tx-magb'),
+        L = [1, 2, 3, 4, 5].map(function (n) { return document.getElementById('zl' + n); });
 
-  var BANDS=[
-   {at:1,   d:'LAYER 1 / 5 \u2014 EXTERNAL', h:'Chassis', tag:'PLATING / SPINE HARNESS',
-    p:'Matte plating over a magnetic spine harness. Below the knees there are no human calves, only hinges. Everything at this depth is documented, serviceable, and replaceable by a technician who has never met him.'},
-   {at:3.2, d:'LAYER 2 / 5 \u2014 SUBDERMAL', h:'Augment lattice', tag:'LATTICE SEAM',
-    p:'The seams that replaced half his nerves. It carries sensation to him and carries heat away, and it is the reason a chemical bite can be shaved down to function before it becomes noise. He rarely notices it happening.'},
-   {at:10,  d:'LAYER 3 / 5 \u2014 INTERNAL', h:'Neural bus', tag:'BUS / TELEMETRY TRAFFIC',
-    p:'Where telemetry becomes language. Status prompts, threat classification, the voice he has heard for years without ever really hearing it. Traffic here is logged, sampled, and folded into the environmental channel.'},
-   {at:30,  d:'LAYER 4 / 5 \u2014 COMPONENT', h:'Technical-behavioral module', tag:'SCOPE: TELEMETRY ONLY',
-    p:'A support routine with a documented scope of telemetry only. It has no permissions ledger, no hardware footprint of its own, no audit trail. Dedicated AI packages have all three. This has none, which is why nobody watches it.'},
-   {at:90,  d:'LAYER 5 / 5 \u2014 NOT ON THE SCHEMATIC', h:'Unlogged', amb:true, tag:'NO DESIGNATION IN ACTIVE USE',
-    p:'Something is allocating cycles here that the module was never given. It has been doing it for years. It has never once taken more than it needed, and no document in this archive can tell you whether that is care or a very good approximation of it.'}
-  ];
-  var cur=-1, swapping=false, wasLive=null;
+      var BANDS = [
+        {
+          at: 1, d: 'LAYER 1 / 5 \u2014 EXTERNAL', h: 'Chassis', tag: 'PLATING / SPINE HARNESS',
+          p: 'Armored external shell built around a magnetic spinal harness and reinforced cybernetic frame. Major assemblies are modular, including fully prosthetic lower legs below the knee. Internal hardpoints provide mounting for armor, weapon systems, projection hardware, and service access.'
+        },
+        {
+          at: 3.2, d: 'LAYER 2 / 5 \u2014 SUBDERMAL', h: 'Augment lattice', tag: 'LATTICE SEAM',
+          p: 'Neural and synthetic interface network distributed through the remaining organic body. Carries sensory input, regulates thermal transfer, and interfaces biological tissue with the cybernetic platform. Local modulation can suppress pain and other sensory interference during periods of elevated combat load.'
+        },
+        {
+          at: 10, d: 'LAYER 3 / 5 \u2014 INTERNAL', h: 'Neural bus', tag: 'BUS / TELEMETRY TRAFFIC',
+          p: 'Where telemetry Primary data pathway between sensory and higher-level processing. Routes telemetry, threat classification, targeting data, auditory prompts, and command traffic through Zed&ldquo;s neural interfaces.'
+        },
+        {
+          at: 30, d: 'LAYER 4 / 5 \u2014 COMPONENT', h: 'Technical-behavioral module', tag: 'SCOPE: TELEMETRY ONLY',
+          p: 'Leadership-class stabilization software integrated during Zed&ldquo;s original augmentation. Regulates dissociation and neural load while maintaining continuity under combat stress. Includes adaptive language selection and familiar-voice support for delivering telemetry through the auditory system.'
+        },
+        {
+          at: 90, d: 'LAYER 5 / 5 \u2014 NOT ON THE SCHEMATIC', h: 'Unlogged', amb: true, tag: 'NO DESIGNATION IN ACTIVE USE',
+          p: 'Something has been allocating cycles here that the module was never assigned. Traces of it reach back years, buried beneath ordinary telemetry. There is no record of why. Nothing in this archive can tell you whether that restraint is care, or simply something that learned to resemble it.'
+        }
+      ];
+      var cur = -1, swapping = false, wasLive = null;
 
-  function ramp(s,inA,inB,outA,outB){
-    if(s<inA||s>outB) return 0;
-    if(s<inB) return (s-inA)/(inB-inA);
-    if(s>outA) return 1-(s-outA)/(outB-outA);
-    return 1;
-  }
-
-  function frame(){
-    var r  = zoom.getBoundingClientRect(),
-        vh = window.innerHeight,
-        travel = r.height - vh,
-        raw = travel>0 ? (-r.top)/travel : 0;
-
-    /* show the stage only while the spacer owns the viewport */
-    var live = r.top<=2 && r.bottom>=vh-2;
-    if(live!==wasLive){ wasLive=live; stage.classList.toggle('on',live); }
-    if(!live) return;                       /* off screen: do no work at all */
-
-    var p = Math.max(0,Math.min(1,raw));
-    var s = Math.pow(200,p);
-    g.setAttribute('transform','translate(500,300) scale('+s+') translate(-500,-300)');
-
-    L[0].style.opacity = ramp(s,0,0,1.9,4.2);
-    L[1].style.opacity = ramp(s,2.2,3.4,7,15);
-    L[2].style.opacity = ramp(s,7,10,22,40);
-    L[3].style.opacity = ramp(s,20,28,58,105);
-    L[4].style.opacity = ramp(s,62,88,1e9,1e9);
-
-    magn.textContent = (s<10 ? s.toFixed(1) : Math.round(s))+'\u00d7';
-    magb.style.width = (p*100)+'%';
-
-    var b=0;
-    for(var i=0;i<BANDS.length;i++) if(s>=BANDS[i].at) b=i;
-    if(b!==cur && !swapping){
-      cur=b; swapping=true;
-      var B=BANDS[b];
-      cd.style.opacity=ch.style.opacity=cp.style.opacity=0;
-      setTimeout(function(){
-        cd.textContent=B.d; ch.textContent=B.h; cp.textContent=B.p;
-        tag.textContent=B.tag;
-        cap.classList.toggle('amb',!!B.amb);
-        tag.parentNode.classList.toggle('amb',!!B.amb);
-        cd.style.opacity=ch.style.opacity=cp.style.opacity=1;
-        swapping=false;
-      },200);
-      if(b===4 && window.TRIXE){
-        window.TRIXE.say('You went looking. Now you have found nothing, which is the honest answer.',{once:'deep',hold:9000});
+      function ramp(s, inA, inB, outA, outB) {
+        if (s < inA || s > outB) return 0;
+        if (s < inB) return (s - inA) / (inB - inA);
+        if (s > outA) return 1 - (s - outA) / (outB - outA);
+        return 1;
       }
-    }
-  }
-  if(window.TX) window.TX.add(frame);
-  else (function r(){ frame(); requestAnimationFrame(r); })();
-}
 
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',txIdentity);
-}else{
-  txIdentity();
-}
-})();
+      var lastY = -1, lastH = -1;
+      function frame() {
+        /* getBoundingClientRect forces a synchronous layout. Doing it 60 times a
+           second while nothing has moved was pure waste. */
+        if (scrollY === lastY && innerHeight === lastH) return;
+        lastY = scrollY; lastH = innerHeight;
+        var r = zoom.getBoundingClientRect(),
+          vh = window.innerHeight,
+          travel = r.height - vh,
+          raw = travel > 0 ? (-r.top) / travel : 0;
+
+        /* show the stage only while the spacer owns the viewport */
+        var live = r.top <= 2 && r.bottom >= vh - 2;
+        if (live !== wasLive) { wasLive = live; stage.classList.toggle('on', live); }
+        if (!live) return;                       /* off screen: do no work at all */
+
+        var p = Math.max(0, Math.min(1, raw));
+        var s = Math.pow(200, p);
+        g.setAttribute('transform', 'translate(500,300) scale(' + s + ') translate(-500,-300)');
+
+        L[0].style.opacity = ramp(s, 0, 0, 1.9, 4.2);
+        L[1].style.opacity = ramp(s, 2.2, 3.4, 7, 15);
+        L[2].style.opacity = ramp(s, 7, 10, 22, 40);
+        L[3].style.opacity = ramp(s, 20, 28, 58, 105);
+        L[4].style.opacity = ramp(s, 62, 88, 1e9, 1e9);
+
+        magn.textContent = (s < 10 ? s.toFixed(1) : Math.round(s)) + '\u00d7';
+        magb.style.width = (p * 100) + '%';
+
+        var b = 0;
+        for (var i = 0; i < BANDS.length; i++) if (s >= BANDS[i].at) b = i;
+        if (b !== cur && !swapping) {
+          cur = b; swapping = true;
+          var B = BANDS[b];
+          cd.style.opacity = ch.style.opacity = cp.style.opacity = 0;
+          setTimeout(function () {
+            cd.textContent = B.d; ch.textContent = B.h; cp.textContent = B.p;
+            tag.textContent = B.tag;
+            cap.classList.toggle('amb', !!B.amb);
+            tag.parentNode.classList.toggle('amb', !!B.amb);
+            cd.style.opacity = ch.style.opacity = cp.style.opacity = 1;
+            swapping = false;
+          }, 200);
+          if (b === 4 && window.TRIXE) {
+            window.TRIXE.say('You went looking. Now you have found nothing, which is the honest answer.', { once: 'deep', hold: 9000 });
+          }
+        }
+      }
+      if (window.TX) window.TX.add(frame);
+      else (function r() { frame(); requestAnimationFrame(r); })();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', txIdentity);
+    } else {
+      txIdentity();
+    }
+  })();
 </script>

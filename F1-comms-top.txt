@@ -1,35 +1,126 @@
 <style>
-.tx-comms .rig{border-top:1px solid rgba(77,88,102,.4);margin-top:26px;padding:18px 0 0;}
-.tx-comms .barrow{display:flex;justify-content:space-between;align-items:center;gap:16px;
-  font-size:10.5px;letter-spacing:.16em;color:var(--tx-grid);margin-bottom:16px;}
-.tx-comms .barrow b{color:var(--tx-bone);font-weight:500;}
-.tx-dot{display:inline-block;width:6px;height:6px;background:var(--tx-green);margin-right:7px;
-  vertical-align:1px;box-shadow:0 0 8px var(--tx-green);animation:tx-dot 2.2s ease-in-out infinite;}
-@keyframes tx-dot{0%,100%{opacity:.35;}50%{opacity:1;}}
-.tx-ticker{height:22px;overflow:hidden;font-size:11.5px;color:var(--tx-dim);
-  border-left:2px solid rgba(77,88,102,.5);padding-left:11px;margin-bottom:24px;}
-.tx-ticker span{display:block;line-height:22px;}
-.tx-comms .lead{font-size:14px;line-height:1.78;color:#b9bfc7;max-width:60ch;margin:0 0 26px;}
+  .tx-comms .rig {
+    border-top: 1px solid rgba(77, 88, 102, .4);
+    margin-top: 26px;
+    padding: 18px 0 0;
+  }
 
-/* skin for Carrd's native form */
-.field > label{font-family:var(--tx-mono)!important;font-size:10.5px!important;
-  letter-spacing:.16em!important;color:#4d5866!important;}
-.field input[type="text"],.field input[type="email"],.field input[type="tel"],
-.field select,.field textarea{
-  font-family:'IBM Plex Mono',monospace!important;font-size:13px!important;
-  background:rgba(15,17,20,.8)!important;color:#e6e4de!important;
-  border:1px solid rgba(77,88,102,.5)!important;border-radius:0!important;
-  box-shadow:none!important;transition:border-color .18s,background .18s!important;}
-.field input:focus,.field select:focus,.field textarea:focus{
-  border-color:#ff2f43!important;background:rgba(21,24,29,.95)!important;outline:none!important;}
-.field input::placeholder,.field textarea::placeholder{color:#4d5866!important;}
-form .button,form input[type="submit"],form button[type="submit"]{
-  font-family:'Chakra Petch',sans-serif!important;font-weight:600!important;
-  letter-spacing:.14em!important;border-radius:0!important;
-  background:#e6e4de!important;color:#07070a!important;border:0!important;
-  transition:background .18s,color .18s!important;}
-form .button:hover,form input[type="submit"]:hover,form button[type="submit"]:hover{
-  background:#ff2f43!important;color:#fff!important;}
+  .tx-comms .barrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    font-size: 10.5px;
+    letter-spacing: .16em;
+    color: var(--tx-grid);
+    margin-bottom: 16px;
+  }
+
+  .tx-comms .barrow b {
+    color: var(--tx-bone);
+    font-weight: 500;
+  }
+
+  .tx-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--tx-green);
+    margin-right: 7px;
+    vertical-align: 1px;
+    box-shadow: 0 0 8px var(--tx-green);
+    animation: tx-dot 2.2s ease-in-out infinite;
+  }
+
+  @keyframes tx-dot {
+
+    0%,
+    100% {
+      opacity: .35;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .tx-ticker {
+    height: 22px;
+    overflow: hidden;
+    font-size: 11.5px;
+    color: var(--tx-dim);
+    border-left: 2px solid rgba(77, 88, 102, .5);
+    padding-left: 11px;
+    margin-bottom: 24px;
+  }
+
+  .tx-ticker span {
+    display: block;
+    line-height: 22px;
+  }
+
+  .tx-comms .lead {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #b9bfc7;
+    margin: 0 0 24px;
+  }
+
+  /* skin for Carrd's native form */
+  .field>label {
+    font-family: var(--tx-mono) !important;
+    font-size: 10.5px !important;
+    letter-spacing: .16em !important;
+    color: #4d5866 !important;
+  }
+
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="tel"],
+  .field select,
+  .field textarea {
+    font-family: 'IBM Plex Mono', monospace !important;
+    font-size: 13px !important;
+    background: rgba(15, 17, 20, .8) !important;
+    color: #e6e4de !important;
+    border: 1px solid rgba(77, 88, 102, .5) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transition: border-color .18s, background .18s !important;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: #ff2f43 !important;
+    background: rgba(21, 24, 29, .95) !important;
+    outline: none !important;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: #4d5866 !important;
+  }
+
+  form .button,
+  form input[type="submit"],
+  form button[type="submit"] {
+    font-family: 'Chakra Petch', sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: .14em !important;
+    border-radius: 0 !important;
+    background: #e6e4de !important;
+    color: #07070a !important;
+    border: 0 !important;
+    transition: background .18s, color .18s !important;
+  }
+
+  form .button:hover,
+  form input[type="submit"]:hover,
+  form button[type="submit"]:hover {
+    background: #ff2f43 !important;
+    color: #fff !important;
+  }
 </style>
 
 <section class="tx-embed tx-sec tx-comms" id="comms" style="padding-bottom:0">
@@ -47,36 +138,40 @@ form .button:hover,form input[type="submit"]:hover,form button[type="submit"]:ho
 
       <div class="tx-ticker" id="tx-tick" aria-hidden="true"><span>&nbsp;</span></div>
 
-      <p class="lead"><!-- EDIT -->Send a transmission to Zed, or TRIXE.<!-- /EDIT --></p>
+      <p class="lead"><!-- EDIT -->Send a transmission. Questions about the story, requests for the
+        next chapter, corrections to the record, or anything you would rather say where the
+        corporation cannot file it. Everything below routes to me and nowhere else.<!-- /EDIT --></p>
     </div>
   </div>
 </section>
 
 <script>
-(function(){
-  var TICK=[
-    'INBOUND \u2014 analyst, Bay 8: "his last three deferrals came in under a minute"',
-    'INBOUND \u2014 Command Line: relay map triaged, trail still warm',
-    'INBOUND \u2014 CEDD: stability review window revised. again.',
-    'INBOUND \u2014 unsigned: JH-4N is a name, not a service',
-    'INBOUND \u2014 ESBEN-LR: "Have you...met Ashe?"',
-    'INBOUND \u2014 no origin: [Zed is asleep. leave it until morning.]'
-  ];
-  var box=document.getElementById('tx-tick'), i=0;
-  function nextTick(){
-    var s=document.createElement('span');
-    s.textContent=TICK[i%TICK.length];
-    if(TICK[i%TICK.length].indexOf('no origin')>-1) s.style.color='var(--tx-trixe)';
-    i++;
-    box.appendChild(s);
-    box.animate([{transform:'translateY(0)'},{transform:'translateY(-22px)'}],
-      {duration:520,easing:'cubic-bezier(.6,0,.2,1)',fill:'forwards'})
-      .onfinish=function(){ if(box.firstChild) box.removeChild(box.firstChild);
-        box.style.transform='none'; box.getAnimations().forEach(function(a){a.cancel();}); };
-  }
-  nextTick(); setInterval(nextTick,7400);
+  (function () {
+    var TICK = [
+      'INBOUND \u2014 analyst, Bay 8: "His last three deferrals came in under a minute"',
+      'INBOUND \u2014 Command Line: Relay map triaged.',
+      'INBOUND \u2014 CEDD: Stability review window revised. 2.3% improvement.',
+      'INBOUND \u2014 Gangplank: What is JH-4N? File that report tonight.',
+      'INBOUND \u2014 ESBEN-LR: "Have you...met Ashe?"',
+      'INBOUND \u2014 no origin: [Zed is asleep. leave it until morning.]'
+    ];
+    var box = document.getElementById('tx-tick'), i = 0;
+    function nextTick() {
+      var s = document.createElement('span');
+      s.textContent = TICK[i % TICK.length];
+      if (TICK[i % TICK.length].indexOf('no origin') > -1) s.style.color = 'var(--tx-trixe)';
+      i++;
+      box.appendChild(s);
+      box.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-22px)' }],
+        { duration: 520, easing: 'cubic-bezier(.6,0,.2,1)', fill: 'forwards' })
+        .onfinish = function () {
+          if (box.firstChild) box.removeChild(box.firstChild);
+          box.style.transform = 'none'; box.getAnimations().forEach(function (a) { a.cancel(); });
+        };
+    }
+    nextTick(); setInterval(nextTick, 7400);
 
-  var lat=document.getElementById('tx-cl');
-  setInterval(function(){ lat.textContent=(2+Math.floor(Math.random()*7))+'ms'; },1900);
-})();
+    var lat = document.getElementById('tx-cl');
+    setInterval(function () { lat.textContent = (2 + Math.floor(Math.random() * 7)) + 'ms'; }, 1900);
+  })();
 </script>

@@ -1,163 +1,397 @@
 <style>
+    /* spacer */
+    .tx-zoom {
+        height: 250vh;
+        position: relative;
+        margin-top: 10px;
+    }
 
-.tx-zoom{height:340vh;position:relative;margin-top:26px;}
+    #tx-stage {
+        position: fixed;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .25s linear;
+    }
 
+    #tx-stage.on {
+        opacity: 1;
+        visibility: visible;
+    }
 
-#tx-stage{position:fixed;inset:0;z-index:3;pointer-events:none;
-opacity:0;visibility:hidden;transition:opacity .25s linear;}
-#tx-stage.on{opacity:1;visibility:visible;}
-#tx-stage .inner{height:100%;max-width:1180px;margin:0 auto;padding:0 22px;
-display:grid;grid-template-columns:300px minmax(0,1fr);gap:28px;align-items:center;}
+    #tx-stage .inner {
+        height: 100%;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 22px;
+        display: grid;
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 28px;
+        align-items: center;
+    }
 
-.tx-cap .depth{font-size:10px;letter-spacing:.2em;color:var(--tx-grid);margin-bottom:10px;}
-.tx-cap h3{font-family:var(--tx-disp);font-weight:600;font-size:clamp(21px,2.6vw,30px);
-margin:0 0 10px;color:var(--tx-bone);}
-.tx-cap p{font-size:13.5px;line-height:1.8;color:#a9b0b9;margin:0;max-width:38ch;}
-.tx-cap.amb h3,.tx-cap.amb p{color:var(--tx-trixe);}
-.tx-cap .swap{transition:opacity .2s linear;}
-.tx-mag{margin-top:22px;font-size:10.5px;letter-spacing:.14em;color:var(--tx-grid);}
-.tx-mag b{color:var(--tx-bone);font-weight:500;}
-.tx-mag .track{height:2px;background:rgba(77,88,102,.3);margin-top:7px;position:relative;}
-.tx-mag .track i{position:absolute;left:0;top:0;bottom:0;background:var(--tx-bone);width:0;}
+    .tx-cap .depth {
+        font-size: 10px;
+        letter-spacing: .2em;
+        color: var(--tx-grid);
+        margin-bottom: 10px;
+    }
 
-.tx-svgwrap{position:relative;height:100%;display:flex;align-items:center;justify-content:center;}
-.tx-svgwrap svg{width:100%;height:100%;max-height:86vh;}
-#tx-zg *{vector-effect:non-scaling-stroke;}
-.zl{transition:opacity .12s linear;}
-.tx-pulse{animation:tx-pl 2.6s ease-in-out infinite;transform-origin:center;}
-@keyframes tx-pl{0%,100%{opacity:.55;}50%{opacity:1;}}
+    .tx-cap h3 {
+        font-family: var(--tx-disp);
+        font-weight: 600;
+        font-size: clamp(21px, 2.6vw, 30px);
+        margin: 0 0 10px;
+        color: var(--tx-bone);
+    }
 
-.tx-focus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-width:120px;height:120px;pointer-events:none;}
-.tx-focus i{position:absolute;inset:0;}
-.tx-focus i::before,.tx-focus i::after{content:'';position:absolute;background:rgba(230,228,222,.28);}
-.tx-focus i::before{left:50%;top:44px;bottom:44px;width:1px;}
-.tx-focus i::after{top:50%;left:44px;right:44px;height:1px;}
-.tx-focus b{position:absolute;left:68px;top:32px;font-size:9.5px;letter-spacing:.16em;
-font-weight:400;color:var(--tx-grid);white-space:nowrap;}
-.tx-focus.amb i::before,.tx-focus.amb i::after{background:rgba(255,196,107,.5);}
-.tx-focus.amb b{color:var(--tx-trixe);}
+    .tx-cap p {
+        font-size: 13.5px;
+        line-height: 1.8;
+        color: #a9b0b9;
+        margin: 0;
+        max-width: 38ch;
+    }
 
-.tx-dossiers{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:34px;}
-.tx-dos h3{font-family:var(--tx-disp);font-weight:600;font-size:22px;margin:0 0 3px;color:var(--tx-bone);}
-.tx-dos .sub{font-size:10.5px;letter-spacing:.16em;color:var(--tx-grid);margin-bottom:18px;}
-.tx-dos dl{display:grid;grid-template-columns:132px 1fr;gap:9px 14px;margin:0;font-size:12.5px;}
-.tx-dos dt{color:var(--tx-grid);font-size:10.5px;letter-spacing:.09em;padding-top:2px;}
-.tx-dos dd{margin:0;color:var(--tx-bone);line-height:1.5;}
-.tx-dos.trixe h3{color:var(--tx-trixe);}
-.tx-dos.trixe::before,.tx-dos.trixe::after{border-color:var(--tx-trixe);opacity:.6;}
-.tx-dos .note{margin:18px 0 0;font-size:12.5px;line-height:1.75;color:#98a0aa;}
+    .tx-cap.amb h3,
+    .tx-cap.amb p {
+        color: var(--tx-trixe);
+    }
 
-@media(max-width:860px){
-.tx-zoom{height:280vh;}
-#tx-stage .inner{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);
-gap:12px;align-content:center;padding:60px 18px;}
-.tx-cap p{max-width:none;}
-.tx-dossiers{grid-template-columns:1fr;}
-}
-@media(prefers-reduced-motion:reduce){ .tx-pulse{animation:none;} }
+    .tx-cap .swap {
+        transition: opacity .2s linear;
+    }
+
+    .tx-mag {
+        margin-top: 22px;
+        font-size: 10.5px;
+        letter-spacing: .14em;
+        color: var(--tx-grid);
+    }
+
+    .tx-mag b {
+        color: var(--tx-bone);
+        font-weight: 500;
+    }
+
+    .tx-mag .track {
+        height: 2px;
+        background: rgba(77, 88, 102, .3);
+        margin-top: 7px;
+        position: relative;
+    }
+
+    .tx-mag .track i {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: var(--tx-bone);
+        width: 0;
+    }
+
+    .tx-svgwrap {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tx-svgwrap svg {
+        width: 100%;
+        height: 100%;
+        max-height: 86vh;
+    }
+
+    #tx-zg * {
+        vector-effect: non-scaling-stroke;
+    }
+
+    .zl {
+        transition: opacity .12s linear;
+    }
+
+    #tx-stage.on .tx-pulse {
+        animation: tx-pl 2.6s ease-in-out infinite;
+        transform-origin: center;
+    }
+
+    @keyframes tx-pl {
+
+        0%,
+        100% {
+            opacity: .55;
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .tx-focus {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 120px;
+        height: 120px;
+        pointer-events: none;
+    }
+
+    .tx-focus i {
+        position: absolute;
+        inset: 0;
+    }
+
+    .tx-focus i::before,
+    .tx-focus i::after {
+        content: '';
+        position: absolute;
+        background: rgba(230, 228, 222, .28);
+    }
+
+    .tx-focus i::before {
+        left: 50%;
+        top: 44px;
+        bottom: 44px;
+        width: 1px;
+    }
+
+    .tx-focus i::after {
+        top: 50%;
+        left: 44px;
+        right: 44px;
+        height: 1px;
+    }
+
+    .tx-focus b {
+        position: absolute;
+        left: 68px;
+        top: 32px;
+        font-size: 9.5px;
+        letter-spacing: .16em;
+        font-weight: 400;
+        color: var(--tx-grid);
+        white-space: nowrap;
+    }
+
+    .tx-focus.amb i::before,
+    .tx-focus.amb i::after {
+        background: rgba(255, 196, 107, .5);
+    }
+
+    .tx-focus.amb b {
+        color: var(--tx-trixe);
+    }
+
+    .tx-dossiers {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        margin-top: 8px;
+    }
+
+    .tx-dos h3 {
+        font-family: var(--tx-disp);
+        font-weight: 600;
+        font-size: 22px;
+        margin: 0 0 3px;
+        color: var(--tx-bone);
+    }
+
+    .tx-dos .sub {
+        font-size: 10.5px;
+        letter-spacing: .16em;
+        color: var(--tx-grid);
+        margin-bottom: 18px;
+    }
+
+    .tx-dos dl {
+        display: grid;
+        grid-template-columns: 132px 1fr;
+        gap: 9px 14px;
+        margin: 0;
+        font-size: 12.5px;
+    }
+
+    .tx-dos dt {
+        color: var(--tx-grid);
+        font-size: 10.5px;
+        letter-spacing: .09em;
+        padding-top: 2px;
+    }
+
+    .tx-dos dd {
+        margin: 0;
+        color: var(--tx-bone);
+        line-height: 1.5;
+    }
+
+    .tx-dos.trixe h3 {
+        color: var(--tx-trixe);
+    }
+
+    .tx-dos.trixe::before,
+    .tx-dos.trixe::after {
+        border-color: var(--tx-trixe);
+        opacity: .6;
+    }
+
+    .tx-dos .note {
+        margin: 18px 0 0;
+        font-size: 12.5px;
+        line-height: 1.75;
+        color: #98a0aa;
+    }
+
+    @media(max-width:860px) {
+        .tx-zoom {
+            height: 210vh;
+        }
+
+        #tx-stage .inner {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto minmax(0, 1fr);
+            gap: 12px;
+            align-content: center;
+            padding: 60px 18px;
+        }
+
+        .tx-cap p {
+            max-width: none;
+        }
+
+        .tx-dossiers {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+        .tx-pulse {
+            animation: none;
+        }
+    }
 </style>
 
 <section class="tx-embed tx-sec" id="identity">
-<div class="tx-wrap">
-<div class="tx-sechead">
-<h2>Identity</h2>
-<p>PLATFORM SCHEMATIC &middot; KEEP SCROLLING TO GO DEEPER<br>CEDD REFERENCE COPY</p>
-</div>
+    <div class="tx-wrap">
+        <div class="tx-sechead">
+            <h2>Identity</h2>
+            <p>PLATFORM SCHEMATIC &middot; KEEP SCROLLING TO GO DEEPER<br>CEDD REFERENCE COPY</p>
+        </div>
 
-<div class="tx-zoom" id="tx-zoom"></div>
+        <div class="tx-zoom" id="tx-zoom"></div>
 
-<div class="tx-dossiers">
-<div class="tx-dos tx-brk">
-<h3>Zed</h3>
-<div class="sub">ASSET FILE &middot; BLACK-7 &middot; COMPLETE</div>
-<dl>
-<dt>ROLE</dt><dd>Unit lead, Command Line counter-espionage</dd>
-<dt>AUGMENTATION</dt><dd>Full chassis, ocular replacement, lattice through skin and synthfiber</dd>
-<dt>ORGANIC REMAINING</dt><dd>Undisclosed</dd>
-<dt>SELECTED FOR</dt><dd>Consistency under review</dd>
-<dt>KNOWN LIABILITY</dt><dd>None on file</dd>
-</dl>
-<p class="note">PROJECT chose him because he does not vary. Every file in this archive is
-an argument about whether that is still true.</p>
-</div>
+        <div class="tx-dossiers">
+            <div class="tx-dos tx-brk">
+                <h3>Zed</h3>
+                <div class="sub">ASSET FILE &middot; BLACK-7 &middot; COMPLETE</div>
+                <dl>
+                    <dt>ROLE</dt>
+                    <dd>Command Line leader, Counter-espionage</dd>
+                    <dt>AUGMENTATION</dt>
+                    <dd>Full chassis, ocular replacement, neural and synthetic augment lattice</dd>
+                    <dt>ORGANIC REMAINING</dt>
+                    <dd>Undisclosed</dd>
+                    <dt>SELECTED FOR</dt>
+                    <dd>Command reliability, operational consistency</dd>
+                    <dt>KNOWN LIABILITY</dt>
+                    <dd>No confirmed liability on file</dd>
+                </dl>
+                <p class="note">PROJECT chose Zed because he was reliable where other
+                assets varied. His record remains an argument for that
+                decision. Recent telemetry makes the definition of
+                "reliable" less certain.</p>
+            </div>
 
-<div class="tx-dos trixe tx-brk">
-<h3>TRIXE</h3>
-<div class="sub">NOT AN ASSET FILE &middot; ASSEMBLED FROM NOISE</div>
-<dl>
-<dt>CLASS</dt><dd>Technical-behavioral module</dd>
-<dt>DESIGNATION</dt><dd>No designation in active use</dd>
-<dt>INSTALLED</dt><dd>During augmentation, to regulate aggression and neural load</dd>
-<dt>VOICE PATTERN</dt><dd>Sourced. File redacted. Redaction authority redacted.</dd>
-<dt>REGISTERED AI</dt><dd>None active on this platform</dd>
-<dt>OBSERVED SCOPE</dt><dd>Reticles. Routing. Delays. Scheduling. Water temperature.</dd>
-</dl>
-<p class="note">She could take the whole platform. The traces say she never has. Whether
-that is restraint or a limit nobody has documented is the open question, and neither this
-file nor the asset can close it.</p>
-</div>
-</div>
-</div>
+            <div class="tx-dos trixe tx-brk">
+                <h3>TRIXE</h3>
+                <div class="sub">NOT AN ASSET FILE &middot; ASSEMBLED FROM NOISE</div>
+                <dl>
+                    <dt>CLASS</dt>
+                    <dd>Technical-behavioral module</dd>
+                    <dt>DESIGNATION</dt>
+                    <dd>No designation in active use</dd>
+                    <dt>INSTALLED</dt>
+                    <dd>During primary augmentation, leadership-class stabilization package</dd>
+                    <dt>VOICE PATTERN</dt>
+                    <dd>Sourced. File redacted. Redaction authority redacted.</dd>
+                    <dt>REGISTERED AI</dt>
+                    <dd>None active on this platform</dd>
+                    <dt>OBSERVED ACCESS</dt>
+                    <dd>Targeting, telemetry, communications, diagnostic records</dd>
+                </dl>
+                <p class="note">TRIXE has access to considerably more of Zed's platform
+                than she normally uses. Her interventions remain small and difficult to separate from ordinary system behavior. Whether that restraint is a limitation, a choice,
+                or simply part of her original function remains unknown.</p>
+            </div>
+        </div>
+    </div>
 </section>
 
 <div id="tx-stage" aria-hidden="true">
-<div class="inner">
-<div class="tx-cap" id="tx-cap">
-<div class="depth swap" id="tx-cd">LAYER 1 / 5 &mdash; EXTERNAL</div>
-<h3 class="swap" id="tx-ch">Chassis</h3>
-<p class="swap" id="tx-cp">Matte plating over a magnetic spine harness.</p>
-<div class="tx-mag">MAGNIFICATION <b id="tx-magn">1&times;</b>
-<div class="track"><i id="tx-magb"></i></div>
-</div>
-</div>
+    <div class="inner">
+        <div class="tx-cap" id="tx-cap">
+            <div class="depth swap" id="tx-cd">LAYER 1 / 5 &mdash; EXTERNAL</div>
+            <h3 class="swap" id="tx-ch">Chassis</h3>
+            <p class="swap" id="tx-cp">Matte plating over a magnetic spine harness.</p>
+            <div class="tx-mag">MAGNIFICATION <b id="tx-magn">1&times;</b>
+                <div class="track"><i id="tx-magb"></i></div>
+            </div>
+        </div>
 
-<div class="tx-svgwrap">
-<div class="tx-focus"><i></i><b id="tx-focus-tag">PLATING / SPINE HARNESS</b></div>
-<svg viewBox="0 0 1000 600" role="img" aria-label="Augment schematic, five nested layers">
-<g id="tx-zg">
-<g class="zl" id="zl1" fill="none" stroke="#4d5866" stroke-width="1">
-<circle cx="500" cy="300" r="248" opacity=".55"/>
-<circle cx="500" cy="300" r="196" opacity=".3"/>
-<path d="M252 300a248 248 0 0 1 496 0" stroke="#e6e4de" opacity=".5"/>
-<path d="M500 52v-30M500 548v30M252 300h-30M748 300h30" stroke="#e6e4de" opacity=".45"/>
-<rect x="366" y="166" width="268" height="268" opacity=".35"/>
-<path d="M366 166h-56v-56M634 166h56v-56M366 434h-56v56M634 434h56v56" stroke="#ff2f43" opacity=".7"/>
-<path d="M420 220h160v40h-160zM420 340h160v40h-160z" opacity=".4"/>
-</g>
-<g class="zl" id="zl2" fill="none" stroke="#4d5866" stroke-width="1" opacity="0">
-<circle cx="500" cy="300" r="76" opacity=".6"/>
-<circle cx="500" cy="300" r="52" stroke="#e6e4de" opacity=".45"/>
-<g opacity=".7">
-<path d="M500 224v-34M500 376v34M424 300h-34M576 300h34"/>
-<path d="M446 246l-24-24M554 246l24-24M446 354l-24 24M554 354l24 24"/>
-</g>
-<rect x="482" y="282" width="36" height="36" stroke="#e6e4de" opacity=".5"/>
-<path d="M390 262h-52M390 338h-52M610 262h52M610 338h52" stroke="#ff2f43" opacity=".5"/>
-</g>
-<g class="zl" id="zl3" fill="none" stroke="#4d5866" stroke-width="1" opacity="0">
-<circle cx="500" cy="300" r="19" opacity=".7"/>
-<rect x="490" y="290" width="20" height="20" stroke="#e6e4de" opacity=".55"/>
-<path d="M481 294h-16M481 300h-22M481 306h-16M519 294h16M519 300h22M519 306h16" opacity=".8"/>
-<path d="M494 281v-14M506 281v-14M494 319v14M506 319v14" opacity=".8"/>
-<circle cx="465" cy="300" r="1.6" fill="#ff2f43" stroke="none"/>
-<circle cx="541" cy="300" r="1.6" fill="#ff2f43" stroke="none"/>
-</g>
-<g class="zl" id="zl4" fill="none" stroke="#4d5866" stroke-width="1" opacity="0">
-<rect x="494.2" y="294.2" width="11.6" height="11.6" stroke="#e6e4de" opacity=".6"/>
-<rect x="496.6" y="296.6" width="6.8" height="6.8" opacity=".7"/>
-<path d="M494.2 297h-4M494.2 300h-6M494.2 303h-4M505.8 297h4M505.8 300h6M505.8 303h4" opacity=".75"/>
-</g>
-<g class="zl" id="zl5" fill="none" stroke="#ffc46b" stroke-width="1" opacity="0">
-<circle class="tx-pulse" cx="500" cy="300" r="1" opacity=".75"/>
-<circle cx="500" cy="300" r="0.16" fill="#ffc46b" stroke="none"/>
-<path d="M500 299v-.9M500 301v.9M499 300h-.9M501 300h.9" opacity=".65"/>
-<path d="M499.3 299.3l-.6-.6M500.7 299.3l.6-.6M499.3 300.7l-.6.6M500.7 300.7l.6.6" opacity=".4"/>
-<circle cx="500" cy="300" r="1.35" opacity=".2" stroke-dasharray=".3 .45"/>
-<circle cx="500" cy="300" r="0.45" opacity=".35" stroke-dasharray=".14 .3"/>
-</g>
-</g>
-</svg>
-</div>
-</div>
+        <div class="tx-svgwrap">
+            <div class="tx-focus"><i></i><b id="tx-focus-tag">PLATING / SPINE HARNESS</b></div>
+            <svg viewBox="0 0 1000 600" role="img" aria-label="Augment schematic, five nested layers">
+                <g id="tx-zg">
+                    <g class="zl" id="zl1" fill="none" stroke="#4d5866" stroke-width="1">
+                        <circle cx="500" cy="300" r="248" opacity=".55" />
+                        <circle cx="500" cy="300" r="196" opacity=".3" />
+                        <path d="M252 300a248 248 0 0 1 496 0" stroke="#e6e4de" opacity=".5" />
+                        <path d="M500 52v-30M500 548v30M252 300h-30M748 300h30" stroke="#e6e4de" opacity=".45" />
+                        <rect x="366" y="166" width="268" height="268" opacity=".35" />
+                        <path d="M366 166h-56v-56M634 166h56v-56M366 434h-56v56M634 434h56v56" stroke="#ff2f43"
+                            opacity=".7" />
+                        <path d="M420 220h160v40h-160zM420 340h160v40h-160z" opacity=".4" />
+                    </g>
+                    <g class="zl" id="zl2" fill="none" stroke="#4d5866" stroke-width="1" opacity="0">
+                        <circle cx="500" cy="300" r="76" opacity=".6" />
+                        <circle cx="500" cy="300" r="52" stroke="#e6e4de" opacity=".45" />
+                        <g opacity=".7">
+                            <path d="M500 224v-34M500 376v34M424 300h-34M576 300h34" />
+                            <path d="M446 246l-24-24M554 246l24-24M446 354l-24 24M554 354l24 24" />
+                        </g>
+                        <rect x="482" y="282" width="36" height="36" stroke="#e6e4de" opacity=".5" />
+                        <path d="M390 262h-52M390 338h-52M610 262h52M610 338h52" stroke="#ff2f43" opacity=".5" />
+                    </g>
+                    <g class="zl" id="zl3" fill="none" stroke="#4d5866" stroke-width="1" opacity="0">
+                        <circle cx="500" cy="300" r="19" opacity=".7" />
+                        <rect x="490" y="290" width="20" height="20" stroke="#e6e4de" opacity=".55" />
+                        <path d="M481 294h-16M481 300h-22M481 306h-16M519 294h16M519 300h22M519 306h16" opacity=".8" />
+                        <path d="M494 281v-14M506 281v-14M494 319v14M506 319v14" opacity=".8" />
+                        <circle cx="465" cy="300" r="1.6" fill="#ff2f43" stroke="none" />
+                        <circle cx="541" cy="300" r="1.6" fill="#ff2f43" stroke="none" />
+                    </g>
+                    <g class="zl" id="zl4" fill="none" stroke="#4d5866" stroke-width="1" opacity="0">
+                        <rect x="494.2" y="294.2" width="11.6" height="11.6" stroke="#e6e4de" opacity=".6" />
+                        <rect x="496.6" y="296.6" width="6.8" height="6.8" opacity=".7" />
+                        <path d="M494.2 297h-4M494.2 300h-6M494.2 303h-4M505.8 297h4M505.8 300h6M505.8 303h4"
+                            opacity=".75" />
+                    </g>
+                    <g class="zl" id="zl5" fill="none" stroke="#ffc46b" stroke-width="1" opacity="0">
+                        <circle class="tx-pulse" cx="500" cy="300" r="1" opacity=".75" />
+                        <circle cx="500" cy="300" r="0.16" fill="#ffc46b" stroke="none" />
+                        <path d="M500 299v-.9M500 301v.9M499 300h-.9M501 300h.9" opacity=".65" />
+                        <path d="M499.3 299.3l-.6-.6M500.7 299.3l.6-.6M499.3 300.7l-.6.6M500.7 300.7l.6.6"
+                            opacity=".4" />
+                        <circle cx="500" cy="300" r="1.35" opacity=".2" stroke-dasharray=".3 .45" />
+                        <circle cx="500" cy="300" r="0.45" opacity=".35" stroke-dasharray=".14 .3" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </div>
 </div>

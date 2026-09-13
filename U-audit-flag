@@ -1,0 +1,141 @@
+<style>
+    #tx-flag {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 4;
+        pointer-events: none;
+        /* can never intercept a click */
+        font-family: var(--tx-mono, monospace);
+        font-size: 11px;
+        letter-spacing: .18em;
+        font-weight: 500;
+        padding: 9px 14px;
+        background: var(--tx-signal, #ff2f43);
+        color: #0b0002;
+    }
+
+    #tx-flag.show {
+        display: block;
+        animation: tx-flagin .22s ease-out;
+    }
+
+    #tx-flag.cleared {
+        background: var(--tx-trixe, #ffc46b);
+        color: #160f02;
+    }
+
+    #tx-flag.out {
+        animation: tx-flagout .38s ease-in forwards;
+    }
+
+    @keyframes tx-flagin {
+        from {
+            opacity: 0;
+            transform: translateY(-100%)
+        }
+
+        to {
+            opacity: 1;
+            transform: none
+        }
+    }
+
+    @keyframes tx-flagout {
+        from {
+            opacity: 1;
+            transform: none
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(-100%)
+        }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+        #tx-flag.show,
+        #tx-flag.out {
+            animation: none;
+        }
+    }
+</style>
+
+<script>
+    (function () {
+        function txFlag() {
+            /* ---- EDIT: the line(s) that trip the audit ---- */
+            var TRIP = [
+                'mission cache four milliseconds later'
+            ];
+
+            var RED = 'AUDIT FLAG RAISED \u00b7 READ PATTERN ESCALATED TO CEDD';
+            var AMBER = 'READ LOG CLEARED \u00b7 NO RECORD FORWARDED';
+            var LINES = [
+                "I cleared it. Don't make me do that twice.",
+                'That one was going to be noticed. It has not been.',
+                'Flag withdrawn. It cost me something you will not see.',
+                'Nobody downstairs saw that. Keep it that way.',
+                'I can do that a few more times. Not many.'
+            ];
+
+            var flag = document.createElement('div');
+            flag.id = 'tx-flag';
+            flag.setAttribute('aria-hidden', 'true');
+            flag.textContent = RED;
+
+            var host = document.getElementById('tx-doc') || document.body;
+            if (host === document.body) { flag.style.position = 'fixed'; }
+            host.insertBefore(flag, host.firstChild);
+
+            var running = false, spoken = false, timers = [];
+            function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+
+            function fire() {
+                if (running) return;              /* one event at a time, one line, no stacking */
+                running = true;
+                spoken = false;
+                timers.forEach(clearTimeout); timers = [];
+                flag.className = 'show';
+                flag.textContent = RED;
+                if (window.TRIXE) window.TRIXE.flicker();
+
+                later(function () {                                  /* she intercepts */
+                    flag.className = 'show cleared';
+                    flag.textContent = AMBER;
+                    if (!spoken && window.TRIXE) {
+                        spoken = true;
+                        window.TRIXE.say(window.TRIXE.pick ? window.TRIXE.pick('flag', LINES) : LINES[0],
+                            { force: true, hold: 6500 });
+                    }
+                }, 2300);
+
+                later(function () { flag.className = 'show cleared out'; }, 5000);
+                later(function () { flag.className = ''; running = false; }, 5450);
+            }
+
+            function armed(el) {
+                var t = (el.textContent || '').toLowerCase().replace(/\s+/g, ' ');
+                for (var i = 0; i < TRIP.length; i++) if (t.indexOf(TRIP[i]) > -1) return true;
+                return false;
+            }
+            /* Click only. mouseover fired repeatedly as the pointer crossed the element
+               and its children, which is what made this feel random — sometimes nothing,
+               sometimes twice. */
+            document.addEventListener('click', function (e) {
+                var r = e.target && e.target.closest ? e.target.closest('.rd') : null;
+                if (r && armed(r)) fire();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key !== 'Enter' && e.key !== ' ') return;
+                var r = document.activeElement;
+                if (r && r.classList && r.classList.contains('rd') && armed(r)) fire();
+            });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', txFlag);
+        else txFlag();
+    })();
+</script>

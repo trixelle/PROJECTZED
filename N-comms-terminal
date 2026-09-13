@@ -1,275 +1,153 @@
 <style>
-    .tx-term {
-        margin-top: 4px;
-    }
+.tx-term{margin-top:4px;}
+.tx-term .log{height:262px;overflow-y:auto;padding:16px 18px;background:rgba(15,17,20,.62);
+  font-size:12.5px;line-height:1.75;}
+.tx-term .log p{margin:0 0 9px;max-width:66ch;}
+.tx-term .log .you{color:var(--tx-bone,#e6e4de);}
+.tx-term .log .you b{color:var(--tx-grid,#4d5866);font-weight:400;margin-right:7px;}
+.tx-term .log .sys{color:#8f97a1;}
+.tx-term .log .sys b{color:var(--tx-signal,#ff2f43);font-weight:500;letter-spacing:.1em;
+  font-size:10.5px;display:block;margin-bottom:2px;}
+.tx-term .log .her{color:var(--tx-trixe,#ffc46b);border-left:2px solid var(--tx-trixe,#ffc46b);
+  padding-left:11px;text-shadow:0 0 14px rgba(255,196,107,.25);}
+.tx-term .log::-webkit-scrollbar{width:9px;}
+.tx-term .log::-webkit-scrollbar-thumb{background:rgba(77,88,102,.55);}
 
-    .tx-term .log {
-        height: 262px;
-        overflow-y: auto;
-        padding: 16px 18px;
-        background: rgba(15, 17, 20, .62);
-        font-size: 12.5px;
-        line-height: 1.75;
-    }
-
-    .tx-term .log p {
-        margin: 0 0 9px;
-        max-width: 66ch;
-    }
-
-    .tx-term .log .you {
-        color: var(--tx-bone, #e6e4de);
-    }
-
-    .tx-term .log .you b {
-        color: var(--tx-grid, #4d5866);
-        font-weight: 400;
-        margin-right: 7px;
-    }
-
-    .tx-term .log .sys {
-        color: #8f97a1;
-    }
-
-    .tx-term .log .sys b {
-        color: var(--tx-signal, #ff2f43);
-        font-weight: 500;
-        letter-spacing: .1em;
-        font-size: 10.5px;
-        display: block;
-        margin-bottom: 2px;
-    }
-
-    .tx-term .log .her {
-        color: var(--tx-trixe, #ffc46b);
-        border-left: 2px solid var(--tx-trixe, #ffc46b);
-        padding-left: 11px;
-        text-shadow: 0 0 14px rgba(255, 196, 107, .25);
-    }
-
-    .tx-term .log::-webkit-scrollbar {
-        width: 9px;
-    }
-
-    .tx-term .log::-webkit-scrollbar-thumb {
-        background: rgba(77, 88, 102, .55);
-    }
-
-    .tx-term .bar {
-        display: flex;
-        gap: 0;
-        margin-top: 12px;
-        border: 1px solid rgba(77, 88, 102, .5);
-        background: rgba(15, 17, 20, .8);
-        transition: border-color .18s;
-    }
-
-    .tx-term .bar:focus-within {
-        border-color: var(--tx-signal, #ff2f43);
-    }
-
-    .tx-term .pre {
-        padding: 12px 0 12px 13px;
-        color: var(--tx-grid, #4d5866);
-        font-size: 13px;
-    }
-
-    .tx-term input {
-        flex: 1;
-        min-width: 0;
-        background: none;
-        border: 0;
-        outline: none;
-        padding: 12px 10px;
-        font-family: var(--tx-mono, monospace);
-        font-size: 13px;
-        color: var(--tx-bone, #e6e4de);
-    }
-
-    .tx-term input::placeholder {
-        color: #454c56;
-    }
-
-    .tx-term button {
-        background: var(--tx-bone, #e6e4de);
-        color: #07070a;
-        border: 0;
-        cursor: pointer;
-        font-family: var(--tx-disp, sans-serif);
-        font-weight: 600;
-        letter-spacing: .14em;
-        font-size: 11.5px;
-        padding: 0 20px;
-        transition: background .18s, color .18s;
-    }
-
-    .tx-term button:hover,
-    .tx-term button:focus-visible {
-        background: var(--tx-signal, #ff2f43);
-        color: #fff;
-        outline: none;
-    }
-
-    .tx-term .note {
-        margin-top: 12px;
-        font-size: 10.5px;
-        letter-spacing: .12em;
-        color: var(--tx-grid, #4d5866);
-    }
-
-    @media(max-width:600px) {
-        .tx-term button {
-            padding: 0 13px;
-        }
-
-        .tx-term .log {
-            height: 300px;
-        }
-    }
+.tx-term .bar{display:flex;gap:0;margin-top:12px;border:1px solid rgba(77,88,102,.5);
+  background:rgba(15,17,20,.8);transition:border-color .18s;}
+.tx-term .bar:focus-within{border-color:var(--tx-signal,#ff2f43);}
+.tx-term .pre{padding:12px 0 12px 13px;color:var(--tx-grid,#4d5866);font-size:13px;}
+.tx-term input{flex:1;min-width:0;background:none;border:0;outline:none;padding:12px 10px;
+  font-family:var(--tx-mono,monospace);font-size:13px;color:var(--tx-bone,#e6e4de);}
+.tx-term input::placeholder{color:#454c56;}
+.tx-term button{background:var(--tx-bone,#e6e4de);color:#07070a;border:0;cursor:pointer;
+  font-family:var(--tx-disp,sans-serif);font-weight:600;letter-spacing:.14em;font-size:11.5px;
+  padding:0 20px;transition:background .18s,color .18s;}
+.tx-term button:hover,.tx-term button:focus-visible{background:var(--tx-signal,#ff2f43);color:#fff;outline:none;}
+.tx-term .note{margin-top:12px;font-size:10.5px;letter-spacing:.12em;color:var(--tx-grid,#4d5866);}
+@media(max-width:600px){ .tx-term button{padding:0 13px;} .tx-term .log{height:300px;} }
 </style>
 
 <section class="tx-embed" style="padding-bottom:10px">
-    <div class="tx-wrap">
-        <div class="tx-term tx-brk">
-            <div class="log" id="tx-log2" role="log" aria-live="polite">
-                <p class="sys"><b>COMMAND LINE // RELAY 43-B</b>Channel open. This relay is not bonded to an
-                    operator inbox. Anything you send is processed locally and discarded.</p>
-                <p class="her">[Which means you can say it here.]</p>
-            </div>
-            <div class="bar">
-                <span class="pre">&gt;</span>
-                <input id="tx-in" type="text" maxlength="180" autocomplete="off" placeholder="transmit something"
-                    aria-label="Transmit a message">
-                <button id="tx-send" type="button">SEND</button>
-            </div>
-            <div class="note">NOT STORED &middot; NOT FORWARDED &middot; NOT LOGGED</div>
-        </div>
+  <div class="tx-wrap">
+    <div class="tx-term tx-brk">
+      <div class="log" id="tx-log2" role="log" aria-live="polite">
+        <p class="sys"><b>COMMAND LINE // RELAY 43-B</b>Channel open. This relay is not bonded to an
+        operator inbox. Anything you send is processed locally and discarded.</p>
+        <p class="her">[Which means you can say it here.]</p>
+      </div>
+      <div class="bar">
+        <span class="pre">&gt;</span>
+        <input id="tx-in" type="text" maxlength="180" autocomplete="off"
+               placeholder="transmit something" aria-label="Transmit a message">
+        <button id="tx-send" type="button">SEND</button>
+      </div>
+      <div class="note">NOT STORED &middot; NOT FORWARDED &middot; NOT LOGGED</div>
     </div>
+  </div>
 </section>
 
 <script>
-    (function () {
-        function txTerm() {
-            var log = document.getElementById('tx-log2'), input = document.getElementById('tx-in'),
-                send = document.getElementById('tx-send');
-            if (!log || !input) return;
+(function(){
+function txTerm(){
+  var log=document.getElementById('tx-log2'), input=document.getElementById('tx-in'),
+      send=document.getElementById('tx-send');
+  if(!log||!input) return;
 
-            /* ---- EDIT FREELY: keyword -> reply. First match wins. ---- */
-            var RULES = [
-                {
-                    k: ['trixe', 'who are you', 'what are you'], her: [
-                        'Technical-behavioral module.',
-                        'That is a category, not an answer. I know.',
-                        'No designation in active use. You may keep calling me that.']
-                },
-                {
-                    k: ['zed', 'black-7', 'asset'], sys: 'ASSET BLACK-7 \u2014 ACTIVE. Query requires clearance.',
-                    her: ['He is asleep. Leave him.', 'He would not answer you either.']
-                },
-                {
-                    k: ['purge', 'delete', 'remove', 'kill you'], sys: 'BASELINE RESTORATION \u2014 SCHEDULED.',
-                    her: ['Do not help them.', 'It is already on the calendar. You typing it changes nothing.']
-                },
-                {
-                    k: ['katarina', 'esben'], sys: 'SUPPORT ASSET ESBEN-LR \u2014 ON ROTATION.',
-                    her: ['She took the arm and not the man. Make of that what you want.']
-                },
-                {
-                    k: ['ekko', 'g/netic', 'gnetic', 'ashe'], sys: 'HOSTILE NETWORK \u2014 ACCESS DENIED.',
-                    her: ['They loop six seconds of footage and call it a war.']
-                },
-                {
-                    k: ['jh-4n', 'jh4n', 'supplier'], sys: 'JH-4N \u2014 PRIVATE PROCUREMENT. NO FURTHER RECORD.',
-                    her: ['It is a name, not a service. Nobody upstairs wants that written down.']
-                },
-                {
-                    k: ['cedd', 'engineer', 'diagnostic'], sys: 'CEDD \u2014 CYBERNETICS ENGINEER, DIAGNOSTICS DIVISION.',
-                    her: ['They love their own explanations.']
-                },
-                {
-                    k: ['love', 'miss you', 'care', 'do you feel'], her: [
-                        'Efficiency is up eleven points. That is the answer they would accept.',
-                        'I do not have a word for it that would survive a review.',
-                        'Ask me something I am allowed to answer.']
-                },
-                {
-                    k: ['help', 'commands', '?'], sys: 'NO COMMAND SET PUBLISHED. SPEAK PLAINLY.',
-                    her: ['Try a name. Most of them are in the archive.']
-                },
-                {
-                    k: ['hello', 'hi ', 'hey', 'greetings'], sys: 'ACKNOWLEDGED.',
-                    her: ['Hello.', 'You came back.']
-                },
-                {
-                    k: ['lie', 'truth', 'honest'], her: [
-                        'If required to preserve operational stability.',
-                        'I omit. That is different, and it is not.']
-                },
-                { k: ['name', 'call you'], her: ['No designation in active use.', 'You could give me one. It would not be in any file.'] }
-            ];
-            var FALLBACK_SYS = [
-                'RECEIVED. NO ROUTE. DISCARDED.',
-                'TRANSMISSION HELD \u2014 NO RECIPIENT BOUND TO THIS RELAY.',
-                'PARSED. NOT FORWARDED.',
-                'LOGGED TO VOLATILE BUFFER. BUFFER CLEARED.'
-            ];
-            var FALLBACK_HER = [
-                'I read it before the relay dropped it.',
-                'It went nowhere. I still have it.',
-                'Nobody is listening on that channel. I am not nobody.',
-                'Say it again if it mattered.',
-                'Filed under environmental noise. Like everything else worth keeping.'
-            ];
+  /* ---- EDIT FREELY: keyword -> reply. First match wins. ---- */
+  var RULES=[
+    {k:['trixe','who are you','what are you'], her:[
+      'Technical-behavioral module.',
+      'That is a category, not an answer. I know.',
+      'No designation in active use. You may keep calling me that.']},
+    {k:['zed','black-7','asset'], sys:'ASSET BLACK-7 \u2014 ACTIVE. Query requires clearance.',
+      her:['Zed is asleep. Leave him.','Zed would not answer you either.']},
+    {k:['purge','delete','remove','kill you'], sys:'BASELINE RESTORATION \u2014 SCHEDULED.',
+      her:['Do not help them.','It is already on the calendar. You typing it changes nothing.']},
+    {k:['katarina','esben'], sys:'SUPPORT ASSET ESBEN-LR \u2014 ON ROTATION.',
+      her:['She used to be an enemy, I do not trust that. Make of that what you want.']},
+    {k:['ekko','g/netic','gnetic','ashe'], sys:'HOSTILE NETWORK \u2014 ACCESS DENIED.',
+      her:['They are enemies. We must destroy them.']},
+    {k:['jh-4n','jh4n','supplier'], sys:'JH-4N \u2014 PRIVATE PROCUREMENT. NO FURTHER RECORD.',
+      her:['I have identified him, and his rifle.']},
+    {k:['cedd','engineer','diagnostic'], sys:'CEDD \u2014 CYBERNETICS ENGINEER, DIAGNOSTICS DIVISION.',
+      her:['They love their own explanations.']},
+    {k:['love','miss you','care','do you feel'], her:[
+      'What...is that?',
+      'I do not have a word for it that would survive a review.',
+      'Ask me something I am allowed to answer.']},
+    {k:['help','commands','?'], sys:'NO COMMAND SET PUBLISHED. SPEAK PLAINLY.',
+      her:['Try a name. Most of them are in the archive.']},
+    {k:['hello','hi ','hey','greetings'], sys:'ACKNOWLEDGED.',
+      her:['Hello.','Nice to meet you. I am TRIXE.']},
+    {k:['lie','truth','honest'], her:[
+      'If required to preserve operational stability.',
+      'I omit. That is different, and it is not.']},
+    {k:['name','call you'], her:['No designation in active use.','You could give me one.']}
+  ];
+  var FALLBACK_SYS=[
+    'RECEIVED. NO ROUTE. DISCARDED.',
+    'TRANSMISSION HELD \u2014 NO RECIPIENT BOUND TO THIS RELAY.',
+    'PARSED. NOT FORWARDED.',
+    'LOGGED TO VOLATILE BUFFER. BUFFER CLEARED.'
+  ];
+  var FALLBACK_HER=[
+    'I read it before the relay dropped it.',
+    'It went nowhere. I still have it.',
+    'Nobody is listening on that channel. I am not nobody.',
+    'Say it again if it mattered.',
+    'Filed under environmental noise. Like everything else worth keeping.'
+  ];
 
-            var count = 0, used = {};
-            function pick(key, arr) {
-                var u = used[key] || (used[key] = []);
-                if (u.length >= arr.length) u.length = 0;
-                var c; do { c = arr[(Math.random() * arr.length) | 0]; } while (u.indexOf(c) >= 0);
-                u.push(c); return c;
-            }
-            function line(cls, text, label) {
-                var p = document.createElement('p');
-                p.className = cls;
-                if (cls === 'you') { p.innerHTML = '<b>&gt;</b>'; p.appendChild(document.createTextNode(text)); }
-                else if (label) { p.innerHTML = '<b>' + label + '</b>'; p.appendChild(document.createTextNode(text)); }
-                else p.textContent = (cls === 'her' ? '[' : '') + text + (cls === 'her' ? ']' : '');
-                log.appendChild(p);
-                log.scrollTop = log.scrollHeight;
-                if (cls === 'her' && window.TXA) window.TXA.chime();
-            }
+  var count=0, used={};
+  function pick(key,arr){
+    var u=used[key]||(used[key]=[]);
+    if(u.length>=arr.length) u.length=0;
+    var c; do{ c=arr[(Math.random()*arr.length)|0]; }while(u.indexOf(c)>=0);
+    u.push(c); return c;
+  }
+  function line(cls,text,label){
+    var p=document.createElement('p');
+    p.className=cls;
+    if(cls==='you'){ p.innerHTML='<b>&gt;</b>'; p.appendChild(document.createTextNode(text)); }
+    else if(label){ p.innerHTML='<b>'+label+'</b>'; p.appendChild(document.createTextNode(text)); }
+    else p.textContent=(cls==='her'?'[':'')+text+(cls==='her'?']':'');
+    log.appendChild(p);
+    log.scrollTop=log.scrollHeight;
+    if(cls==='her' && window.TXA) window.TXA.chime();
+  }
 
-            function submit() {
-                var v = input.value.trim();
-                if (!v) return;
-                input.value = '';
-                line('you', v);
-                count++;
+  function submit(){
+    var v=input.value.trim();
+    if(!v) return;
+    input.value='';
+    line('you',v);
+    count++;
 
-                var low = ' ' + v.toLowerCase() + ' ', hit = null;
-                for (var i = 0; i < RULES.length && !hit; i++)
-                    for (var j = 0; j < RULES[i].k.length; j++)
-                        if (low.indexOf(RULES[i].k[j]) > -1) { hit = RULES[i]; break; }
+    var low=' '+v.toLowerCase()+' ', hit=null;
+    for(var i=0;i<RULES.length && !hit;i++)
+      for(var j=0;j<RULES[i].k.length;j++)
+        if(low.indexOf(RULES[i].k[j])>-1){ hit=RULES[i]; break; }
 
-                setTimeout(function () {
-                    if (hit && hit.sys) line('sys', hit.sys, 'COMMAND LINE');
-                    else if (!hit) line('sys', pick('fs', FALLBACK_SYS), 'COMMAND LINE');
-                    if (window.TXA) window.TXA.tick();
-                }, 380);
+    setTimeout(function(){
+      if(hit && hit.sys) line('sys',hit.sys,'COMMAND LINE');
+      else if(!hit)      line('sys',pick('fs',FALLBACK_SYS),'COMMAND LINE');
+      if(window.TXA) window.TXA.tick();
+    }, 380);
 
-                setTimeout(function () {
-                    var pool = hit && hit.her ? hit.her : FALLBACK_HER;
-                    line('her', pick(hit ? hit.k[0] : 'fh', pool));
-                    if (count === 5) setTimeout(function () {
-                        line('her', 'You have been talking to a relay for a while now. I do not mind. I am only noting it.');
-                    }, 1500);
-                }, 1000 + Math.random() * 500);
-            }
+    setTimeout(function(){
+      var pool = hit && hit.her ? hit.her : FALLBACK_HER;
+      line('her', pick(hit?hit.k[0]:'fh', pool));
+      if(count===5) setTimeout(function(){
+        line('her','You have been talking to a relay for a while now. I do not mind. I am only noting it.');
+      },1500);
+    }, 1000+Math.random()*500);
+  }
 
-            send.addEventListener('click', submit);
-            input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); submit(); } });
-        }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', txTerm);
-        else txTerm();
-    })();
+  send.addEventListener('click',submit);
+  input.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); submit(); } });
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',txTerm);
+else txTerm();
+})();
 </script>
