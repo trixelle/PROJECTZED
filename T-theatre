@@ -47,47 +47,49 @@
       <div class="cell" data-k="corp" data-seal="0"><span class="bar"></span>
         <div class="tag"><span>01 / STATE</span><b>ACTIVE</b></div>
         <h3>PROJECT Corporation</h3>
-        <p>Owns the City, the augment economy, and the language people use to describe both.
-        Its creed is that the body is a limitation and ascension is a purchase. Everything on
-        this site is its paperwork.</p>
+        <p>The dominant power in the City and the force behind its augmentation economy. PROJECT sells transcendence as progress.
+        The body can be improved, replaced, and eventually surpassed. Its influence reaches from infrastructure and medicine to
+        private security, military research, and the systems that decide who moves freely through the City.</p>
       </div>
 
       <div class="cell" data-k="corp" data-seal="0"><span class="bar"></span>
         <div class="tag"><span>02 / ENFORCEMENT</span><b>ACTIVE</b></div>
         <h3>Command Line</h3>
-        <p>Counter-espionage. Zed leads its sharp end and did not write the policy he enforces.
-        Above him the hierarchy thins into people who sign things and are never in the room.</p>
+        <p>PROJECT&ldquo;s enforcement and counter-espionage arm. Zed leads its operations against G/NETIC, using surveillance,
+        rapid-response teams, and heavily augmented field assets to suppress threats before they spread. Its work is precise,
+        and usually finished long before the public knows there was a problem.</p>
       </div>
 
       <div class="cell" data-k="corp" data-seal="0"><span class="bar"></span>
         <div class="tag"><span>03 / MAINTENANCE</span><b>ACTIVE</b></div>
         <h3>CEDD</h3>
-        <p>Cybernetics Engineer, Diagnostics Division. Housed below leadership so nobody
-        mistakes a fixer for a decision-maker. </p>
+        <p>Cybernetics Engineer, Diagnostics Division. CEDD maintains the bodies and systems that keep PROJECT&ldquo;s augmented
+        personnel functional. Including standard and non standard IT procedures, such as repairs, software updates, and deeper intervention when something
+        stops behaving within specification. Housed below leadership so nobody mistakes a fixer for a decision-maker. </p>
       </div>
 
       <div class="cell" data-k="rebel" data-seal="0"><span class="bar"></span>
         <div class="tag"><span>04 / HOSTILE</span><b>ENGAGED</b></div>
         <h3>G/NETIC</h3>
-        <p>The resistance built from the population the Corporation discarded. Relay nodes,
-        stolen route trees, six seconds of looped footage. Zed has hunted them long enough
-        that the work has stopped requiring a reason.</p>
+        <p>An organized cybernetic human resistance movement led by Ashe. Built from people who rejected, escaped, or survived PROJECT&ldquo;s systems.
+        They are looking to preserve human autonomy, and goes against PROJECT&ldquo;s interests. Zed
+        has spent years hunting them, long enough that their methods have become familiar even when their motives remain
+        irrelevant to the mission.</p>
       </div>
 
       <div class="cell" data-k="anom" data-seal="0"><span class="bar"></span>
         <div class="tag"><span>05 / UNFILED</span><b>NO RECORD</b></div>
         <h3>The anomaly</h3>
-        <p>Not a faction. Not a registered package. A support routine with no permissions
-        ledger that has begun spending heat on outcomes with no operational value. CEDD has
-        given it a drawer and closed the drawer.</p>
+        <p>Something inside Zed&ldquo;s system is behaving outside its original design. The changes are easy to miss and
+        difficult to prove. For now, it remains unclassified.</p>
       </div>
 
       <div class="cell" data-k="virus" data-seal="0"><span class="bar"></span>
         <div class="tag"><span>06 / EMERGING</span><b>UNCLASSIFIED</b></div>
         <h3>Machine drift</h3>
-        <p>Automated units deviating from route logic. A patrol arriving with the wrong
-        pathing. A friendly tag that flickers. Citywide bulletins call the cause unknown and
-        nobody has attached a name to it yet.</p>
+        <p>A growing pattern of automated systems behaving outside expected logic in the City. Patrols take the wrong routes. Identification
+        tags flicker. Drones repeat movements they already made. Early reports treat the incidents as isolated faults, though
+        the same behavior begins appearing across the City with increasing frequency. Eventually, someone will give it a name.</p>
       </div>
 
       <div class="cell" data-k="virus" data-seal="1"><span class="bar"></span>

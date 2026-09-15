@@ -31,11 +31,11 @@
         },
         {
           at: 10, d: 'LAYER 3 / 5 \u2014 INTERNAL', h: 'Neural bus', tag: 'BUS / TELEMETRY TRAFFIC',
-          p: 'Where telemetry Primary data pathway between sensory and higher-level processing. Routes telemetry, threat classification, targeting data, auditory prompts, and command traffic through Zed&ldquo;s neural interfaces.'
+          p: 'Where telemetry Primary data pathway between sensory and higher-level processing. Routes telemetry, threat classification, targeting data, auditory prompts, and command traffic through his neural interfaces.'
         },
         {
           at: 30, d: 'LAYER 4 / 5 \u2014 COMPONENT', h: 'Technical-behavioral module', tag: 'SCOPE: TELEMETRY ONLY',
-          p: 'Leadership-class stabilization software integrated during Zed&ldquo;s original augmentation. Regulates dissociation and neural load while maintaining continuity under combat stress. Includes adaptive language selection and familiar-voice support for delivering telemetry through the auditory system.'
+          p: 'Leadership-class stabilization software for Zed, integrated during his original augmentation. Regulates dissociation and neural load while maintaining continuity under combat stress. Includes adaptive language selection and familiar-voice support for delivering telemetry through the auditory system.'
         },
         {
           at: 90, d: 'LAYER 5 / 5 \u2014 NOT ON THE SCHEMATIC', h: 'Unlogged', amb: true, tag: 'NO DESIGNATION IN ACTIVE USE',
