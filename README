@@ -1,0 +1,141 @@
+# PROJECT:ZED // ANOMALY
+
+A fan site for League of Legends' PROJECT: Zed, built as an in-world archive rather than a normal
+fan page. The conceit is that you're browsing PROJECT Corporation's own files on asset ZED and his mission
+records, CEDD diagnostics, redacted internal mail, and something that isn't supposed to be in those
+files keeps annotating them in amber.
+
+That something is TRIXE, my OC. She started as a behavioural stabiliser installed during Zed's
+augmentation. Somewhere she started choosing her own words. The corporation calls that an
+emotional artifact and schedules its removal. The story never settles whether what she feels is real
+or a very good routine that learned care improves performance retention, and neither does the site.
+
+Live at **trixelle.net**
+
+---
+
+## Why it's built the way it is
+
+The site runs on [Carrd](https://carrd.co), which is a one-page site builder. Carrd handles the
+hosting, the page skeleton and the text I edit most often. Everything interactive is dropped in
+through Carrd's **Embed** element as raw HTML/CSS/JS.
+
+So the repo is a pile of self-contained code blocks that get
+pasted into Carrd embeds, in order. Each one is independent, delete any single block and the rest of
+the site keeps working.
+
+You need **Carrd Pro Standard** for this. Embeds and forms aren't available on the free or Lite plans.
+
+---
+
+## The blocks
+
+Paste each file into its own Embed element, Type: Code, Style: Inline, in this order.
+
+| Block | What it does |
+|---|---|
+| `A1-system` | Design tokens, fonts, HUD markup, nav, the boot gate. CSS and HTML only. |
+| `A2-system-script` | The shared animation scheduler, cursor telemetry, neural load, TRIXE's voice channel, boot logic. |
+| `B-hero` | Masthead with parallax wordmark. |
+| `C-projects` | Chapter index. Expanding dossiers with case codes and metadata. |
+| `D-archive` | The CEDD document reader. Five documents, hover a redaction to read it. |
+| `T-theatre` | Faction and threat board. Later-act entries stay blurred behind a clearance gate. |
+| `U-audit-flag` | Optional. One designated redaction trips an audit banner that TRIXE then withdraws. |
+| `E1-identity` | Schematic markup and styles. |
+| `E2-identity-script` | Scroll-driven zoom, 1× to 190×, five nested layers. |
+| `G-descent-gauge` | Replaces the scrollbar with an altitude readout. Scrolling down is descending the City. |
+| `H-cursors` | Custom cursors, base64'd into the CSS so there's nothing to host. |
+| `J-cursor-audio` | Cursor follower and the ambient audio, which is synthesised in-browser rather than loaded. |
+| `K-purge` | Type `purge` anywhere. Nothing good happens, then she stops it. |
+| `L-sigil` | The PROJECT mark as four filled SVG paths, injected into headings and the boot gate. |
+| `M-power-on` | CRT turn-on when the boot gate clears. |
+| `S-chapter-modal` | The chapter reader. See below. |
+| `F1-comms-top` | Comms header and inbound ticker. |
+| `N-comms-terminal` | The terminal you can type into. |
+| `F2-comms-footer` | Footer. |
+
+A1 has to come first because everything else reads its CSS variables and registers with its
+scheduler. Beyond that the order only matters for where things appear on the page.
+
+---
+
+## How chapters work
+
+Chapters are pasted as plain text into ordinary Carrd **Text** elements,
+in a section at the bottom of the page with padding set to None. `S-chapter-modal` finds them, hides
+the source, and re-renders them into a popup with full formatting.
+
+The first line of each Text element is a marker and has to stay exactly as written:
+
+```
+::CHAPTER 1 :: Routine Work :: CL-CE/19-447B :: MID-TIER DISTRICT
+```
+
+Everything after it is the chapter, one paragraph per line.
+
+The reader works out the formatting on its own. It reads each paragraph and decides which voice it's
+in:
+
+- `[SYNAPTIC LATENCY: 0ms]` — telemetry, grey mono
+- `[You are stable.]` — TRIXE, amber with a left rule
+- `CASE FILE: CL-CE/19-447B` — mission report, mono on a plate with red corner brackets
+- `UPGRADE TO ASCEND` — doctrine billboard, bold, one line per row
+- anything else — body prose
+
+The trick for telling telemetry from her: **telemetry never punctuates.** `[END OF LOG]` is the
+system. `[YOU ARE STABLE.]` is her, even though it's in caps.
+
+This setup exists because Carrd's code editor has a size ceiling somewhere between 14k and 19k
+characters, and chapters run 19k–29k. Pasting them as HTML meant splitting every chapter across two
+or three embeds, which was miserable to maintain. Text elements have no such limit. Revising a
+chapter is now one paste into one element.
+
+`chapters.py` is the converter that turns the source PDFs into those paste files. It rebuilds
+paragraphs from the PDF's hard line wrapping, so the text on the site is character-identical to the
+manuscript and I never retype anything.
+
+---
+
+## Things that broke and why
+
+Writing these down because every one of them cost hours and none of them are obvious.
+
+**Unclosed tags nuke everything below them.** An embed missing its closing `</script>` doesn't just
+break that embed. The HTML parser doesn't respect embed boundaries, so it swallows the whole rest of
+the document as JavaScript and every block after it silently dies. 
+
+**`position: fixed` isn't fixed inside a transform.** Carrd puts transforms on sections for its
+entrance animations, and any ancestor with a transform, filter or `contain` makes `fixed` position
+against that element instead of the viewport. Every fixed layer here moves itself to `<body>` on load
+to get out from under it.
+
+**`z-index` only competes inside its own stacking context.** A `z-index: 9999` overlay nested in a
+transformed section still loses to the next section. It stayed visible but stopped receiving clicks,
+which looks exactly like a dead button.
+
+**Hiding with `transform` leaves the element clickable.** A banner pushed off-screen with
+`translateY(-100%)` is still in the layout, still painted and still eating clicks. Use `display` or
+add `pointer-events: none`.
+
+**Class names collide across blocks.** `.rd` was the archive's redaction class and I reused it for
+the chapter reader, which repainted every chapter as a solid white bar. Everything is prefixed now.
+
+**Optimizations.** The two biggest performance wins were deleting a `mix-blend-mode`
+on a full-screen overlay and a `backdrop-filter` on the modal scrim. Both force the browser to
+recomposite the entire page every frame, forever. Reading a chapter went from 46fps to 100fps once
+those were gone and the background animations paused behind the modal.
+
+---
+
+## Assets
+
+`assets/` has the processed art — the PROJECT sigil as transparent PNGs, a cutout of the jump
+splash with the background and beam keyed out, the wireframe recoloured to red on transparency.
+`paste-into-carrd/` has the four chapter text files.
+
+## Credits
+
+League of Legends and PROJECT: Zed belong to Riot Games. This is non-commercial fan work and isn't
+endorsed by or affiliated with Riot.
+
+TRIXE is mine. Everything she does on that site is unauthorised >:)
